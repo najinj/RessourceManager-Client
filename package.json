@@ -1,0 +1,43 @@
+{
+  "name": "RessourceManager-Client",
+  "version": "1.0.0",
+  "description": "React front-end client for Ressource Managment App",
+  "main": "index.js",
+  "author": "najinj <naji.ensat@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "compression-webpack-plugin": "^3.0.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "scripts": {
+    "dev": "webpack --env.mode=development",
+    "dev-server": "webpack-dev-server --env.mode=development",
+    "prod": "webpack --env.mode=production",
+    "format": "prettier \"src/**/*.{js,html,jsx}\" --write",
+    "lint": "eslint \"src/**/*.{js,jsx}\" --quiet"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-loader": "^3.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.14.3",
+    "html-webpack-plugin": "^3.2.0",
+    "prettier": "^1.18.2",
+    "webpack": "4.39.3",
+    "webpack-cli": "3.3.8",
+    "webpack-dev-server": "3.8.0",
+    "webpack-merge": "^4.2.2"
+  }
+}
