@@ -15,6 +15,9 @@ module.exports = ({ mode } = { mode: "production" }) =>
       resolve: {
         extensions: [".js", ".jsx", ".json"]
       },
+      node: {
+        fs: "empty"
+     },
       module: {
         rules: [
           {

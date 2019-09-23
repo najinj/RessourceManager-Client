@@ -1,3 +1,4 @@
+import {history} from "../../config";
 import {
   SIGNIN_ERROR,
   SIGNIN_REQUEST,
@@ -7,43 +8,58 @@ import {
   SIGNUP_ERROR,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
-  LOGOUT_FAILURE
+  LOGOUT_FAILURE,
+  CONNECT_THE_USER
 } from "./types";
 
 import AuthServices from "./service";
 
 export function signIn(values) {
-  return async dispatch => {
+  return  dispatch => {
     dispatch({ type: SIGNIN_REQUEST });
-    try {
-      const response = await AuthServices.signinRequest(values);
-      dispatch({ type: SIGNIN_SUCCESS, paylod: response.data });
-      localStorage.setItem("token", response.data.token);
-    } catch (e) {
-      dispatch({ type: SIGNIN_ERROR });
-    }
+      AuthServices.signinRequest(values).then(response=>{
+        dispatch({ type: SIGNIN_SUCCESS, payload: response.data });
+        localStorage.setItem("token", response.data.token);
+        history.push("/");
+      },err=>{
+        console.log(SIGNIN_ERROR,err);
+        dispatch({ type: SIGNIN_ERROR });
+      });      
   };
 }
 
 export function signUp(user) {
-  return async dispatch => {
+  return  dispatch => {
     dispatch({ type: SIGNUP_REQUEST });
-    try {
-      const response = await AuthServices.signUp(user);
-      dispatch({ type: SIGNUP_SUCCESS, paylod: response.data });
-      localStorage.setItem("token", response.data.token);
-    } catch (e) {
+    AuthServices.signupRequest(user).then(response=>{
+      dispatch({ type: SIGNUP_SUCCESS, payload: response.data });
+      localStorage.setItem("token", response.data.token);     
+    },err=>{
+      console.log(SIGNUP_ERROR,err);
       dispatch({ type: SIGNUP_ERROR });
-    }
+
+    });   
   };
 }
-
-export function logout() {
+// LoginIn without interaction with the server
+export function connectTheUser(token) {
+  return async dispatch => {
+    localStorage.setItem("token", token);
+    dispatch({
+      type: CONNECT_THE_USER,
+      payload: {
+        token
+      }
+    });
+  };
+}
+// LoginOut without interaction with the server
+export function logout() {  
   return async dispatch => {
     dispatch({ type: LOGOUT_REQUEST });
     try {
       await AuthServices.logoutRequest();
-      localStorage.removeItem("halber_token");
+      localStorage.removeItem("token");
       dispatch({ type: LOGOUT_SUCCESS });
     } catch (e) {
       dispatch({ type: LOGOUT_FAILURE });

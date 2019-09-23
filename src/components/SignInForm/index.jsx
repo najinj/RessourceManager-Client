@@ -1,16 +1,27 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from "react";
-import { Form, Input, Button, Row, Col } from "antd";
-import { shape } from "prop-types";
+import { Form, Input, Button, Col } from "antd";
+import {connect} from "react-redux";
+import { shape, func } from "prop-types";
+import {signUp} from "../../actions/auth-actions/actions";
+
 import "./SignInForm.css";
 
-const SignInForm = ({ form }) => {
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    register : user => dispatch(signUp(user))
+  }
+}
+  
+
+const SignInForm = ({ form ,register}) => {
   const [confirmDirty, setConfirmDirty] = useState(false);
   const handleSubmit = e => {
     e.preventDefault();
-    form.validateFieldsAndScroll((err, values) => {
+    form.validateFieldsAndScroll((err, user) => {
       if (!err) {
-        console.log("Received values of form: ", values);
+        register(user);
+        console.log("Received values of form: ", user);
       }
     });
   };
@@ -30,7 +41,7 @@ const SignInForm = ({ form }) => {
 
   const validateToNextPassword = (rule, value, callback) => {
     if (value && confirmDirty) {
-      form.validateFields(["confirm"], { force: true });
+      form.validateFields(["ConfirmPassword"], { force: true });
     }
     callback();
   };
@@ -53,7 +64,6 @@ const SignInForm = ({ form }) => {
   return (
     <Form onSubmit={handleSubmit} className="login-form">
       <Form.Item>
-        <Row>
           <Col>
             <Form.Item label="Name">
               {getFieldDecorator("name", {
@@ -78,7 +88,6 @@ const SignInForm = ({ form }) => {
               })(<Input />)}
             </Form.Item>
           </Col>
-        </Row>
       </Form.Item>
       <Form.Item label="E-mail">
         {getFieldDecorator("email", {
@@ -108,7 +117,7 @@ const SignInForm = ({ form }) => {
         })(<Input.Password />)}
       </Form.Item>
       <Form.Item label="Confirm Password" hasFeedback>
-        {getFieldDecorator("confirm", {
+        {getFieldDecorator("ConfirmPassword", {
           rules: [
             {
               required: true,
@@ -132,10 +141,14 @@ const SignInForm = ({ form }) => {
 const WrappedSignInForm = Form.create({ name: "register" })(SignInForm);
 
 SignInForm.propTypes = {
-  form: shape()
+  form: shape(),
+  register : func
 };
 SignInForm.defaultProps = {
-  form: {}
+  form: {},
+  register : null
 };
 
-export default WrappedSignInForm;
+const ConnectedForm = connect(null,mapDispatchToProps)(WrappedSignInForm);
+
+export default ConnectedForm;
