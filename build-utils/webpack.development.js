@@ -9,6 +9,7 @@ module.exports = () => ({
     contentBase: path.join(__dirname, "../", "dist"),
     compress: true,
     hot: true,
-    port: 9000
+    port: 9000,
+    historyApiFallback: true
   }
 });
