@@ -1,5 +1,6 @@
 import React,{useState} from "react";
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import EditableFormTable from "../RessourceTypes";
 
 import "antd/es/layout/style/css";
 import "antd/es/menu/style/css";
@@ -67,7 +68,9 @@ const SideNav = () => {
                 <Breadcrumb.Item>User</Breadcrumb.Item>
                 <Breadcrumb.Item>Bill</Breadcrumb.Item>
                 </Breadcrumb>
-                <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>Bill is a cat.</div>
+                <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+                    <EditableFormTable/>
+                </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
             </Layout>
