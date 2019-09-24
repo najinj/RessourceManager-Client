@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-shadow */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
 import { Table, Input, InputNumber, Popconfirm, Form } from "antd";
 import { connect } from "react-redux";
@@ -87,7 +91,7 @@ const EditableTable = ({
   isLoading,
   fetchRessourceTypes,
   updateRessourceType,
-  deleteRessourceType,
+  //  deleteRessourceType,
   addRessourceType
 }) => {
   const [editingKey, SetEditingKey] = useState("");
@@ -105,17 +109,21 @@ const EditableTable = ({
       if (error) {
         return;
       }
-
-      const index = ressourceTypes.findIndex(item => key === item.key);
+      const index = ressourceTypes.findIndex(item => key === item.id);
+      const ressourceType = { ...row };
+      ressourceType.id = key;
       if (index > -1) {
-        updateRessourceType(row.key, row);
+        updateRessourceType(key, ressourceType);
+        SetEditingKey("");
       } else {
-        addRessourceType(row);
+        addRessourceType(ressourceType);
+        SetEditingKey("");
       }
     });
   };
 
   const edit = key => {
+    console.log(key);
     SetEditingKey(key);
   };
 
@@ -186,11 +194,13 @@ const EditableTable = ({
   };
 
   const MappedRessourceTypes = ressourceTypes.map(ressourceType => ({
-    key: ressourceType.Id,
+    id: ressourceType.id,
+    key: ressourceType.id,
     name: ressourceType.name,
-    description: ressourceType.ressourceType,
+    description: ressourceType.description,
     type: ressourceType.type
   }));
+  console.log(MappedRessourceTypes);
   const columnsMaped = columns.map(col => {
     if (!col.editable) {
       return col;

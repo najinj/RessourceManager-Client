@@ -16,7 +16,7 @@ import {
 
 const intialState = {
   ressourceTypes: [],
-  isLoading
+  isLoading: false
 };
 
 export default function ressourceTypeReducer(state = intialState, action) {
@@ -31,7 +31,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
         isLoading: false
       };
     case FETCH_RESSOURCE_TYPES_FAILURE:
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: false };
     /* *************************** */
     case ADD_RESSOURCE_TYPE_REQUEST:
       return state;

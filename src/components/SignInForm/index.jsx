@@ -1,20 +1,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from "react";
 import { Form, Input, Button, Col } from "antd";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { shape, func } from "prop-types";
-import {signUp} from "../../actions/auth-actions/actions";
+import { signUp } from "../../actions/auth-actions/actions";
 
 import "./SignInForm.css";
 
-const mapDispatchToProps = (dispatch) =>{
+const mapDispatchToProps = dispatch => {
   return {
-    register : user => dispatch(signUp(user))
-  }
-}
-  
+    register: user => dispatch(signUp(user))
+  };
+};
 
-const SignInForm = ({ form ,register}) => {
+const SignInForm = ({ form, register }) => {
   const [confirmDirty, setConfirmDirty] = useState(false);
   const handleSubmit = e => {
     e.preventDefault();
@@ -64,30 +63,30 @@ const SignInForm = ({ form ,register}) => {
   return (
     <Form onSubmit={handleSubmit} className="login-form">
       <Form.Item>
-          <Col>
-            <Form.Item label="Name">
-              {getFieldDecorator("name", {
-                rules: [
-                  {
-                    required: true,
-                    message: "Please input your Name!"
-                  }
-                ]
-              })(<Input />)}
-            </Form.Item>
-          </Col>
-          <Col>
-            <Form.Item label="Last Name">
-              {getFieldDecorator("lastName", {
-                rules: [
-                  {
-                    required: true,
-                    message: "Please input your Last Name!"
-                  }
-                ]
-              })(<Input />)}
-            </Form.Item>
-          </Col>
+        <Col>
+          <Form.Item label="Name">
+            {getFieldDecorator("name", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please input your Name!"
+                }
+              ]
+            })(<Input />)}
+          </Form.Item>
+        </Col>
+        <Col>
+          <Form.Item label="Last Name">
+            {getFieldDecorator("lastName", {
+              rules: [
+                {
+                  required: true,
+                  message: "Please input your Last Name!"
+                }
+              ]
+            })(<Input />)}
+          </Form.Item>
+        </Col>
       </Form.Item>
       <Form.Item label="E-mail">
         {getFieldDecorator("email", {
@@ -142,13 +141,16 @@ const WrappedSignInForm = Form.create({ name: "register" })(SignInForm);
 
 SignInForm.propTypes = {
   form: shape(),
-  register : func
+  register: func
 };
 SignInForm.defaultProps = {
   form: {},
-  register : null
+  register: null
 };
 
-const ConnectedForm = connect(null,mapDispatchToProps)(WrappedSignInForm);
+const ConnectedForm = connect(
+  null,
+  mapDispatchToProps
+)(WrappedSignInForm);
 
 export default ConnectedForm;

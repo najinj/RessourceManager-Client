@@ -1,4 +1,4 @@
-import {history} from "../../config";
+import { history } from "../../config";
 import {
   SIGNIN_ERROR,
   SIGNIN_REQUEST,
@@ -15,30 +15,35 @@ import {
 import AuthServices from "./service";
 
 export function signIn(values) {
-  return  dispatch => {
+  return dispatch => {
     dispatch({ type: SIGNIN_REQUEST });
-      AuthServices.signinRequest(values).then(response=>{
+    AuthServices.signinRequest(values).then(
+      response => {
         dispatch({ type: SIGNIN_SUCCESS, payload: response.data });
         localStorage.setItem("token", response.data.token);
         history.push("/");
-      },err=>{
-        console.log(SIGNIN_ERROR,err);
+      },
+      err => {
+        console.log(SIGNIN_ERROR, err);
         dispatch({ type: SIGNIN_ERROR });
-      });      
+      }
+    );
   };
 }
 
 export function signUp(user) {
-  return  dispatch => {
+  return dispatch => {
     dispatch({ type: SIGNUP_REQUEST });
-    AuthServices.signupRequest(user).then(response=>{
-      dispatch({ type: SIGNUP_SUCCESS, payload: response.data });
-      localStorage.setItem("token", response.data.token);     
-    },err=>{
-      console.log(SIGNUP_ERROR,err);
-      dispatch({ type: SIGNUP_ERROR });
-
-    });   
+    AuthServices.signupRequest(user).then(
+      response => {
+        dispatch({ type: SIGNUP_SUCCESS, payload: response.data });
+        localStorage.setItem("token", response.data.token);
+      },
+      err => {
+        console.log(SIGNUP_ERROR, err);
+        dispatch({ type: SIGNUP_ERROR });
+      }
+    );
   };
 }
 // LoginIn without interaction with the server
@@ -54,7 +59,7 @@ export function connectTheUser(token) {
   };
 }
 // LoginOut without interaction with the server
-export function logout() {  
+export function logout() {
   return async dispatch => {
     dispatch({ type: LOGOUT_REQUEST });
     try {

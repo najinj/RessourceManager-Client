@@ -1,9 +1,9 @@
 import React from "react";
 import { Form, Icon, Input, Button, Checkbox } from "antd";
-import { shape , func} from "prop-types";
-import {connect} from "react-redux";
-import {Link} from "react-router-dom";
-import {signIn} from "../../actions/auth-actions/actions"
+import { shape, func } from "prop-types";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { signIn } from "../../actions/auth-actions/actions";
 import "antd/es/form/style/css";
 import "antd/es/icon/style/css";
 import "antd/es/input/style/css";
@@ -11,14 +11,14 @@ import "antd/es/button/style/css";
 import "antd/es/checkbox/style/css";
 import "./LoginForm.css";
 
-const mapDispatchToProps = (dispatch) =>{
+const mapDispatchToProps = dispatch => {
   return {
-    logIn : user => dispatch(signIn(user))
-  }
-}
+    logIn: user => dispatch(signIn(user))
+  };
+};
 
 // eslint-disable-next-line no-unused-vars
-const NormalLoginForm = ({ form ,logIn}) => {
+const NormalLoginForm = ({ form, logIn }) => {
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFields((err, values) => {
@@ -29,7 +29,6 @@ const NormalLoginForm = ({ form ,logIn}) => {
     });
   };
 
- 
   const { getFieldDecorator } = form;
   return (
     <Form onSubmit={handleSubmit} className="login-form">
@@ -80,9 +79,12 @@ NormalLoginForm.propTypes = {
 };
 NormalLoginForm.defaultProps = {
   form: {},
-  logIn : null
+  logIn: null
 };
 
-const ConnectedWrappedNormalLoginForm = connect(null,mapDispatchToProps)(WrappedNormalLoginForm);
+const ConnectedWrappedNormalLoginForm = connect(
+  null,
+  mapDispatchToProps
+)(WrappedNormalLoginForm);
 
 export default ConnectedWrappedNormalLoginForm;

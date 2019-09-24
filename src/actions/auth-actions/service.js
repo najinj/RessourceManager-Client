@@ -17,14 +17,13 @@ function signinRequest(body) {
   });
 }
 
-const  signupRequest = (body) => {
+const signupRequest = body => {
   return axiosInstance({
     method: "post",
     url: "Account/Register",
     data: body
   });
-}
-
+};
 
 const AuthServices = {
   signinRequest,

@@ -45,7 +45,6 @@ const authReducer = (state = intialState, action) => {
     case SIGNUP_ERROR:
       return state;
 
-
     // Connect & disconnect user ( no interaction with the server )
     case DISCONNECT_THE_USER:
       return {
