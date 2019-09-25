@@ -51,7 +51,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
       return {
         ...state,
         ressourceTypes: state.ressourceTypes.map(ressourceType => {
-          if (ressourceType.Id) return action.payload;
+          if (ressourceType.id === action.payload.id) return action.payload;
           return ressourceType;
         })
       };

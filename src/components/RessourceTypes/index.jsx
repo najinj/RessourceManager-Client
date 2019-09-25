@@ -3,7 +3,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
-import { Table, Input, InputNumber, Popconfirm, Form } from "antd";
+import { Table, Input, Popconfirm, Form, Select } from "antd";
 import { connect } from "react-redux";
 import {
   fetchRessourceTypes,
@@ -14,19 +14,11 @@ import {
 
 import "antd/es/table/style/css";
 import "antd/es/input/style/css";
-import "antd/es/input-number/style/css";
 import "antd/es/popconfirm/style/css";
 import "antd/es/form/style/css";
+import "antd/es/select/style/css";
 
-const data = [];
-for (let i = 0; i < 100; i += 1) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`
-  });
-}
+const { Option } = Select;
 
 const EditableContext = React.createContext();
 
@@ -41,8 +33,13 @@ const EditableCell = ({
   ...restProps
 }) => {
   const getInput = type => {
-    if (type === "number") {
-      return <InputNumber />;
+    if (type === "combo") {
+      return (
+        <Select defaultValue="" style={{ width: 120 }}>
+          <Option value={0}>Space</Option>
+          <Option value={1}>Asset</Option>
+        </Select>
+      );
     }
     return <Input />;
   };
@@ -132,13 +129,27 @@ const EditableTable = ({
       title: "Name",
       dataIndex: "name",
       width: "25%",
-      editable: true
+      editable: true,
+      sorter: (a, b) => a.name.localeCompare(b.name), // a.name.length - b.name.length,
+      sortDirections: ["descend", "ascend"]
     },
     {
       title: "Type",
       dataIndex: "type",
       width: "15%",
-      editable: true
+      editable: true,
+      filters: [
+        {
+          text: "Space",
+          value: 0
+        },
+        {
+          text: "Asset",
+          value: 1
+        }
+      ],
+      onFilter: (value, record) => record.type === value,
+      render: value => (value === 0 ? "Space" : "Asset")
     },
     {
       title: "Description",
@@ -200,7 +211,6 @@ const EditableTable = ({
     description: ressourceType.description,
     type: ressourceType.type
   }));
-  console.log(MappedRessourceTypes);
   const columnsMaped = columns.map(col => {
     if (!col.editable) {
       return col;
@@ -209,7 +219,7 @@ const EditableTable = ({
       ...col,
       onCell: record => ({
         record,
-        inputType: col.dataIndex === "age" ? "number" : "text",
+        inputType: col.dataIndex === "type" ? "combo" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record)
