@@ -3,21 +3,23 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
-import { Table, Input, Popconfirm, Form, Select } from "antd";
+import { Table, Input, Popconfirm, Form, Select, Divider, Button } from "antd";
 import { connect } from "react-redux";
 import {
   fetchRessourceTypes,
   updateRessourceType,
   deleteRessourceType,
-  addRessourceType
+  addRessourceType,
+  addRessourceTypeRow,
+  deleteRessourceTypeRow
 } from "../../actions/ressourceTypes-actions/actions";
-
+/*
 import "antd/es/table/style/css";
 import "antd/es/input/style/css";
 import "antd/es/popconfirm/style/css";
 import "antd/es/form/style/css";
 import "antd/es/select/style/css";
-
+*/
 const { Option } = Select;
 
 const EditableContext = React.createContext();
@@ -35,7 +37,7 @@ const EditableCell = ({
   const getInput = type => {
     if (type === "combo") {
       return (
-        <Select defaultValue="" style={{ width: 120 }}>
+        <Select initialValue="" style={{ width: 120 }}>
           <Option value={0}>Space</Option>
           <Option value={1}>Asset</Option>
         </Select>
@@ -72,7 +74,10 @@ const mapDispatchToProps = dispatch => {
     updateRessourceType: (id, ressourceType) =>
       dispatch(updateRessourceType(id, ressourceType)),
     deleteRessourceType: id => dispatch(deleteRessourceType(id)),
-    addRessourceType: ressourceType => dispatch(addRessourceType(ressourceType))
+    addRessourceType: ressourceType =>
+      dispatch(addRessourceType(ressourceType)),
+    addRessourceTypeRow: row => dispatch(addRessourceTypeRow(row)),
+    deleteRessourceTypeRow: id => dispatch(deleteRessourceTypeRow(id))
   };
 };
 
@@ -88,8 +93,10 @@ const EditableTable = ({
   isLoading,
   fetchRessourceTypes,
   updateRessourceType,
-  //  deleteRessourceType,
-  addRessourceType
+  deleteRessourceType,
+  addRessourceType,
+  addRessourceTypeRow,
+  deleteRessourceTypeRow
 }) => {
   const [editingKey, SetEditingKey] = useState("");
 
@@ -97,7 +104,8 @@ const EditableTable = ({
 
   const isEditing = record => record.key === editingKey;
 
-  const cancel = () => {
+  const cancel = key => {
+    if (key === undefined) deleteRessourceTypeRow(undefined);
     SetEditingKey("");
   };
 
@@ -106,21 +114,25 @@ const EditableTable = ({
       if (error) {
         return;
       }
-      const index = ressourceTypes.findIndex(item => key === item.id);
+      const index = ressourceTypes.findIndex(item => item.id === undefined);
       const ressourceType = { ...row };
-      ressourceType.id = key;
       if (index > -1) {
-        updateRessourceType(key, ressourceType);
+        console.log(ressourceType);
+        addRessourceType(ressourceType);
         SetEditingKey("");
       } else {
-        addRessourceType(ressourceType);
+        ressourceType.id = key;
+        updateRessourceType(key, ressourceType);
         SetEditingKey("");
       }
     });
   };
 
+  const deleteRow = key => {
+    deleteRessourceType(key);
+  };
+
   const edit = key => {
-    console.log(key);
     SetEditingKey(key);
   };
 
@@ -158,8 +170,8 @@ const EditableTable = ({
       editable: true
     },
     {
-      title: "operation",
-      dataIndex: "operation",
+      title: "Actions",
+      dataIndex: "actions",
       render: (text, record) => {
         const editable = isEditing(record);
         return editable ? (
@@ -176,6 +188,7 @@ const EditableTable = ({
                 </a>
               )}
             </EditableContext.Consumer>
+            <Divider type="vertical" />
             <Popconfirm
               title="Sure to cancel?"
               onKeyPress={() => {}}
@@ -185,14 +198,30 @@ const EditableTable = ({
             </Popconfirm>
           </span>
         ) : (
-          <a
-            role="presentation"
-            disabled={editingKey !== ""}
-            onKeyPress={() => {}}
-            onClick={() => edit(record.key)}
-          >
-            Edit
-          </a>
+          <span>
+            <a
+              role="presentation"
+              disabled={editingKey !== ""}
+              onKeyPress={() => {}}
+              onClick={() => edit(record.key)}
+            >
+              Edit
+            </a>
+            <Divider type="vertical" />
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => deleteRow(record.key)}
+            >
+              <a
+                role="presentation"
+                disabled={editingKey !== ""}
+                onKeyPress={() => {}}
+                onClick={() => {}}
+              >
+                Delete
+              </a>
+            </Popconfirm>
+          </span>
         );
       }
     }
@@ -205,7 +234,6 @@ const EditableTable = ({
   };
 
   const MappedRessourceTypes = ressourceTypes.map(ressourceType => ({
-    id: ressourceType.id,
     key: ressourceType.id,
     name: ressourceType.name,
     description: ressourceType.description,
@@ -226,20 +254,35 @@ const EditableTable = ({
       })
     };
   });
+
+  const handleAdd = () => {
+    addRessourceTypeRow({
+      name: "",
+      description: "",
+      type: ""
+    });
+    SetEditingKey(undefined);
+  };
+
   return (
-    <EditableContext.Provider value={form}>
-      <Table
-        components={components}
-        bordered
-        dataSource={MappedRessourceTypes}
-        columns={columnsMaped}
-        rowClassName="editable-row"
-        pagination={{
-          onChange: cancel
-        }}
-        loading={isLoading}
-      />
-    </EditableContext.Provider>
+    <>
+      <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
+        Add a row
+      </Button>
+      <EditableContext.Provider value={form}>
+        <Table
+          components={components}
+          bordered
+          dataSource={MappedRessourceTypes}
+          columns={columnsMaped}
+          rowClassName="editable-row"
+          pagination={{
+            onChange: cancel
+          }}
+          loading={isLoading}
+        />
+      </EditableContext.Provider>
+    </>
   );
 };
 

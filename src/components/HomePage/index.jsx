@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Layout, Menu, Breadcrumb, Icon } from "antd";
 import EditableFormTable from "../RessourceTypes";
-
+/*
 import "antd/es/layout/style/css";
 import "antd/es/menu/style/css";
 import "antd/es/breadcrumb/style/css";
 import "antd/es/icon/style/css";
-
+*/
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 

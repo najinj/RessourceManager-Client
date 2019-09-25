@@ -10,11 +10,7 @@ const updateRessourceType = (id, ressourceType) =>
   axiosInstance.put(`RessourceType/${id}`, ressourceType);
 
 const addRessourceType = ressourceType =>
-  axiosInstance({
-    method: "POST",
-    url: "RessourceType",
-    body: ressourceType
-  });
+  axiosInstance.post("RessourceType/", ressourceType);
 
 const deleteRessourceType = id =>
   axiosInstance({

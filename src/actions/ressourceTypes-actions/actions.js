@@ -10,9 +10,25 @@ import {
   FETCH_RESSOURCE_TYPES_SUCCESS,
   UPDATE_RESSOURCE_TYPE_FAILURE,
   UPDATE_RESSOURCE_TYPE_REQUEST,
-  UPDATE_RESSOURCE_TYPE_SUCCESS
+  UPDATE_RESSOURCE_TYPE_SUCCESS,
+  ADD_RESSOURCE_TYPE_TO_TABLE,
+  DELETE_RESSOURCE_TYPE_FROM_TABLE
 } from "./types";
 import RessourceTypesServices from "./service";
+
+export function addRessourceTypeRow(row) {
+  return {
+    type: ADD_RESSOURCE_TYPE_TO_TABLE,
+    payload: row
+  };
+}
+
+export function deleteRessourceTypeRow(id) {
+  return {
+    type: DELETE_RESSOURCE_TYPE_FROM_TABLE,
+    payload: id
+  };
+}
 
 export function fetchRessourceTypes() {
   return dispatch => {
@@ -37,6 +53,7 @@ export function addRessourceType(ressourceType) {
     dispatch({ type: ADD_RESSOURCE_TYPE_REQUEST });
     RessourceTypesServices.addRessourceType(ressourceType).then(
       response => {
+        dispatch(deleteRessourceTypeRow(undefined));
         dispatch({ type: ADD_RESSOURCE_TYPE_SUCCESS, payload: response.data });
       },
       err => {
@@ -69,10 +86,10 @@ export function deleteRessourceType(id) {
   return dispatch => {
     dispatch({ type: DELETE_RESSOURCE_TYPE_REQUEST });
     RessourceTypesServices.deleteRessourceType(id).then(
-      response => {
+      () => {
         dispatch({
           type: DELETE_RESSOURCE_TYPE_SUCCESS,
-          payload: response.data
+          payload: id
         });
       },
       err => {

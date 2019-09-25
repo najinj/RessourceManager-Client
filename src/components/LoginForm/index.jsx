@@ -4,13 +4,14 @@ import { shape, func } from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { signIn } from "../../actions/auth-actions/actions";
+/*
 import "antd/es/form/style/css";
 import "antd/es/icon/style/css";
 import "antd/es/input/style/css";
 import "antd/es/button/style/css";
 import "antd/es/checkbox/style/css";
 import "./LoginForm.css";
-
+*/
 const mapDispatchToProps = dispatch => {
   return {
     logIn: user => dispatch(signIn(user))
