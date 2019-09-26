@@ -6,13 +6,16 @@ import React, { useState, useEffect } from "react";
 import { Table, Input, Popconfirm, Form, Select, Divider, Button } from "antd";
 import { connect } from "react-redux";
 import {
-  fetchRessourceTypes,
-  updateRessourceType,
-  deleteRessourceType,
-  addRessourceType,
-  addRessourceTypeRow,
-  deleteRessourceTypeRow
-} from "../../actions/ressourceTypes-actions/actions";
+  fetchSpaces,
+  addSpace,
+  deleteSpace,
+  updateSpace,
+  addSpaceRow,
+  deleteSpaceRow
+} from "../../actions/space-actions/actions";
+import {
+    fetchRessourceTypes,
+  } from "../../actions/ressourceTypes-actions/actions";
 
 const { Option } = Select;
 
@@ -65,23 +68,26 @@ const EditableCell = ({
 
 const EditableTable = ({
   form,
-  ressourceTypes,
+  spaces,
   isLoading,
-  fetchRessourceTypes,
-  updateRessourceType,
-  deleteRessourceType,
-  addRessourceType,
-  addRessourceTypeRow,
-  deleteRessourceTypeRow
+  fetchSpaces,
+  addSpace,
+  deleteSpace,
+  updateSpace,
+  addSpaceRow,
+  deleteSpaceRow
 }) => {
   const [editingKey, SetEditingKey] = useState("");
 
-  useEffect(() => fetchRessourceTypes(), []);
+  useEffect(() => {
+    fetchRessourceTypes();
+    fetchSpaces()
+  }, []);
 
   const isEditing = record => record.key === editingKey;
 
   const cancel = key => {
-    if (key === undefined) deleteRessourceTypeRow(undefined);
+    if (key === undefined) deleteSpaceRow(undefined);
     SetEditingKey("");
   };
 
@@ -90,22 +96,22 @@ const EditableTable = ({
       if (error) {
         return;
       }
-      const index = ressourceTypes.findIndex(item => item.id === undefined);
+      const index = spaces.findIndex(item => item.id === undefined);
       const ressourceType = { ...row };
       if (index > -1) {
         console.log(ressourceType);
-        addRessourceType(ressourceType);
+        addSpace(ressourceType);
         SetEditingKey("");
       } else {
         ressourceType.id = key;
-        updateRessourceType(key, ressourceType);
+        updateSpace(key, ressourceType);
         SetEditingKey("");
       }
     });
   };
 
   const deleteRow = key => {
-    deleteRessourceType(key);
+    deleteSpace(key);
   };
 
   const edit = key => {
@@ -140,17 +146,23 @@ const EditableTable = ({
       render: value => (value === 0 ? "Space" : "Asset")
     },
     {
-      title: "Description",
-      dataIndex: "description",
+      title: "Tags",
+      dataIndex: "tags",
       width: "30%",
       editable: true
     },
     {
-      title:"count",
-      dataIndex:"count",
+      title:"Capacity",
+      dataIndex:"capacity",
       width: "10%",
       editable: false,
     },
+    {
+        title:"Assets",
+        dataIndex:"assests",
+        width: "10%",
+        editable: false,
+      },
     {
       title: "Actions",
       dataIndex: "actions",
@@ -215,7 +227,7 @@ const EditableTable = ({
     }
   };
 
-  const MappedRessourceTypes = ressourceTypes.map(ressourceType => ({
+  const MappedSpaces = spaces.map(ressourceType => ({
     key: ressourceType.id,
     name: ressourceType.name,
     description: ressourceType.description,
@@ -240,7 +252,7 @@ const EditableTable = ({
 
   const handleAdd = () => {    
     if(editingKey !== undefined){
-      addRessourceTypeRow({
+      addSpaceRow({
         name: "",
         description: "",
         type: "",
@@ -259,7 +271,7 @@ const EditableTable = ({
         <Table
           components={components}
           bordered
-          dataSource={MappedRessourceTypes}
+          dataSource={MappedSpaces}
           columns={columnsMaped}
           rowClassName="editable-row"
           pagination={{
@@ -273,22 +285,25 @@ const EditableTable = ({
 };
 
 const EditableFormTable = Form.create()(EditableTable);
+
 const mapDispatchToProps = dispatch => {
   return {
     fetchRessourceTypes: () => dispatch(fetchRessourceTypes()),
-    updateRessourceType: (id, ressourceType) =>
-      dispatch(updateRessourceType(id, ressourceType)),
-    deleteRessourceType: id => dispatch(deleteRessourceType(id)),
-    addRessourceType: ressourceType =>
-      dispatch(addRessourceType(ressourceType)),
-    addRessourceTypeRow: row => dispatch(addRessourceTypeRow(row)),
-    deleteRessourceTypeRow: id => dispatch(deleteRessourceTypeRow(id))
+    fetchSpaces: () => dispatch(fetchSpaces()),
+    updateSpace: (id, ressourceType) =>
+      dispatch(updateSpace(id, ressourceType)),
+      deleteSpace: id => dispatch(deleteSpace(id)),
+    addSpace: ressourceType =>
+      dispatch(addSpace(ressourceType)),
+      addSpaceRow: row => dispatch(addSpaceRow(row)),
+      deleteSpaceRow: id => dispatch(deleteSpaceRow(id))
   };
 };
 
 const mapStateToProps = state => {
   return {
     ressourceTypes: state.ressourceTypeReducer.ressourceTypes,
+    spaces: state.spaceReducer.spaces,
     isLoading: state.ressourceTypeReducer.isLoading
   };
 };
