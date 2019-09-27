@@ -3,8 +3,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
-import { Table, Input, Popconfirm, Form, Select, Divider, Button } from "antd";
+import { Table, Popconfirm, Form, Divider, Button ,Tag} from "antd";
 import { connect } from "react-redux";
+import EditableCell from "../EditableCell";
 import {
   fetchSpaces,
   addSpace,
@@ -13,78 +14,40 @@ import {
   addSpaceRow,
   deleteSpaceRow
 } from "../../actions/space-actions/actions";
-import {
-    fetchRessourceTypes,
-  } from "../../actions/ressourceTypes-actions/actions";
+import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
 
-const { Option } = Select;
 
 const EditableContext = React.createContext();
-
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const getInput = type => {
-    if (type === "combo") {
-      return (
-        <Select initialValue="" style={{ width: 120 }}>
-          <Option value={0}>Space</Option>
-          <Option value={1}>Asset</Option>
-        </Select>
-      );
-    }
-    return <Input />;
-  };
-  const renderCell = ({ getFieldDecorator }) => {
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`
-                }
-              ],
-              initialValue: record[dataIndex]
-            })(getInput(inputType))}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
-};
 
 const EditableTable = ({
   form,
   spaces,
+  filters,
   isLoading,
   fetchSpaces,
+  getRessourceTypeByType,
   addSpace,
   deleteSpace,
-  updateSpace,
+ // updateSpace,
   addSpaceRow,
   deleteSpaceRow
 }) => {
   const [editingKey, SetEditingKey] = useState("");
 
-  useEffect(() => {
-    fetchRessourceTypes();
-    fetchSpaces()
-  }, []);
 
+  useEffect(() => {
+    getRessourceTypeByType(0);
+    fetchSpaces();
+  }, []);
+  
   const isEditing = record => record.key === editingKey;
+
+  const spaceFilter = filters.map(ressourceType=>{
+    return {
+      text:ressourceType.name,
+      value : ressourceType.id
+    }
+  })
 
   const cancel = key => {
     if (key === undefined) deleteSpaceRow(undefined);
@@ -97,19 +60,18 @@ const EditableTable = ({
         return;
       }
       const index = spaces.findIndex(item => item.id === undefined);
-      const ressourceType = { ...row };
+      const space = { ...row };
       if (index > -1) {
-        console.log(ressourceType);
-        addSpace(ressourceType);
+        addSpace(space);
         SetEditingKey("");
       } else {
-        ressourceType.id = key;
-        updateSpace(key, ressourceType);
+        space.id = key;
+        console.log(space);
+        // updateSpace(key, space);
         SetEditingKey("");
       }
     });
   };
-
   const deleteRow = key => {
     deleteSpace(key);
   };
@@ -129,40 +91,45 @@ const EditableTable = ({
     },
     {
       title: "Type",
-      dataIndex: "type",
+      dataIndex: "spaceTypeId",
       width: "15%",
       editable: true,
-      filters: [
-        {
-          text: "Space",
-          value: 0
-        },
-        {
-          text: "Asset",
-          value: 1
-        }
-      ],
-      onFilter: (value, record) => record.type === value,
-      render: value => (value === 0 ? "Space" : "Asset")
+      filters : spaceFilter,
+      onFilter: (value, record) => record.spaceTypeId === value,
+      render: value => spaceFilter.reduce((acc,curr)=>curr.value === value ? curr.text : acc ,"")
     },
     {
       title: "Tags",
       dataIndex: "tags",
       width: "30%",
-      editable: true
+      editable: true,
+      render : tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? 'geekblue' : 'green';
+          if (tag === 'loser') {
+            color = 'volcano';
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </span>)
     },
     {
-      title:"Capacity",
-      dataIndex:"capacity",
+      title: "Capacity",
+      dataIndex: "capacity",
       width: "10%",
-      editable: false,
+      editable: false
     },
     {
-        title:"Assets",
-        dataIndex:"assests",
-        width: "10%",
-        editable: false,
-      },
+      title: "Assets",
+      dataIndex: "assests",
+      width: "10%",
+      editable: false
+    },
     {
       title: "Actions",
       dataIndex: "actions",
@@ -227,36 +194,56 @@ const EditableTable = ({
     }
   };
 
-  const MappedSpaces = spaces.map(ressourceType => ({
-    key: ressourceType.id,
-    name: ressourceType.name,
-    description: ressourceType.description,
-    type: ressourceType.type,
-    count :ressourceType.count
+  const MappedSpaces = spaces.map(space => ({
+    key: space.id,
+    name: space.name,
+    capacity: space.capacity,
+    spaceTypeId: space.spaceTypeId,
+    count: space.count,
+    tags: space.tags,
+    assests : space.assests
   }));
   const columnsMaped = columns.map(col => {
     if (!col.editable) {
       return col;
     }
+    if(col.dataIndex === "spaceTypeId"){
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          inputType: "combo",
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: isEditing(record),
+          options : spaceFilter,
+          getFieldDecorator : form.getFieldDecorator
+        })
+      };
+    }
     return {
       ...col,
       onCell: record => ({
         record,
-        inputType: col.dataIndex === "type" ? "combo" : "text",
+        inputType: col.dataIndex === "tags" ? "tags" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record)
+        editing: isEditing(record),
+        getFieldDecorator : form.getFieldDecorator,
+        tagsArray : record.tags
       })
     };
   });
 
-  const handleAdd = () => {    
-    if(editingKey !== undefined){
+  const handleAdd = () => {
+    if (editingKey !== undefined) {
       addSpaceRow({
         name: "",
-        description: "",
-        type: "",
-        count : 0
+        capacity:0,
+        spaceTypeId: "",
+        count: 0,
+        tags: [],
+        assests : []
       });
       SetEditingKey(undefined);
     }
@@ -288,21 +275,20 @@ const EditableFormTable = Form.create()(EditableTable);
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRessourceTypes: () => dispatch(fetchRessourceTypes()),
     fetchSpaces: () => dispatch(fetchSpaces()),
-    updateSpace: (id, ressourceType) =>
-      dispatch(updateSpace(id, ressourceType)),
-      deleteSpace: id => dispatch(deleteSpace(id)),
-    addSpace: ressourceType =>
-      dispatch(addSpace(ressourceType)),
-      addSpaceRow: row => dispatch(addSpaceRow(row)),
-      deleteSpaceRow: id => dispatch(deleteSpaceRow(id))
+    updateSpace: (id, space) =>
+    dispatch(updateSpace(id, space)),
+    deleteSpace: id => dispatch(deleteSpace(id)),
+    addSpace: space => dispatch(addSpace(space)),
+    addSpaceRow: row => dispatch(addSpaceRow(row)),
+    deleteSpaceRow: id => dispatch(deleteSpaceRow(id)),
+    getRessourceTypeByType : type => dispatch(getRessourceTypeByType(type))
   };
 };
 
 const mapStateToProps = state => {
   return {
-    ressourceTypes: state.ressourceTypeReducer.ressourceTypes,
+    filters: state.ressourceTypeReducer.filters,
     spaces: state.spaceReducer.spaces,
     isLoading: state.ressourceTypeReducer.isLoading
   };

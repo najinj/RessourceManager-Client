@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Menu, Breadcrumb, Icon } from "antd";
-import EditableFormTable from "../RessourceTypes";
+import EditableFormTable from "../Space";
 /*
 import "antd/es/layout/style/css";
 import "antd/es/menu/style/css";

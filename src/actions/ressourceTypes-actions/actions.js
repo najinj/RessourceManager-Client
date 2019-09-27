@@ -12,10 +12,31 @@ import {
   UPDATE_RESSOURCE_TYPE_REQUEST,
   UPDATE_RESSOURCE_TYPE_SUCCESS,
   ADD_RESSOURCE_TYPE_TO_TABLE,
-  DELETE_RESSOURCE_TYPE_FROM_TABLE
-} from "./types";
+  DELETE_RESSOURCE_TYPE_FROM_TABLE,
+  GET_RESSOURCE_TYPES_BY_TYPE_REQUEST,
+  GET_RESSOURCE_TYPES_BY_TYPE_SUCCESS,
+  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE,
+} from "./types"
 import RessourceTypesServices from "./service";
 
+
+export function getRessourceTypeByType(type){
+  return dispatch => {
+    dispatch({ type: GET_RESSOURCE_TYPES_BY_TYPE_REQUEST });
+    RessourceTypesServices.getRessourceTypeByType(type).then(
+      response => {
+        dispatch({
+          type: GET_RESSOURCE_TYPES_BY_TYPE_SUCCESS,
+          payload: response.data
+        });
+      },
+      err => {
+        console.log(GET_RESSOURCE_TYPES_BY_TYPE_FAILURE, err);
+        dispatch({ type: GET_RESSOURCE_TYPES_BY_TYPE_FAILURE });
+      }
+    );
+  };
+}
 export function addRessourceTypeRow(row) {
   return {
     type: ADD_RESSOURCE_TYPE_TO_TABLE,

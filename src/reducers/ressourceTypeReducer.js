@@ -13,11 +13,15 @@ import {
   UPDATE_RESSOURCE_TYPE_REQUEST,
   UPDATE_RESSOURCE_TYPE_SUCCESS,
   ADD_RESSOURCE_TYPE_TO_TABLE,
-  DELETE_RESSOURCE_TYPE_FROM_TABLE
+  DELETE_RESSOURCE_TYPE_FROM_TABLE,
+  GET_RESSOURCE_TYPES_BY_TYPE_REQUEST,
+  GET_RESSOURCE_TYPES_BY_TYPE_SUCCESS,
+  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE,
 } from "../actions/ressourceTypes-actions/types";
 
 const intialState = {
   ressourceTypes: [],
+  filters : [],
   isLoading: false
 };
 
@@ -88,6 +92,15 @@ export default function ressourceTypeReducer(state = intialState, action) {
           ressourceType => ressourceType.id !== action.payload
         )
       };
+    case GET_RESSOURCE_TYPES_BY_TYPE_REQUEST:
+      return state;
+    case GET_RESSOURCE_TYPES_BY_TYPE_SUCCESS:
+      return {
+        ...state,
+        filters:action.payload
+      }  
+    case GET_RESSOURCE_TYPES_BY_TYPE_FAILURE:
+      return state;  
     default:
       return state;
   }

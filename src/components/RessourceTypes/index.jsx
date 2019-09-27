@@ -3,8 +3,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
-import { Table, Input, Popconfirm, Form, Select, Divider, Button } from "antd";
+import { Table, Popconfirm, Form, Divider, Button } from "antd";
 import { connect } from "react-redux";
+import EditableCell from "../EditableCell";
+
 import {
   fetchRessourceTypes,
   updateRessourceType,
@@ -14,54 +16,19 @@ import {
   deleteRessourceTypeRow
 } from "../../actions/ressourceTypes-actions/actions";
 
-const { Option } = Select;
+
 
 const EditableContext = React.createContext();
-
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const getInput = type => {
-    if (type === "combo") {
-      return (
-        <Select initialValue="" style={{ width: 120 }}>
-          <Option value={0}>Space</Option>
-          <Option value={1}>Asset</Option>
-        </Select>
-      );
-    }
-    return <Input />;
-  };
-  const renderCell = ({ getFieldDecorator }) => {
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`
-                }
-              ],
-              initialValue: record[dataIndex]
-            })(getInput(inputType))}
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-  return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
-};
+const filters = [
+  {
+    text: "Space",
+    value: 0
+  },
+  {
+    text: "Asset",
+    value: 1
+  }
+];
 
 const EditableTable = ({
   form,
@@ -126,18 +93,9 @@ const EditableTable = ({
       dataIndex: "type",
       width: "15%",
       editable: true,
-      filters: [
-        {
-          text: "Space",
-          value: 0
-        },
-        {
-          text: "Asset",
-          value: 1
-        }
-      ],
+      filters,
       onFilter: (value, record) => record.type === value,
-      render: value => (value === 0 ? "Space" : "Asset")
+      render: value =>  filters.reduce((acc,curr)=>curr.value === value ? curr.text : acc ,"")
     },
     {
       title: "Description",
@@ -146,10 +104,10 @@ const EditableTable = ({
       editable: true
     },
     {
-      title:"count",
-      dataIndex:"count",
+      title: "count",
+      dataIndex: "count",
       width: "10%",
-      editable: false,
+      editable: false
     },
     {
       title: "Actions",
@@ -220,7 +178,7 @@ const EditableTable = ({
     name: ressourceType.name,
     description: ressourceType.description,
     type: ressourceType.type,
-    count :ressourceType.count
+    count: ressourceType.count
   }));
   const columnsMaped = columns.map(col => {
     if (!col.editable) {
@@ -233,18 +191,20 @@ const EditableTable = ({
         inputType: col.dataIndex === "type" ? "combo" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record)
+        editing: isEditing(record),
+        options : filters,
+        getFieldDecorator : form.getFieldDecorator
       })
     };
   });
 
-  const handleAdd = () => {    
-    if(editingKey !== undefined){
+  const handleAdd = () => {
+    if (editingKey !== undefined) {
       addRessourceTypeRow({
         name: "",
         description: "",
         type: "",
-        count : 0
+        count: 0
       });
       SetEditingKey(undefined);
     }

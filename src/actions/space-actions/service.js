@@ -1,9 +1,13 @@
 import axiosInstance from "../../config";
 
+const getSpace = id => {
+  axiosInstance.get(`Space/Get/${id}`);
+};
+
 const fetchSpaces = () =>
   axiosInstance({
     method: "GET",
-    url: "Space"
+    url: "Space/Get"
   });
 
 const updateSpace = (id, ressourceType) =>
@@ -18,27 +22,27 @@ const deleteSpace = id =>
     url: `Space/Delete/${id}`
   });
 
-const RemoveAssetFromSpace = (assetId,spaceId) => {
-    axiosInstance({
-        method: "GET",
-        url: "Space/RemoveAssetFromSpace",
-        params: {
-            assetId,
-            spaceId
-          }
-      });
-}
+const RemoveAssetFromSpace = (assetId, spaceId) => {
+  axiosInstance({
+    method: "GET",
+    url: "Space/RemoveAssetFromSpace",
+    params: {
+      assetId,
+      spaceId
+    }
+  });
+};
 
-const AddAssetToSpace = (assetId,spaceId) => {
-    axiosInstance({
-        method: "GET",
-        url: "Space/AddAssetToSpace",
-        params: {
-            assetId,
-            spaceId
-          }
-      });
-}
+const AddAssetToSpace = (assetId, spaceId) => {
+  axiosInstance({
+    method: "GET",
+    url: "Space/AddAssetToSpace",
+    params: {
+      assetId,
+      spaceId
+    }
+  });
+};
 
 const SpaceServices = {
   updateSpace,
@@ -46,7 +50,8 @@ const SpaceServices = {
   fetchSpaces,
   addSpace,
   RemoveAssetFromSpace,
-  AddAssetToSpace
+  AddAssetToSpace,
+  getSpace
 };
 
 export default SpaceServices;
