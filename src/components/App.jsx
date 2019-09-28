@@ -14,7 +14,7 @@ export default () => (
       <Switch>
         <Route exact path="/Signup" component={WrappedSignInForm} />
         <Route exact path="/login" component={LoginForm} />
-        <PrivateRoute exact path="/" component={SideNav} />
+        <PrivateRoute path="/" component={SideNav} />
       </Switch>
     </Router>
   </Provider>

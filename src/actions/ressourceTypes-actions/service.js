@@ -1,12 +1,13 @@
 import axiosInstance from "../../config";
 
-const getRessourceTypeByType = (type) => 
-axiosInstance({
-  method: "GET",
-  url: "RessourceType/GetRessourceTypeByType",
-  params : type
-});
-
+const getRessourceTypeByType = type =>
+  axiosInstance({
+    method: "GET",
+    url: "RessourceType/GetRessourceTypeByType",
+    params: {
+      type
+    }
+  });
 
 const fetchRessourceTypes = () =>
   axiosInstance({

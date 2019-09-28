@@ -2,8 +2,10 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 
-import React,{useState} from "react";
-import { Input,  Form, Select,Tag , Tooltip, Icon } from "antd";
+import React, { useState } from "react";
+import { Input, Form, Select, Tag, Tooltip, Icon, Checkbox } from "antd";
+
+const CheckboxGroup = Checkbox.Group;
 
 const EditableContext = React.createContext();
 const { Option } = Select;
@@ -21,9 +23,9 @@ const EditableCell = ({
   tagsArray,
   ...restProps
 }) => {
-  const [tags,SetTags] = useState(tagsArray);
-  const [inputVisible,SetInputVisible] = useState(false);
-  const [inputValue,SetInputValue] = useState('');
+  const [tags, SetTags] = useState(tagsArray);
+  const [inputVisible, SetInputVisible] = useState(false);
+  const [inputValue, SetInputValue] = useState("");
 
   const handleClose = removedTag => {
     const filteredTags = tags.filter(tag => tag !== removedTag);
@@ -33,16 +35,15 @@ const EditableCell = ({
   const showInput = () => {
     SetInputVisible(true);
     // this.setState({ inputVisible: true }, () => this.input.focus());
-
   };
 
   const handleInputChange = e => {
-    SetInputValue(e.target.value)
-   // this.setState({ inputValue: e.target.value });
+    SetInputValue(e.target.value);
+    // this.setState({ inputValue: e.target.value });
   };
 
   const handleInputConfirm = () => {
-    let  myTags  = {...tags};
+    let myTags = { ...tags };
     if (inputValue && tags.indexOf(inputValue) === -1) {
       myTags = [...tags, inputValue];
     }
@@ -52,41 +53,58 @@ const EditableCell = ({
     SetInputValue("");
   };
 
- // const saveInputRef = input => (this.input = input);
+  // const saveInputRef = input => (this.input = input);
 
-  const getInput = (type,options) => {
+  const getInput = (type, options) => {
     if (type === "combo") {
       return (
-        <Select initialValue="" style={{ width: 120 }}>
-          {
-            options.map(option=><Option value={option.value}>{option.text}</Option>)
-          }        
-        </Select>
+        <Form.Item style={{ margin: 0 }}>
+          {getFieldDecorator(dataIndex, {
+            rules: [
+              {
+                required: dataIndex !== "tags",
+                message: `Please Input ${title}!`
+              }
+            ],
+            initialValue: record[dataIndex]
+          })(
+            <Select initialValue="" style={{ width: 120 }}>
+              {options.map(option => (
+                <Option value={option.value}>{option.text}</Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
       );
     }
-    if (type === "tags"){
+    if (type === "tags") {
       return (
         <div>
           {tags.map((tag, index) => {
             const isLongTag = tag.length > 20;
             const tagElem = (
-              <Tag key={tag} closable={index !== 0} onClose={() => handleClose(tag)}>
-                {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-              </Tag>
+              <Form.Item style={{ margin: 0 }}>
+                {getFieldDecorator(`tags[${index}]`, {
+                  initialValue: tag
+                })(
+                  <Tag
+                    key={tag}
+                    closable={index !== 0}
+                    onClose={() => handleClose(tag)}
+                  >
+                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                  </Tag>
+                )}
+              </Form.Item>
             );
             return isLongTag ? (
               <span>
                 <Tooltip title={tag} key={tag}>
                   {tagElem}
                 </Tooltip>
-                <Input value={tag} hidden="hidden" name={`tags[${index}]`}/>
               </span>
-              
             ) : (
-              <span>
-                {tagElem}
-                <Input value={tag} hidden="hidden" name={`tags[${index}]`}/>
-              </span>
+              <span>{tagElem}</span>
             );
           })}
           {inputVisible && (
@@ -101,39 +119,40 @@ const EditableCell = ({
             />
           )}
           {!inputVisible && (
-            <Tag onClick={showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
+            <Tag
+              onClick={showInput}
+              style={{ background: "#fff", borderStyle: "dashed" }}
+            >
               <Icon type="plus" /> New Tag
             </Tag>
           )}
+          <CheckboxGroup options={tags} value={tags} hidden="hidden" />
         </div>
       );
     }
-     
-    return <Input />;
+
+    return (
+      <Form.Item style={{ margin: 0 }}>
+        {getFieldDecorator(dataIndex, {
+          rules: [
+            {
+              required: dataIndex !== "tags",
+              message: `Please Input ${title}!`
+            }
+          ],
+          initialValue: record[dataIndex]
+        })(<Input />)}
+      </Form.Item>
+    );
   };
   const renderCell = () => {
     return (
       <td {...restProps}>
-        {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: dataIndex !== "tags",
-                  message: `Please Input ${title}!`
-                }
-              ],
-              initialValue: record[dataIndex]
-            })(getInput(inputType,options))}
-          </Form.Item>
-        ) : (
-          children
-        )}
+        {editing ? getInput(inputType, options) : children}
       </td>
     );
   };
   return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
 };
-
 
 export default EditableCell;

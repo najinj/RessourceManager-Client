@@ -10,14 +10,15 @@ module.exports = ({ mode } = { mode: "production" }) =>
     {
       mode,
       output: {
-        path: path.resolve(__dirname, "dist")
+        path: path.resolve(__dirname, "dist"),
+        publicPath: "http://localhost:9000/"
       },
       resolve: {
         extensions: [".js", ".jsx", ".json"]
       },
       node: {
         fs: "empty"
-     },
+      },
       module: {
         rules: [
           {

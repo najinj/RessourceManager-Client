@@ -3,44 +3,54 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
-import { Table, Popconfirm, Form, Divider, Button, Tag } from "antd";
+import { Table, Popconfirm, Form, Divider, Button } from "antd";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
 import {
-  fetchSpaces,
-  addSpace,
-  deleteSpace,
-  updateSpace,
-  addSpaceRow,
-  deleteSpaceRow
-} from "../../actions/space-actions/actions";
+  fetchAssets,
+  addAsset,
+  deleteAsset,
+  updateAsset,
+  addAssetRow,
+  deleteAssetRow
+} from "../../actions/asset-actions/actions";
+import { fetchSpaces } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
 
 const EditableContext = React.createContext();
 
 const EditableTable = ({
   form,
+  assets,
   spaces,
-  filters,
   isLoading,
+  fetchAssets,
   fetchSpaces,
+  addAsset,
+  deleteAsset,
+  updateAsset,
+  addAssetRow,
+  deleteAssetRow,
   getRessourceTypeByType,
-  addSpace,
-  deleteSpace,
-  updateSpace,
-  addSpaceRow,
-  deleteSpaceRow
+  filters
 }) => {
   const [editingKey, SetEditingKey] = useState("");
 
   useEffect(() => {
-    getRessourceTypeByType(0);
+    getRessourceTypeByType(1);
     fetchSpaces();
+    fetchAssets();
   }, []);
 
   const isEditing = record => record.key === editingKey;
 
-  const spaceFilter = filters.map(ressourceType => {
+  const spaceFiler = spaces.map(space => {
+    return {
+      text: space.name,
+      value: space.id
+    };
+  });
+  const assetFilter = filters.map(ressourceType => {
     return {
       text: ressourceType.name,
       value: ressourceType.id
@@ -48,7 +58,7 @@ const EditableTable = ({
   });
 
   const cancel = key => {
-    if (key === undefined) deleteSpaceRow(undefined);
+    if (key === undefined) deleteAssetRow(undefined);
     SetEditingKey("");
   };
 
@@ -57,20 +67,20 @@ const EditableTable = ({
       if (error) {
         return;
       }
-      const index = spaces.findIndex(item => item.id === undefined);
-      const space = { ...row };
+      const index = assets.findIndex(item => item.id === undefined);
+      const asset = { ...row };
       if (index > -1) {
-        addSpace(space);
+        addAsset(asset);
         SetEditingKey("");
       } else {
-        space.id = key;
-        updateSpace(key, space);
+        asset.id = key;
+        updateAsset(key, asset);
         SetEditingKey("");
       }
     });
   };
   const deleteRow = key => {
-    deleteSpace(key);
+    deleteAsset(key);
   };
 
   const edit = key => {
@@ -88,48 +98,34 @@ const EditableTable = ({
     },
     {
       title: "Type",
-      dataIndex: "spaceTypeId",
+      dataIndex: "assetTypeId",
       width: "15%",
       editable: true,
-      filters: spaceFilter,
-      onFilter: (value, record) => record.spaceTypeId === value,
+      filters: assetFilter,
+      onFilter: (value, record) => record.assetTypeId === value,
       render: value =>
-        spaceFilter.reduce(
+        assetFilter.reduce(
           (acc, curr) => (curr.value === value ? curr.text : acc),
           ""
         )
     },
     {
-      title: "Tags",
-      dataIndex: "tags",
-      width: "30%",
+      title: "SpaceId",
+      dataIndex: "spaceId",
+      width: "15%",
       editable: true,
-      render: tags => (
-        <span>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? "geekblue" : "green";
-            if (tag === "loser") {
-              color = "volcano";
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </span>
-      )
+      filters: spaceFiler,
+      onFilter: (value, record) => record.assetTypeId === value,
+      render: value =>
+        spaceFiler.reduce(
+          (acc, curr) => (curr.value === value ? curr.text : acc),
+          ""
+        )
     },
     {
-      title: "Capacity",
-      dataIndex: "capacity",
-      width: "10%",
-      editable: false
-    },
-    {
-      title: "Assets",
-      dataIndex: "assests",
-      width: "10%",
+      title: "Status",
+      dataIndex: "status",
+      width: "30%",
       editable: false
     },
     {
@@ -196,20 +192,18 @@ const EditableTable = ({
     }
   };
 
-  const MappedSpaces = spaces.map(space => ({
-    key: space.id,
-    name: space.name,
-    capacity: space.capacity,
-    spaceTypeId: space.spaceTypeId,
-    count: space.count,
-    tags: space.tags,
-    assests: space.assests
+  const MappedAssets = assets.map(asset => ({
+    key: asset.id,
+    name: asset.name,
+    assetTypeId: asset.assetTypeId,
+    status: asset.status,
+    SpaceId: asset.spaceId
   }));
   const columnsMaped = columns.map(col => {
     if (!col.editable) {
       return col;
     }
-    if (col.dataIndex === "spaceTypeId") {
+    if (col.dataIndex === "assetTypeId") {
       return {
         ...col,
         onCell: record => ({
@@ -218,7 +212,7 @@ const EditableTable = ({
           dataIndex: col.dataIndex,
           title: col.title,
           editing: isEditing(record),
-          options: spaceFilter,
+          options: assetFilter,
           getFieldDecorator: form.getFieldDecorator
         })
       };
@@ -227,25 +221,23 @@ const EditableTable = ({
       ...col,
       onCell: record => ({
         record,
-        inputType: col.dataIndex === "tags" ? "tags" : "text",
+        inputType: col.dataIndex === "spaceId" ? "combo" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
-        getFieldDecorator: form.getFieldDecorator,
-        tagsArray: record.tags
+        options: col.dataIndex === "spaceId" ? spaceFiler : null,
+        getFieldDecorator: form.getFieldDecorator
       })
     };
   });
 
   const handleAdd = () => {
     if (editingKey !== undefined) {
-      addSpaceRow({
+      addAssetRow({
         name: "",
-        capacity: 0,
-        spaceTypeId: "",
-        count: 0,
-        tags: [],
-        assests: []
+        SpaceId: "",
+        assetTypeId: "",
+        status: 0
       });
       SetEditingKey(undefined);
     }
@@ -260,7 +252,7 @@ const EditableTable = ({
         <Table
           components={components}
           bordered
-          dataSource={MappedSpaces}
+          dataSource={MappedAssets}
           columns={columnsMaped}
           rowClassName="editable-row"
           pagination={{
@@ -277,12 +269,13 @@ const EditableFormTable = Form.create()(EditableTable);
 
 const mapDispatchToProps = dispatch => {
   return {
+    fetchAssets: () => dispatch(fetchAssets()),
+    updateAsset: (id, asset) => dispatch(updateAsset(id, asset)),
+    deleteAsset: id => dispatch(deleteAsset(id)),
+    addAsset: asset => dispatch(addAsset(asset)),
+    addAssetRow: row => dispatch(addAssetRow(row)),
+    deleteAssetRow: id => dispatch(deleteAssetRow(id)),
     fetchSpaces: () => dispatch(fetchSpaces()),
-    updateSpace: (id, space) => dispatch(updateSpace(id, space)),
-    deleteSpace: id => dispatch(deleteSpace(id)),
-    addSpace: space => dispatch(addSpace(space)),
-    addSpaceRow: row => dispatch(addSpaceRow(row)),
-    deleteSpaceRow: id => dispatch(deleteSpaceRow(id)),
     getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type))
   };
 };
@@ -291,6 +284,7 @@ const mapStateToProps = state => {
   return {
     filters: state.ressourceTypeReducer.filters,
     spaces: state.spaceReducer.spaces,
+    assets: state.assetReducer.assets,
     isLoading: state.ressourceTypeReducer.isLoading
   };
 };
