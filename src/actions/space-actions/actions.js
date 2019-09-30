@@ -22,7 +22,7 @@ import {
   GET_SPACE_REQUEST,
   GET_SPACE_SUCCESS,
   GET_SPACE_FAILURE
-  } from "./types";
+} from "./types";
 import SpaceServices from "./service";
 
 export function getSpace(id) {

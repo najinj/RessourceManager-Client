@@ -13,7 +13,8 @@ import {
   UPDATE_ASSET_REQUEST,
   UPDATE_ASSET_SUCCESS,
   ADD_ASSET_TO_TABLE,
-  DELETE_ASSET_FROM_TABLE
+  DELETE_ASSET_FROM_TABLE,
+  UPDATE_ASSET_FROM_TABLE
 } from "../actions/asset-actions/types";
 
 const intialState = {
@@ -83,6 +84,14 @@ export default function spaceReducer(state = intialState, action) {
       return {
         ...state,
         assets: state.assets.filter(space => space.id !== action.payload)
+      };
+
+    case UPDATE_ASSET_FROM_TABLE:
+      return {
+        ...state,
+        assets: state.assets.map(asset =>
+          asset.id === undefined ? { ...asset, status: action.payload } : asset
+        )
       };
     default:
       return state;

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import RessourceTypes from "../RessourceTypes";
 import Spaces from "../Space";
 import Assets from "../Asset";
+import Users from "../User";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -55,12 +56,14 @@ const SideNav = () => {
               title={
                 <span>
                   <Icon type="team" />
-                  <span>Team</span>
+                  <span>Users Managment</span>
                 </span>
               }
             >
-              <Menu.Item key="6">Team 1</Menu.Item>
-              <Menu.Item key="8">Team 2</Menu.Item>
+              <Menu.Item key="6">
+                <span>Activate Accounts</span>
+                <Link to="/Users" />
+              </Menu.Item>
             </SubMenu>
             <Menu.Item key="9">
               <Icon type="file" />
@@ -79,6 +82,7 @@ const SideNav = () => {
               <Route exact path="/RessourceTypes" component={RessourceTypes} />
               <Route exact path="/Spaces" component={Spaces} />
               <Route exact path="/Assets" component={Assets} />
+              <Route exact path="/Users" component={Users} />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>

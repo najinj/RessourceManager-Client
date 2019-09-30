@@ -17,6 +17,10 @@ import {
 import { fetchSpaces } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
 
+const Status = {
+  Chained: 0,
+  Unchained: 1
+};
 const EditableContext = React.createContext();
 
 const EditableTable = ({
@@ -94,7 +98,8 @@ const EditableTable = ({
       width: "25%",
       editable: true,
       sorter: (a, b) => a.name.localeCompare(b.name), // a.name.length - b.name.length,
-      sortDirections: ["descend", "ascend"]
+      sortDirections: ["descend", "ascend"],
+      required: true
     },
     {
       title: "Type",
@@ -102,6 +107,7 @@ const EditableTable = ({
       width: "15%",
       editable: true,
       filters: assetFilter,
+      required: true,
       onFilter: (value, record) => record.assetTypeId === value,
       render: value =>
         assetFilter.reduce(
@@ -115,7 +121,7 @@ const EditableTable = ({
       width: "15%",
       editable: true,
       filters: spaceFiler,
-      onFilter: (value, record) => record.assetTypeId === value,
+      onFilter: (value, record) => record.spaceId === value,
       render: value =>
         spaceFiler.reduce(
           (acc, curr) => (curr.value === value ? curr.text : acc),
@@ -125,8 +131,21 @@ const EditableTable = ({
     {
       title: "Status",
       dataIndex: "status",
+      required: true,
       width: "30%",
-      editable: false
+      editable: false,
+      onFilter: (value, record) => record.status === value,
+      filters: [
+        {
+          text: "Chained",
+          value: Status.Chained
+        },
+        {
+          text: "Unchained",
+          value: Status.Unchained
+        }
+      ],
+      render: value => (value === 0 ? "Chained" : "Unchained")
     },
     {
       title: "Actions",
@@ -197,7 +216,7 @@ const EditableTable = ({
     name: asset.name,
     assetTypeId: asset.assetTypeId,
     status: asset.status,
-    SpaceId: asset.spaceId
+    spaceId: asset.spaceId
   }));
   const columnsMaped = columns.map(col => {
     if (!col.editable) {
@@ -208,6 +227,7 @@ const EditableTable = ({
         ...col,
         onCell: record => ({
           record,
+          required: col.required,
           inputType: "combo",
           dataIndex: col.dataIndex,
           title: col.title,
@@ -221,6 +241,7 @@ const EditableTable = ({
       ...col,
       onCell: record => ({
         record,
+        required: col.required,
         inputType: col.dataIndex === "spaceId" ? "combo" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
@@ -237,7 +258,7 @@ const EditableTable = ({
         name: "",
         SpaceId: "",
         assetTypeId: "",
-        status: 0
+        status: Status.Unchained
       });
       SetEditingKey(undefined);
     }

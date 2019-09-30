@@ -3,7 +3,9 @@
 /* eslint-disable react/prop-types */
 
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { Input, Form, Select, Tag, Tooltip, Icon, Checkbox } from "antd";
+import { updateAssetRow } from "../../actions/asset-actions/actions";
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -14,6 +16,7 @@ const EditableCell = ({
   editing,
   dataIndex,
   title,
+  required,
   inputType,
   record,
   index,
@@ -21,6 +24,7 @@ const EditableCell = ({
   options,
   getFieldDecorator,
   tagsArray,
+  updateAssetRow,
   ...restProps
 }) => {
   const [tags, SetTags] = useState(tagsArray);
@@ -47,13 +51,15 @@ const EditableCell = ({
     if (inputValue && tags.indexOf(inputValue) === -1) {
       myTags = [...tags, inputValue];
     }
-    console.log(tags);
     SetTags(myTags);
     SetInputVisible(false);
     SetInputValue("");
   };
 
-  // const saveInputRef = input => (this.input = input);
+  const hadnleSelectChange = value => {
+    if (dataIndex === "spaceId" && value !== "") updateAssetRow(0); // change to enum later !
+    if (dataIndex === "spaceId" && value === "") updateAssetRow(1);
+  };
 
   const getInput = (type, options) => {
     if (type === "combo") {
@@ -62,13 +68,17 @@ const EditableCell = ({
           {getFieldDecorator(dataIndex, {
             rules: [
               {
-                required: dataIndex !== "tags",
+                required,
                 message: `Please Input ${title}!`
               }
             ],
             initialValue: record[dataIndex]
           })(
-            <Select initialValue="" style={{ width: 120 }}>
+            <Select
+              initialValue=""
+              style={{ width: 120 }}
+              onChange={hadnleSelectChange}
+            >
               {options.map(option => (
                 <Option value={option.value}>{option.text}</Option>
               ))}
@@ -136,7 +146,7 @@ const EditableCell = ({
         {getFieldDecorator(dataIndex, {
           rules: [
             {
-              required: dataIndex !== "tags",
+              required,
               message: `Please Input ${title}!`
             }
           ],
@@ -155,4 +165,15 @@ const EditableCell = ({
   return <EditableContext.Consumer>{renderCell}</EditableContext.Consumer>;
 };
 
-export default EditableCell;
+const mapDispatchToProps = dispatch => {
+  return {
+    updateAssetRow: row => dispatch(updateAssetRow(row))
+  };
+};
+
+const ConnectedEditableCell = connect(
+  null,
+  mapDispatchToProps
+)(EditableCell);
+
+export default ConnectedEditableCell;

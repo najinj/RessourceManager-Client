@@ -15,12 +15,11 @@ import {
   DELETE_RESSOURCE_TYPE_FROM_TABLE,
   GET_RESSOURCE_TYPES_BY_TYPE_REQUEST,
   GET_RESSOURCE_TYPES_BY_TYPE_SUCCESS,
-  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE,
-} from "./types"
+  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE
+} from "./types";
 import RessourceTypesServices from "./service";
 
-
-export function getRessourceTypeByType(type){
+export function getRessourceTypeByType(type) {
   return dispatch => {
     dispatch({ type: GET_RESSOURCE_TYPES_BY_TYPE_REQUEST });
     RessourceTypesServices.getRessourceTypeByType(type).then(

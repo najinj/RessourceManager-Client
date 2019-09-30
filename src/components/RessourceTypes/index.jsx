@@ -16,8 +16,6 @@ import {
   deleteRessourceTypeRow
 } from "../../actions/ressourceTypes-actions/actions";
 
-
-
 const EditableContext = React.createContext();
 const filters = [
   {
@@ -83,6 +81,7 @@ const EditableTable = ({
     {
       title: "Name",
       dataIndex: "name",
+      required: true,
       width: "25%",
       editable: true,
       sorter: (a, b) => a.name.localeCompare(b.name), // a.name.length - b.name.length,
@@ -91,17 +90,23 @@ const EditableTable = ({
     {
       title: "Type",
       dataIndex: "type",
+      required: true,
       width: "15%",
       editable: true,
       filters,
       onFilter: (value, record) => record.type === value,
-      render: value =>  filters.reduce((acc,curr)=>curr.value === value ? curr.text : acc ,"")
+      render: value =>
+        filters.reduce(
+          (acc, curr) => (curr.value === value ? curr.text : acc),
+          ""
+        )
     },
     {
       title: "Description",
       dataIndex: "description",
       width: "30%",
-      editable: true
+      editable: true,
+      required: false
     },
     {
       title: "count",
@@ -188,12 +193,13 @@ const EditableTable = ({
       ...col,
       onCell: record => ({
         record,
+        required: col.required,
         inputType: col.dataIndex === "type" ? "combo" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
-        options : filters,
-        getFieldDecorator : form.getFieldDecorator
+        options: filters,
+        getFieldDecorator: form.getFieldDecorator
       })
     };
   });

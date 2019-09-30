@@ -12,10 +12,17 @@ import {
   UPDATE_ASSET_REQUEST,
   UPDATE_ASSET_SUCCESS,
   ADD_ASSET_TO_TABLE,
-  DELETE_ASSET_FROM_TABLE
+  DELETE_ASSET_FROM_TABLE,
+  UPDATE_ASSET_FROM_TABLE
 } from "./types";
 import AssetsServices from "./service";
 
+export function updateAssetRow(row) {
+  return {
+    type: UPDATE_ASSET_FROM_TABLE,
+    payload: row
+  };
+}
 export function addAssetRow(row) {
   return {
     type: ADD_ASSET_TO_TABLE,

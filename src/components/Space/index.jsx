@@ -84,11 +84,13 @@ const EditableTable = ({
       width: "25%",
       editable: true,
       sorter: (a, b) => a.name.localeCompare(b.name), // a.name.length - b.name.length,
-      sortDirections: ["descend", "ascend"]
+      sortDirections: ["descend", "ascend"],
+      required: true
     },
     {
       title: "Type",
       dataIndex: "spaceTypeId",
+      required: true,
       width: "15%",
       editable: true,
       filters: spaceFilter,
@@ -214,6 +216,7 @@ const EditableTable = ({
         ...col,
         onCell: record => ({
           record,
+          required: col.required,
           inputType: "combo",
           dataIndex: col.dataIndex,
           title: col.title,
@@ -227,6 +230,7 @@ const EditableTable = ({
       ...col,
       onCell: record => ({
         record,
+        required: col.required,
         inputType: col.dataIndex === "tags" ? "tags" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
