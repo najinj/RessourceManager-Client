@@ -23,24 +23,12 @@ export default function userReducer(state = intialState, action) {
     case ACTIVATE_USER_ACCOUNT_REQUEST:
       return {
         ...state,
-        users: state.users.map(user =>
-          user.email === action.payload
-            ? {
-                ...user,
-                isLoading: true
-              }
-            : user
-        )
+        users: state.users.map(user =>user.email === action.payload ? {...user,isLoading: true}: user)
       };
 
     case ACTIVATE_USER_ACCOUNT_SUCCESS:
       return {
-        ...state,
-        users: state.users.map(user =>
-          user.email === action.payload
-            ? { ...user, activated: !user.activated, isLoading: false }
-            : user
-        )
+        ...state,users: state.users.map(user =>user.email === action.payload.email ? { ...user, activated: !user.activated, isLoading: false }: user)
       };
     case ACTIVATE_USER_ACCOUNT_FAILURE:
       return {

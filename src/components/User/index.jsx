@@ -3,8 +3,8 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from "react";
-import { Table, Popconfirm, Form, Divider, Button } from "antd";
+import React, { useEffect } from "react";
+import { Table, Form,  Button } from "antd";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
 import {
@@ -15,14 +15,14 @@ import {
 const EditableContext = React.createContext();
 const filters = [
   {
-    text: "Space",
-    value: 0
+    text: "Activated",
+    value: true
   },
   {
-    text: "Asset",
-    value: 1
+    text: "Deactivated",
+    value: false
   }
-];
+]
 
 const EditableTable = ({
   form,
@@ -31,8 +31,6 @@ const EditableTable = ({
   fetchUsers,
   ActivateOrDeactivateUser
 }) => {
-  const [editingKey, SetEditingKey] = useState("");
-
   useEffect(() => fetchUsers(), []);
 
   const activate = value => {
@@ -59,31 +57,24 @@ const EditableTable = ({
       width: "15%",
       editable: false,
       onFilter: (value, record) => record.activated === value,
-      filters: [
-        {
-          text: "Activated",
-          value: true
-        },
-        {
-          text: "Deactivated",
-          value: false
-        }
-      ],
+      filters,
       render: value => (value === false ? "Deactivated" : "Activated")
     },
     {
       title: "Actions",
       dataIndex: "actions",
+      width: "15%",
       render: (text, record) => {
         return (
           <span>
             <Button
+              size="default"
               type="primary"
               role="presentation"
               loading={record.isLoading}
               onClick={() => activate(record.key)}
             >
-              Activate
+             {record.activated === false ? "Activate" : "Deactivate"}
             </Button>
           </span>
         );
@@ -101,7 +92,8 @@ const EditableTable = ({
     key: user.email,
     name: user.name,
     email: user.email,
-    activated: user.activated
+    activated: user.activated,
+    isLoading : user.isLoading
   }));
   const columnsMaped = columns.map(col => {
     if (!col.editable) {

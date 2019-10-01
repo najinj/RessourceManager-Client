@@ -6,7 +6,7 @@ const fetchUsers = () =>
     url: "User/Get"
   });
 
-const ActivateOrDeactivateUser = email => {
+const ActivateOrDeactivateUser = email => 
   axiosInstance({
     method: "GET",
     url: "User/ActivateOrDeactivateUser",
@@ -14,7 +14,6 @@ const ActivateOrDeactivateUser = email => {
       email
     }
   });
-};
 
 const UserServices = {
   ActivateOrDeactivateUser,
