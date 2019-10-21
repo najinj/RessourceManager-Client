@@ -24,8 +24,8 @@ export function signIn(values) {
         history.push("/");
       },
       err => {
-        console.log(SIGNIN_ERROR, err);
-        dispatch({ type: SIGNIN_ERROR });
+        console.log(err.response.data);
+        dispatch({ type: SIGNIN_ERROR ,errors:err.response.data});
       }
     );
   };
