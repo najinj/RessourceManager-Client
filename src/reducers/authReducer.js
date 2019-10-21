@@ -13,7 +13,8 @@ const intialState = {
   email: null,
   isLoggedIn: false,
   isLoadingUser: true,
-  token: null
+  token: null,
+  errors: null
 };
 
 const authReducer = (state = intialState, action) => {
@@ -30,7 +31,12 @@ const authReducer = (state = intialState, action) => {
         token: action.payload.token
       };
     case SIGNIN_ERROR:
-      return state;
+      return {
+        ...state,
+        isLoggedIn: false,
+        token: null,
+        errors: action.errors
+      };
 
     // Sign up
     case SIGNUP_REQUEST:
