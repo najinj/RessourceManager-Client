@@ -37,8 +37,19 @@ const SignInForm = ({ form, register }) => {
       callback();
     }
   };
-
+  const ValidatePasswordStrength = (rule, value, callback) => {
+    const regex = RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/);
+    console.log(regex.test(value))
+    if(regex.test(value)) 
+    {
+      console.log("valid") 
+      form.validateFields(["ConfirmPassword"], { force: true });
+      callback();
+    }
+    callback("Password between 6 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase letter");
+  }
   const validateToNextPassword = (rule, value, callback) => {
+    ValidatePasswordStrength(rule, value, callback);
     if (value && confirmDirty) {
       form.validateFields(["ConfirmPassword"], { force: true });
     }
