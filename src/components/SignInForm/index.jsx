@@ -39,10 +39,8 @@ const SignInForm = ({ form, register }) => {
   };
   const ValidatePasswordStrength = (rule, value, callback) => {
     const regex = RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/);
-    console.log(regex.test(value))
     if(regex.test(value)) 
     {
-      console.log("valid") 
       form.validateFields(["ConfirmPassword"], { force: true });
       callback();
     }
