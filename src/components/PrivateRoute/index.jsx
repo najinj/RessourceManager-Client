@@ -3,12 +3,23 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { func } from "prop-types";
 
-const PrivateRoute = ({ component, ...options }) => {
-  const user = localStorage.getItem("token");
-  return user ? (
-    <Route {...options} component={component} />
-  ) : (
-    <Redirect to={{ pathname: "/login", state: { from: options.location } }} />
+// eslint-disable-next-line react/prop-types
+const PrivateRoute = ({ component:Component,authenticated, ...options }) => {
+  console.log("Private authenticated",authenticated)
+  return (
+    <Route
+      {...options}
+      exact
+      render={props =>
+        authenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{ pathname: "/login" }}
+          />
+        )
+      }
+    />
   );
 };
 
