@@ -12,7 +12,7 @@ import {
 const intialState = {
   email: null,
   isLoggedIn: false,
-  isLoadingUser: true,
+  isLoadingUser: false,
   token: null,
   errors: null
 };
@@ -21,35 +21,47 @@ const authReducer = (state = intialState, action) => {
   switch (action.type) {
     // Sign in
     case SIGNIN_REQUEST:
-      return state;
+      return {
+        ...state,
+        isLoadingUser: true
+      };
 
     case SIGNIN_SUCCESS:
       return {
         ...state,
         email: action.payload.email,
         isLoggedIn: true,
+        isLoadingUser: false,
         token: action.payload.token
       };
     case SIGNIN_ERROR:
       return {
         ...state,
         isLoggedIn: false,
+        isLoadingUser: false,
         token: null,
         errors: action.errors
       };
 
     // Sign up
     case SIGNUP_REQUEST:
-      return state;
+      return {
+        ...state,
+        isLoadingUser: true
+      };
     case SIGNUP_SUCCESS:
       return {
         ...state,
         email: action.payload.email,
         isLoggedIn: true,
+        isLoadingUser: false,
         token: action.payload.token
       };
     case SIGNUP_ERROR:
-      return state;
+      return {
+        ...state,
+        isLoadingUser: false
+      };
 
     // Connect & disconnect user ( no interaction with the server )
     case DISCONNECT_THE_USER:
@@ -57,6 +69,7 @@ const authReducer = (state = intialState, action) => {
         ...state,
         user: null,
         isLoggedIn: false,
+        isLoadingUser: false,
         token: null
       };
 
@@ -64,6 +77,7 @@ const authReducer = (state = intialState, action) => {
       return {
         ...state,
         isLoggedIn: true,
+        isLoadingUser: false,
         token: action.payload.token // getting token from local storage
       };
     default:
