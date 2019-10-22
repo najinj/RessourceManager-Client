@@ -7,7 +7,8 @@ import { Provider ,connect} from "react-redux";
 import App from "./components/App";
 import store from "./store";
 import {connectTheUser} from "./actions/auth-actions/actions";
-import axiosInstance from "./config";
+import axiosInstance,{history} from "./config";
+
 
 
 
@@ -63,7 +64,7 @@ const Reload = () => {
   // eslint-disable-next-line react/jsx-filename-extension
   render(<Provider store={store}>
     <ConnectedWrappedApp store={store}>
-        <App />
+        <App history= {history}/>
     </ConnectedWrappedApp>
   </Provider>, document.getElementById("root"));
 };

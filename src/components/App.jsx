@@ -19,7 +19,7 @@ const mapStateToProps = reduxStore => {
   };
 };
 
-const App = () => (
+const App = (props) => (
 
   <Router history={props.history}>
   <Switch>
