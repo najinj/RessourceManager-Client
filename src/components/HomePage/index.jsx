@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import { Layout, Menu, Icon } from "antd";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import RessourceTypes from "../RessourceTypes";
 import Spaces from "../Space";
 import Assets from "../Asset";
 import Users from "../User";
+import Breadcrumbs from "../Breadcrumb";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -73,11 +74,8 @@ const SideNav = () => {
         </Sider>
         <Layout>
           <Header style={{ background: "#fff", padding: 0 }} />
-          <Content style={{ margin: "0 16px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
+          <Content style={{ margin: "0 16px" }}>          
+            <Breadcrumbs style={{ margin: "16px 0" }}/>             
             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
               <Route exact path="/RessourceTypes" component={RessourceTypes} />
               <Route exact path="/Spaces" component={Spaces} />
