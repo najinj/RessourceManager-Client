@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect } from "react";
-import { Table, Form,  Button } from "antd";
+import { Table, Form, Button } from "antd";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
 import {
@@ -22,7 +22,7 @@ const filters = [
     text: "Deactivated",
     value: false
   }
-]
+];
 
 const EditableTable = ({
   form,
@@ -74,7 +74,7 @@ const EditableTable = ({
               loading={record.isLoading}
               onClick={() => activate(record.key)}
             >
-             {record.activated === false ? "Activate" : "Deactivate"}
+              {record.activated === false ? "Activate" : "Deactivate"}
             </Button>
           </span>
         );
@@ -93,7 +93,7 @@ const EditableTable = ({
     name: user.name,
     email: user.email,
     activated: user.activated,
-    isLoading : user.isLoading
+    isLoading: user.isLoading
   }));
   const columnsMaped = columns.map(col => {
     if (!col.editable) {

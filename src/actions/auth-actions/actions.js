@@ -19,12 +19,12 @@ export function signIn(values) {
     AuthServices.signinRequest(values).then(
       response => {
         localStorage.setItem("token", response.data.token);
-        console.log("token ",localStorage.getItem("token"))
-        dispatch({ type: SIGNIN_SUCCESS, payload: response.data });        
+        console.log("token ", localStorage.getItem("token"));
+        dispatch({ type: SIGNIN_SUCCESS, payload: response.data });
       },
       err => {
         console.log(err.response.data);
-        dispatch({ type: SIGNIN_ERROR ,errors:err.response.data});
+        dispatch({ type: SIGNIN_ERROR, errors: err.response.data });
       }
     );
   };

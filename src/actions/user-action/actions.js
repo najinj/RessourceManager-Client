@@ -29,8 +29,9 @@ export const fetchUsers = () => {
 
 export const ActivateOrDeactivateUser = email => {
   return dispatch => {
-    dispatch({ type: ACTIVATE_USER_ACCOUNT_REQUEST ,payload : email});
-    UserServices.ActivateOrDeactivateUser(email).then(responce => {
+    dispatch({ type: ACTIVATE_USER_ACCOUNT_REQUEST, payload: email });
+    UserServices.ActivateOrDeactivateUser(email).then(
+      responce => {
         dispatch({
           type: ACTIVATE_USER_ACCOUNT_SUCCESS,
           payload: responce.data
@@ -38,7 +39,7 @@ export const ActivateOrDeactivateUser = email => {
       },
       err => {
         console.log(err, ACTIVATE_USER_ACCOUNT_FAILURE);
-        dispatch({ type: ACTIVATE_USER_ACCOUNT_FAILURE,payload : email });
+        dispatch({ type: ACTIVATE_USER_ACCOUNT_FAILURE, payload: email });
       }
     );
   };

@@ -87,8 +87,7 @@ const EditableCell = ({
         </Form.Item>
       );
     }
-    if(type === "text")
-     return <Input/>;
+    if (type === "text") return <Input />;
     if (type === "tags") {
       return (
         <div>
@@ -142,7 +141,6 @@ const EditableCell = ({
         </div>
       );
     }
-
 
     return (
       <Form.Item style={{ margin: 0 }}>

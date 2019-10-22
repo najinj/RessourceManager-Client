@@ -4,8 +4,8 @@ import { Route, Redirect } from "react-router-dom";
 import { func } from "prop-types";
 
 // eslint-disable-next-line react/prop-types
-const PrivateRoute = ({ component:Component,authenticated, ...options }) => {
-  console.log("Private authenticated",authenticated)
+const PrivateRoute = ({ component: Component, authenticated, ...options }) => {
+  console.log("Private authenticated", authenticated);
   return (
     <Route
       {...options}
@@ -14,9 +14,7 @@ const PrivateRoute = ({ component:Component,authenticated, ...options }) => {
         authenticated ? (
           <Component {...props} />
         ) : (
-          <Redirect
-            to={{ pathname: "/login" }}
-          />
+          <Redirect to={{ pathname: "/login" }} />
         )
       }
     />

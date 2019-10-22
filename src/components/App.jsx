@@ -3,13 +3,12 @@
 /* eslint-disable react/destructuring-assignment */
 import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import WrappedSignInForm from "./SignInForm";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import LoginForm from "./LoginForm";
 import SideNav from "./HomePage";
-
 
 const mapStateToProps = reduxStore => {
   return {
@@ -19,26 +18,31 @@ const mapStateToProps = reduxStore => {
   };
 };
 
-const App = (props) => (
-
+const App = props => (
   <Router history={props.history}>
-  <Switch>
-    <PublicRoute 
-        exact path="/Signup" 
+    <Switch>
+      <PublicRoute
+        exact
+        path="/Signup"
         component={WrappedSignInForm}
         email={props.email}
-        authenticated={props.isLoggedIn}/>
-    <PublicRoute exact path="/login" 
+        authenticated={props.isLoggedIn}
+      />
+      <PublicRoute
+        exact
+        path="/login"
         component={LoginForm}
         email={props.email}
-        authenticated={props.isLoggedIn} />
-    <PrivateRoute 
-        path="/" 
+        authenticated={props.isLoggedIn}
+      />
+      <PrivateRoute
+        path="/"
         component={SideNav}
         email={props.email}
-        authenticated={props.isLoggedIn}/>
-  </Switch>
-</Router>
+        authenticated={props.isLoggedIn}
+      />
+    </Switch>
+  </Router>
 );
 const ConnectedApp = connect(
   mapStateToProps,
