@@ -1,4 +1,3 @@
-import { history } from "../../config";
 import {
   SIGNIN_ERROR,
   SIGNIN_REQUEST,
@@ -19,9 +18,9 @@ export function signIn(values) {
     dispatch({ type: SIGNIN_REQUEST });
     AuthServices.signinRequest(values).then(
       response => {
-        dispatch({ type: SIGNIN_SUCCESS, payload: response.data });
         localStorage.setItem("token", response.data.token);
-        history.push("/");
+        console.log("token ",localStorage.getItem("token"))
+        dispatch({ type: SIGNIN_SUCCESS, payload: response.data });        
       },
       err => {
         console.log(err.response.data);
