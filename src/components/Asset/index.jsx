@@ -41,7 +41,7 @@ const EditableTable = ({
   const [editingKey, SetEditingKey] = useState("");
 
   useEffect(() => {
-    getRessourceTypeByType(1);
+    getRessourceTypeByType(2);
     fetchSpaces();
     fetchAssets();
   }, []);
