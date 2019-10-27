@@ -25,8 +25,7 @@ const intialState = {
   ressourceTypes: [],
   ressourceTypeForm: null,
   filters: [],
-  isLoading: false,
-  errors: null
+  isLoading: false
 };
 
 export default function ressourceTypeReducer(state = intialState, action) {
