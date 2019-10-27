@@ -15,7 +15,9 @@ import {
   DELETE_RESSOURCE_TYPE_FROM_TABLE,
   GET_RESSOURCE_TYPES_BY_TYPE_REQUEST,
   GET_RESSOURCE_TYPES_BY_TYPE_SUCCESS,
-  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE
+  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE,
+  FILL_RESSOURCE_TYPE_FORM,
+  EMPTY_RESSOURCE_TYPE_FORM
 } from "./types";
 import RessourceTypesServices from "./service";
 
@@ -85,6 +87,7 @@ export function addRessourceType(ressourceType) {
 }
 
 export function updateRessourceType(id, ressourceType) {
+  console.log(id, ressourceType);
   return dispatch => {
     dispatch({ type: UPDATE_RESSOURCE_TYPE_REQUEST });
     RessourceTypesServices.updateRessourceType(id, ressourceType).then(
@@ -117,5 +120,19 @@ export function deleteRessourceType(id) {
         dispatch({ type: DELETE_RESSOURCE_TYPE_FAILURE });
       }
     );
+  };
+}
+
+export function fillRessourceTypeForm(ressourceType) {
+  return {
+    type: FILL_RESSOURCE_TYPE_FORM,
+    payload: ressourceType
+  };
+}
+
+export function emptyRessourceTypeForm() {
+  return {
+    type: EMPTY_RESSOURCE_TYPE_FORM,
+    payload: null
   };
 }
