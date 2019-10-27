@@ -16,13 +16,17 @@ import {
   DELETE_RESSOURCE_TYPE_FROM_TABLE,
   GET_RESSOURCE_TYPES_BY_TYPE_REQUEST,
   GET_RESSOURCE_TYPES_BY_TYPE_SUCCESS,
-  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE
+  GET_RESSOURCE_TYPES_BY_TYPE_FAILURE,
+  FILL_RESSOURCE_TYPE_FORM,
+  EMPTY_RESSOURCE_TYPE_FORM
 } from "../actions/ressourceTypes-actions/types";
 
 const intialState = {
   ressourceTypes: [],
+  ressourceTypeForm: null,
   filters: [],
-  isLoading: false
+  isLoading: false,
+  errors: null
 };
 
 export default function ressourceTypeReducer(state = intialState, action) {
@@ -101,6 +105,16 @@ export default function ressourceTypeReducer(state = intialState, action) {
       };
     case GET_RESSOURCE_TYPES_BY_TYPE_FAILURE:
       return state;
+    case FILL_RESSOURCE_TYPE_FORM:
+      return {
+        ...state,
+        ressourceTypeForm: action.payload
+      };
+    case EMPTY_RESSOURCE_TYPE_FORM:
+      return {
+        ...state,
+        ressourceTypeForm: action.payload
+      };
     default:
       return state;
   }
