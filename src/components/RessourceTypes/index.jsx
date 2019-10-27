@@ -1,11 +1,14 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from "react";
-import { Table, Popconfirm, Form, Divider, Button } from "antd";
+import React, { useState, useEffect, useRef } from "react";
+import { Table, Popconfirm, Form, Divider, Button, Modal } from "antd";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
+import TableForm from "../TableForm";
 
 import {
   fetchRessourceTypes,
@@ -15,16 +18,20 @@ import {
   addRessourceTypeRow,
   deleteRessourceTypeRow
 } from "../../actions/ressourceTypes-actions/actions";
+import {
+  ADD_RESSOURCE_TYPE_REQUEST,
+  UPDATE_RESSOURCE_TYPE_REQUEST
+} from "../../actions/ressourceTypes-actions/types";
 
 const EditableContext = React.createContext();
 const filters = [
   {
     text: "Space",
-    value: 0
+    value: 1
   },
   {
     text: "Asset",
-    value: 1
+    value: 2
   }
 ];
 
@@ -40,10 +47,33 @@ const EditableTable = ({
   deleteRessourceTypeRow
 }) => {
   const [editingKey, SetEditingKey] = useState("");
+  const [visible, SetVisible] = useState(false);
+
+  const [editableRow, SetEditableRow] = useState(null);
+  const [userAction, SetUserAction] = useState("");
+  const grandChildRef = useRef(childRef);
+  const childRef = useRef(grandChildRef);
 
   useEffect(() => fetchRessourceTypes(), []);
 
   const isEditing = record => record.key === editingKey;
+
+  const handleCancel = () => {
+    SetVisible(false);
+    SetEditableRow(null);
+    SetUserAction("");
+  };
+
+  const handleOk = () => {
+    console.log(childRef);
+    console.log(grandChildRef);
+    // childRef.current.saveOrUpdate(form);
+    //
+    setTimeout(() => {
+      //   SetConfirmLoading(false);
+      //  SetVisible(false);
+    }, 2000);
+  };
 
   const cancel = key => {
     if (key === undefined) deleteRessourceTypeRow(undefined);
@@ -148,7 +178,7 @@ const EditableTable = ({
               role="presentation"
               disabled={editingKey !== ""}
               onKeyPress={() => {}}
-              onClick={() => edit(record.key)}
+              onClick={() => editModal(record)}
             >
               Edit
             </a>
@@ -192,7 +222,8 @@ const EditableTable = ({
     return {
       ...col,
       onCell: record => ({
-        record,
+        key: `${record.key}_${col.dataIndex}`,
+        record: { ...record },
         required: col.required,
         inputType: col.dataIndex === "type" ? "combo" : "text",
         dataIndex: col.dataIndex,
@@ -203,6 +234,30 @@ const EditableTable = ({
       })
     };
   });
+  const editModal = editableRecord => {
+    const record = { ...editableRecord };
+    const columnsMaped = columns.map(col => {
+      return {
+        ...col,
+        onCell: record => ({
+          key: `${record.key}_${col.dataIndex}`,
+          record,
+          required: col.required,
+          inputType: col.dataIndex === "type" ? "combo" : "text",
+          dataIndex: col.dataIndex,
+          title: col.title,
+          options: filters,
+          getFieldDecorator: form.getFieldDecorator,
+          validateFields: form.validateFields
+        })
+      };
+    });
+    const fields = columnsMaped.slice(0, 3).map(col => col.onCell(record));
+    console.log(fields);
+    SetEditableRow(fields);
+    SetUserAction(UPDATE_RESSOURCE_TYPE_REQUEST);
+    SetVisible(true);
+  };
 
   const handleAdd = () => {
     if (editingKey !== undefined) {
@@ -221,6 +276,20 @@ const EditableTable = ({
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
         Add a row
       </Button>
+
+      {editableRow && userAction !== "" ? (
+        <TableForm
+          title="Title"
+          fields={editableRow}
+          action={userAction}
+          visible={visible}
+          onCancel={handleCancel}
+          updateRessourceType={updateRessourceType}
+          validateFields={form.validateFields}
+        />
+      ) : (
+        ""
+      )}
       <EditableContext.Provider value={form}>
         <Table
           components={components}
