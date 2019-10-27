@@ -7,17 +7,29 @@
 
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Input, Form, Select, Tag, Tooltip, Icon, Checkbox } from "antd";
-import { updateAssetRow } from "../../actions/asset-actions/actions";
+import { Input, Form, Select, Tag, Tooltip, Icon, Checkbox, Modal } from "antd";
+import { updateRessourceType } from "../../actions/ressourceTypes-actions/actions";
+import {
+  ADD_RESSOURCE_TYPE_REQUEST,
+  UPDATE_RESSOURCE_TYPE_REQUEST
+} from "../../actions/ressourceTypes-actions/types";
 
 const CheckboxGroup = Checkbox.Group;
 
 const { Option } = Select;
 
-const TableForm = ({ fields }) => {
+const TableForm = ({
+  fields,
+  action,
+  onCancel,
+  visible,
+  validateFields,
+  updateRessourceType
+}) => {
   const [tags, SetTags] = useState(fields.tagsArray);
   const [inputVisible, SetInputVisible] = useState(false);
   const [inputValue, SetInputValue] = useState("");
+  const [confirmLoading, SetConfirmLoading] = useState(false);
 
   const handleClose = removedTag => {
     const filteredTags = tags.filter(tag => tag !== removedTag);
@@ -47,6 +59,30 @@ const TableForm = ({ fields }) => {
   const hadnleSelectChange = value => {
     //  if (dataIndex === "spaceId" && value !== "") updateAssetRow(1); // change to enum later !
     //  if (dataIndex === "spaceId" && value === "") updateAssetRow(2);
+  };
+  const updateRessourceTypeT = (id, ressourceType) =>
+    updateRessourceType(id, ressourceType);
+
+  const saveOrUpdate = () => {
+    console.log(updateRessourceType);
+    SetConfirmLoading(true);
+
+    validateFields((error, row) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      const ressourceType = { ...row };
+      if (action === ADD_RESSOURCE_TYPE_REQUEST) {
+        console.log(ressourceType);
+        //   addRessourceType(ressourceType);
+        SetConfirmLoading(false);
+      } else if (action === UPDATE_RESSOURCE_TYPE_REQUEST) {
+        ressourceType.id = fields[0].record.key;
+        updateRessourceType(ressourceType.id, ressourceType);
+        SetConfirmLoading(false);
+      }
+    });
   };
 
   const getInput = field => {
@@ -168,7 +204,7 @@ const TableForm = ({ fields }) => {
         })(
           field.dataIndex === "description" ? (
             <Input.TextArea
-              autoSize={{ minRows: 4, maxRows: 8 }}
+              autosize={{ minRows: 4, maxRows: 8 }}
               {...itemLayout}
             />
           ) : (
@@ -178,19 +214,28 @@ const TableForm = ({ fields }) => {
       </Form.Item>
     );
   };
-
-  return <Form>{fields.map(field => getInput(field))}</Form>;
+  return (
+    <Modal
+      title="Title"
+      visible={visible}
+      onOk={saveOrUpdate}
+      confirmLoading={confirmLoading}
+      onCancel={onCancel}
+    >
+      <Form>{fields.map(field => getInput(field))}</Form>
+    </Modal>
+  );
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateAssetRow: row => dispatch(updateAssetRow(row))
+    updateRessourceType: (id, ressourceType) =>
+      dispatch(updateRessourceType(id, ressourceType))
   };
 };
-
 const ConnectedTableForm = connect(
   null,
   mapDispatchToProps
 )(TableForm);
 
-export default TableForm;
+export default ConnectedTableForm;
