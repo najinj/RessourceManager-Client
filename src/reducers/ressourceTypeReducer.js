@@ -23,9 +23,13 @@ import {
 
 const intialState = {
   ressourceTypes: [],
-  ressourceTypeForm: null,
+  ressourceTypeForm: {
+    errors: null,
+    fields: []
+  },
   filters: [],
-  isLoading: false
+  isLoading: false,
+  errors: null
 };
 
 export default function ressourceTypeReducer(state = intialState, action) {
@@ -40,7 +44,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
         isLoading: false
       };
     case FETCH_RESSOURCE_TYPES_FAILURE:
-      return { ...state, isLoading: false };
+      return { ...state, isLoading: false, errors: action.errors };
     /* *************************** */
     case ADD_RESSOURCE_TYPE_REQUEST:
       return state;
@@ -51,7 +55,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
         ressourceTypes: [...state.ressourceTypes, action.payload]
       };
     case ADD_RESSOURCE_TYPE_FAILURE:
-      return state;
+      return { ...state, errors: action.errors };
     /* *************************** */
 
     case UPDATE_RESSOURCE_TYPE_REQUEST:
@@ -65,7 +69,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
         })
       };
     case UPDATE_RESSOURCE_TYPE_FAILURE:
-      return state;
+      return { ...state, errors: action.errors };
     /* *************************** */
 
     case DELETE_RESSOURCE_TYPE_REQUEST:
@@ -80,7 +84,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
       };
 
     case DELETE_RESSOURCE_TYPE_FAILURE:
-      return state;
+      return { ...state, errors: action.errors };
 
     /* *************************** */
     case ADD_RESSOURCE_TYPE_TO_TABLE:
@@ -103,16 +107,24 @@ export default function ressourceTypeReducer(state = intialState, action) {
         filters: action.payload
       };
     case GET_RESSOURCE_TYPES_BY_TYPE_FAILURE:
-      return state;
+      return { ...state, errors: action.errors };
     case FILL_RESSOURCE_TYPE_FORM:
       return {
         ...state,
-        ressourceTypeForm: action.payload
+        ressourceTypeForm: {
+          ...state.ressourceTypeForm,
+          fields: action.payload,
+          errors: null
+        }
       };
     case EMPTY_RESSOURCE_TYPE_FORM:
       return {
         ...state,
-        ressourceTypeForm: action.payload
+        ressourceTypeForm: {
+          ...state.ressourceTypeForm,
+          fields: action.payload,
+          errors: null
+        }
       };
     default:
       return state;
