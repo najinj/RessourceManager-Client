@@ -284,7 +284,6 @@ const EditableTable = ({
           action={userAction}
           visible={visible}
           onCancel={handleCancel}
-          updateRessourceType={updateRessourceType}
           validateFields={form.validateFields}
         />
       ) : (
