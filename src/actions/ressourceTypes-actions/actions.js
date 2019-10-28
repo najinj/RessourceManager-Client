@@ -33,7 +33,10 @@ export function getRessourceTypeByType(type) {
       },
       err => {
         console.log(GET_RESSOURCE_TYPES_BY_TYPE_FAILURE, err);
-        dispatch({ type: GET_RESSOURCE_TYPES_BY_TYPE_FAILURE });
+        dispatch({
+          type: GET_RESSOURCE_TYPES_BY_TYPE_FAILURE,
+          errors: err.response.data
+        });
       }
     );
   };
@@ -64,7 +67,10 @@ export function fetchRessourceTypes() {
       },
       err => {
         console.log(FETCH_RESSOURCE_TYPES_FAILURE, err);
-        dispatch({ type: FETCH_RESSOURCE_TYPES_FAILURE });
+        dispatch({
+          type: FETCH_RESSOURCE_TYPES_FAILURE,
+          errors: err.response.data
+        });
       }
     );
   };
@@ -80,14 +86,16 @@ export function addRessourceType(ressourceType) {
       },
       err => {
         console.log(ADD_RESSOURCE_TYPE_FAILURE, err);
-        dispatch({ type: ADD_RESSOURCE_TYPE_FAILURE });
+        dispatch({
+          type: ADD_RESSOURCE_TYPE_FAILURE,
+          errors: err.response.data
+        });
       }
     );
   };
 }
 
 export function updateRessourceType(id, ressourceType) {
-  console.log(id, ressourceType);
   return dispatch => {
     dispatch({ type: UPDATE_RESSOURCE_TYPE_REQUEST });
     RessourceTypesServices.updateRessourceType(id, ressourceType).then(
@@ -99,7 +107,10 @@ export function updateRessourceType(id, ressourceType) {
       },
       err => {
         console.log(UPDATE_RESSOURCE_TYPE_FAILURE, err);
-        dispatch({ type: UPDATE_RESSOURCE_TYPE_FAILURE });
+        dispatch({
+          type: UPDATE_RESSOURCE_TYPE_FAILURE,
+          errors: err.response.data
+        });
       }
     );
   };
@@ -117,7 +128,10 @@ export function deleteRessourceType(id) {
       },
       err => {
         console.log(DELETE_RESSOURCE_TYPE_FAILURE, err);
-        dispatch({ type: DELETE_RESSOURCE_TYPE_FAILURE });
+        dispatch({
+          type: DELETE_RESSOURCE_TYPE_FAILURE,
+          errors: err.response.data
+        });
       }
     );
   };
