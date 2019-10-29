@@ -5,7 +5,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Input, Form, Select, Tag, Tooltip, Icon, Checkbox, Modal } from "antd";
 import { updateRessourceType } from "../../actions/ressourceTypes-actions/actions";
@@ -23,13 +23,26 @@ const TableForm = ({
   action,
   onCancel,
   visible,
+  errors,
   validateFields,
-  updateRessourceType
+  updateRessourceType,
+  loading,
+  setFieldsValue
 }) => {
-  const [tags, SetTags] = useState(fields.tagsArray);
+  const [tags, SetTags] = useState([]);
   const [inputVisible, SetInputVisible] = useState(false);
   const [inputValue, SetInputValue] = useState("");
-  const [confirmLoading, SetConfirmLoading] = useState(false);
+
+  useEffect(() => {
+    if (fields !== null && typeof fields.tagsArray !== "undefined")
+      SetTags(fields.tagsArray);
+  });
+
+  const validateField = field => {
+    setFieldsValue({
+      field: errors[field]
+    });
+  };
 
   const handleClose = removedTag => {
     const filteredTags = tags.filter(tag => tag !== removedTag);
@@ -60,12 +73,9 @@ const TableForm = ({
     //  if (dataIndex === "spaceId" && value !== "") updateAssetRow(1); // change to enum later !
     //  if (dataIndex === "spaceId" && value === "") updateAssetRow(2);
   };
-  const updateRessourceTypeT = (id, ressourceType) =>
-    updateRessourceType(id, ressourceType);
 
   const saveOrUpdate = () => {
     console.log(updateRessourceType);
-    SetConfirmLoading(true);
 
     validateFields((error, row) => {
       if (error) {
@@ -76,11 +86,9 @@ const TableForm = ({
       if (action === ADD_RESSOURCE_TYPE_REQUEST) {
         console.log(ressourceType);
         //   addRessourceType(ressourceType);
-        SetConfirmLoading(false);
       } else if (action === UPDATE_RESSOURCE_TYPE_REQUEST) {
         ressourceType.id = fields[0].record.key;
         updateRessourceType(ressourceType.id, ressourceType);
-        SetConfirmLoading(false);
       }
     });
   };
@@ -192,6 +200,11 @@ const TableForm = ({
         key={field.key}
         label={field.title}
         {...itemLayout}
+        {...(errors !== null &&
+          getParameterCaseInsensitive(errors, field.dataIndex) && {
+            help: getParameterCaseInsensitive(errors, field.dataIndex),
+            validateStatus: "error"
+          })}
       >
         {field.getFieldDecorator(field.dataIndex, {
           rules: [
@@ -219,10 +232,10 @@ const TableForm = ({
       title="Title"
       visible={visible}
       onOk={saveOrUpdate}
-      confirmLoading={confirmLoading}
+      confirmLoading={loading}
       onCancel={onCancel}
     >
-      <Form>{fields.map(field => getInput(field))}</Form>
+      <Form>{fields !== null ? fields.map(field => getInput(field)) : ""}</Form>
     </Modal>
   );
 };
@@ -233,9 +246,21 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateRessourceType(id, ressourceType))
   };
 };
+const mapStateToProps = state => ({
+  visible: state.ressourceTypeReducer.ressourceTypeForm.visible,
+  fields: state.ressourceTypeReducer.ressourceTypeForm.fields,
+  errors: state.ressourceTypeReducer.ressourceTypeForm.errors,
+  loading: state.ressourceTypeReducer.ressourceTypeForm.loading
+});
 const ConnectedTableForm = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(TableForm);
 
 export default ConnectedTableForm;
+
+const getParameterCaseInsensitive = (object, key) => {
+  return object[
+    Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())
+  ];
+};
