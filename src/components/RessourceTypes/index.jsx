@@ -4,7 +4,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button, Modal } from "antd";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
@@ -53,8 +53,6 @@ const EditableTable = ({
   const [editingKey, SetEditingKey] = useState("");
 
   const [userAction, SetUserAction] = useState("");
-  const grandChildRef = useRef(childRef);
-  const childRef = useRef(grandChildRef);
 
   useEffect(() => fetchRessourceTypes(), []);
 
@@ -63,17 +61,6 @@ const EditableTable = ({
   const handleCancel = () => {
     emptyRessourceTypeForm();
     SetUserAction("");
-  };
-
-  const handleOk = () => {
-    console.log(childRef);
-    console.log(grandChildRef);
-    // childRef.current.saveOrUpdate(form);
-    //
-    setTimeout(() => {
-      //   SetConfirmLoading(false);
-      //  SetVisible(false);
-    }, 2000);
   };
 
   const cancel = key => {
