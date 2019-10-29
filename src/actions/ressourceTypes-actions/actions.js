@@ -104,12 +104,14 @@ export function updateRessourceType(id, ressourceType) {
           type: UPDATE_RESSOURCE_TYPE_SUCCESS,
           payload: response.data
         });
+        // eslint-disable-next-line no-use-before-define
+        dispatch(emptyRessourceTypeForm());
       },
       err => {
         console.log(UPDATE_RESSOURCE_TYPE_FAILURE, err);
         dispatch({
           type: UPDATE_RESSOURCE_TYPE_FAILURE,
-          errors: err.response.data
+          errors: err.response.data.errors
         });
       }
     );
