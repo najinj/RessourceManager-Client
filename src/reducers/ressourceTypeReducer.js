@@ -24,6 +24,8 @@ import {
 const intialState = {
   ressourceTypes: [],
   ressourceTypeForm: {
+    visible: false,
+    loading: false,
     errors: null,
     fields: []
   },
@@ -59,17 +61,34 @@ export default function ressourceTypeReducer(state = intialState, action) {
     /* *************************** */
 
     case UPDATE_RESSOURCE_TYPE_REQUEST:
-      return state;
+      return {
+        ...state,
+        ressourceTypeForm: {
+          ...state.ressourceTypeForm,
+          loading: true
+        }
+      };
     case UPDATE_RESSOURCE_TYPE_SUCCESS:
       return {
         ...state,
         ressourceTypes: state.ressourceTypes.map(ressourceType => {
           if (ressourceType.id === action.payload.id) return action.payload;
           return ressourceType;
-        })
+        }),
+        ressourceTypeForm: {
+          ...state.ressourceTypeForm,
+          loading: false
+        }
       };
     case UPDATE_RESSOURCE_TYPE_FAILURE:
-      return { ...state, errors: action.errors };
+      return {
+        ...state,
+        ressourceTypeForm: {
+          ...state.ressourceTypeForm,
+          loading: false,
+          errors: action.errors
+        }
+      };
     /* *************************** */
 
     case DELETE_RESSOURCE_TYPE_REQUEST:
@@ -114,6 +133,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
         ressourceTypeForm: {
           ...state.ressourceTypeForm,
           fields: action.payload,
+          visible: true,
           errors: null
         }
       };
@@ -122,6 +142,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
         ...state,
         ressourceTypeForm: {
           ...state.ressourceTypeForm,
+          visible: false,
           fields: action.payload,
           errors: null
         }
