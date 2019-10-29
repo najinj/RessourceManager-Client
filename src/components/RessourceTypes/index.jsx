@@ -16,7 +16,9 @@ import {
   deleteRessourceType,
   addRessourceType,
   addRessourceTypeRow,
-  deleteRessourceTypeRow
+  deleteRessourceTypeRow,
+  fillRessourceTypeForm,
+  emptyRessourceTypeForm
 } from "../../actions/ressourceTypes-actions/actions";
 import {
   ADD_RESSOURCE_TYPE_REQUEST,
@@ -44,7 +46,9 @@ const EditableTable = ({
   deleteRessourceType,
   addRessourceType,
   addRessourceTypeRow,
-  deleteRessourceTypeRow
+  deleteRessourceTypeRow,
+  fillRessourceTypeForm,
+  emptyRessourceTypeForm
 }) => {
   const [editingKey, SetEditingKey] = useState("");
   const [visible, SetVisible] = useState(false);
@@ -60,7 +64,7 @@ const EditableTable = ({
 
   const handleCancel = () => {
     SetVisible(false);
-    SetEditableRow(null);
+    emptyRessourceTypeForm();
     SetUserAction("");
   };
 
@@ -254,7 +258,7 @@ const EditableTable = ({
     });
     const fields = columnsMaped.slice(0, 3).map(col => col.onCell(record));
     console.log(fields);
-    SetEditableRow(fields);
+    fillRessourceTypeForm(fields);
     SetUserAction(UPDATE_RESSOURCE_TYPE_REQUEST);
     SetVisible(true);
   };
@@ -276,19 +280,14 @@ const EditableTable = ({
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
         Add a row
       </Button>
+      <TableForm
+        title="Title"
+        action={userAction}
+        onCancel={handleCancel}
+        validateFields={form.validateFields}
+        setFieldsValue={form.setFieldsValue}
+      />
 
-      {editableRow && userAction !== "" ? (
-        <TableForm
-          title="Title"
-          fields={editableRow}
-          action={userAction}
-          visible={visible}
-          onCancel={handleCancel}
-          validateFields={form.validateFields}
-        />
-      ) : (
-        ""
-      )}
       <EditableContext.Provider value={form}>
         <Table
           components={components}
@@ -316,7 +315,9 @@ const mapDispatchToProps = dispatch => {
     addRessourceType: ressourceType =>
       dispatch(addRessourceType(ressourceType)),
     addRessourceTypeRow: row => dispatch(addRessourceTypeRow(row)),
-    deleteRessourceTypeRow: id => dispatch(deleteRessourceTypeRow(id))
+    deleteRessourceTypeRow: id => dispatch(deleteRessourceTypeRow(id)),
+    fillRessourceTypeForm: form => dispatch(fillRessourceTypeForm(form)),
+    emptyRessourceTypeForm: () => dispatch(emptyRessourceTypeForm())
   };
 };
 
