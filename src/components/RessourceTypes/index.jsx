@@ -51,9 +51,7 @@ const EditableTable = ({
   emptyRessourceTypeForm
 }) => {
   const [editingKey, SetEditingKey] = useState("");
-  const [visible, SetVisible] = useState(false);
 
-  const [editableRow, SetEditableRow] = useState(null);
   const [userAction, SetUserAction] = useState("");
   const grandChildRef = useRef(childRef);
   const childRef = useRef(grandChildRef);
@@ -63,7 +61,6 @@ const EditableTable = ({
   const isEditing = record => record.key === editingKey;
 
   const handleCancel = () => {
-    SetVisible(false);
     emptyRessourceTypeForm();
     SetUserAction("");
   };
@@ -260,7 +257,6 @@ const EditableTable = ({
     console.log(fields);
     fillRessourceTypeForm(fields);
     SetUserAction(UPDATE_RESSOURCE_TYPE_REQUEST);
-    SetVisible(true);
   };
 
   const handleAdd = () => {
