@@ -38,12 +38,6 @@ const TableForm = ({
       SetTags(fields.tagsArray);
   });
 
-  const validateField = field => {
-    setFieldsValue({
-      field: errors[field]
-    });
-  };
-
   const handleClose = removedTag => {
     const filteredTags = tags.filter(tag => tag !== removedTag);
     SetTags(filteredTags);
