@@ -100,17 +100,33 @@ const EditableTable = ({
   };
   const handleAdd = () => {
     const formColumns = columns.map(col => {
+      if (col.dataIndex === "spaceTypeId") {
+        return {
+          ...col,
+          onCell: record => ({
+            key: `_${col.dataIndex}`,
+            record,
+            required: col.required,
+            inputType: "combo",
+            dataIndex: col.dataIndex,
+            title: col.title,
+            options: spaceFilter,
+            getFieldDecorator: form.getFieldDecorator,
+            validateFields: form.validateFields
+          })
+        };
+      }
       return {
         ...col,
         onCell: record => ({
           key: `_${col.dataIndex}`,
           record,
           required: col.required,
-          inputType: col.dataIndex === "type" ? "combo" : "text",
+          inputType: col.dataIndex === "tags" ? "tags" : "text",
           dataIndex: col.dataIndex,
           title: col.title,
-          options: filters,
           getFieldDecorator: form.getFieldDecorator,
+          tagsArray: record.tags,
           validateFields: form.validateFields
         })
       };
