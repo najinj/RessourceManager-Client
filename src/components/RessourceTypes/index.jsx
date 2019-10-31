@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button } from "antd";
 import { connect } from "react-redux";
