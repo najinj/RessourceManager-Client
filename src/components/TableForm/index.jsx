@@ -37,8 +37,17 @@ const TableForm = ({
   const [inputValue, SetInputValue] = useState("");
 
   useEffect(() => {
-    if (fields !== null && typeof fields.tagsArray !== "undefined")
-      SetTags(fields.tagsArray);
+    if (fields !== null){
+      const tagsArray = fields.reduce((acc,curr)=>{
+        if(curr.inputType === "tags"){
+          console.log("curr.inputType",curr.record.tags)
+           acc.push(curr.record.tags)  
+        }        
+        return acc;
+      },[])
+     // SetTags(tagsArray);
+      console.log("fields.tagsArray",tagsArray)
+    }
   });
 
   const handleClose = removedTag => {
@@ -57,10 +66,12 @@ const TableForm = ({
   };
 
   const handleInputConfirm = () => {
-    let myTags = { ...tags };
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      myTags = [...tags, inputValue];
-    }
+     const myTags2 = [ ...tags ];
+    // if (inputValue && tags.indexOf(inputValue) === -1) {
+      const myTags = [...tags, inputValue];
+    // }
+    console.log('Baaaaaaaaam',myTags,myTags2);
+
     SetTags(myTags);
     SetInputVisible(false);
     SetInputValue("");
@@ -142,7 +153,7 @@ const TableForm = ({
     if (field.inputType === "tags") {
       return (
         <div>
-          {field.tags.map((tag, index) => {
+          {field.record.tags.map((tag, index) => {
             const isLongTag = tag.length > 20;
             const tagElem = (
               <Form.Item

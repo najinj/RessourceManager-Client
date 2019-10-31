@@ -78,7 +78,7 @@ const EditableTable = ({
           })
         };
       }
-      return { 
+      return {
         ...col,
         onCell: record => ({
           key: `${record.key}_${col.dataIndex}`,
@@ -240,7 +240,7 @@ const EditableTable = ({
         })
       };
     }
-    return { 
+    return {
       ...col,
       onCell: record => ({
         record,
