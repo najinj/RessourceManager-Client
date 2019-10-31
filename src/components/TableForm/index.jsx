@@ -7,17 +7,20 @@
 
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { Input, Form, Select, Tag, Tooltip, Icon, Checkbox, Modal } from "antd";
+import { Input, Form, Select, Tag, Tooltip, Icon, Modal } from "antd";
 import {
   updateRessourceType,
   addRessourceType
 } from "../../actions/ressourceTypes-actions/actions";
+import { addSpace, updateSpace } from "../../actions/space-actions/actions";
 import {
   ADD_RESSOURCE_TYPE_REQUEST,
   UPDATE_RESSOURCE_TYPE_REQUEST
 } from "../../actions/ressourceTypes-actions/types";
-
-const CheckboxGroup = Checkbox.Group;
+import {
+  ADD_SPACE_REQUEST,
+  UPDATE_SPACE_REQUEST
+} from "../../actions/space-actions/types";
 
 const { Option } = Select;
 
@@ -30,6 +33,8 @@ const TableForm = ({
   validateFields,
   updateRessourceType,
   addRessourceType,
+  updateSpace,
+  addSpace,
   loading
 }) => {
   const [tags, SetTags] = useState([]);
@@ -38,17 +43,19 @@ const TableForm = ({
 
   useEffect(() => {
     if (fields !== null) {
-      const tagsArray = fields.reduce((acc, curr) => {
-        if (curr.inputType === "tags") {
-          console.log("curr.inputType", curr.record.tags);
-          acc.push(curr.record.tags);
-        }
-        return acc;
-      }, []);
-      // SetTags(tagsArray);
+      const tagsArray = fields
+        .reduce((acc, curr) => {
+          if (curr.inputType === "tags") {
+            console.log("curr.inputType", curr.record.tags);
+            acc.push(curr.record.tags);
+          }
+          return acc;
+        }, [])
+        .flat();
+      SetTags(tagsArray);
       console.log("fields.tagsArray", tagsArray);
     }
-  });
+  }, [fields]);
 
   const handleClose = removedTag => {
     const filteredTags = tags.filter(tag => tag !== removedTag);
@@ -66,15 +73,13 @@ const TableForm = ({
   };
 
   const handleInputConfirm = () => {
-    const myTags2 = [...tags];
-    // if (inputValue && tags.indexOf(inputValue) === -1) {
-    const myTags = [...tags, inputValue];
-    // }
-    console.log("Baaaaaaaaam", myTags, myTags2);
-
-    SetTags(myTags);
-    SetInputVisible(false);
-    SetInputValue("");
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      const myTags = [...tags, inputValue];
+      SetTags(myTags);
+      SetInputVisible(false);
+      SetInputValue("");
+    }
+    //
   };
 
   const hadnleSelectChange = value => {
@@ -90,13 +95,23 @@ const TableForm = ({
         console.log(error);
         return;
       }
-      const ressourceType = { ...row };
+      const entity = { ...row };
+      console.log(action);
       if (action === ADD_RESSOURCE_TYPE_REQUEST) {
-        console.log(ressourceType);
-        addRessourceType(ressourceType);
+        console.log(entity);
+        addRessourceType(entity);
       } else if (action === UPDATE_RESSOURCE_TYPE_REQUEST) {
-        ressourceType.id = fields[0].record.key;
-        updateRessourceType(ressourceType.id, ressourceType);
+        entity.id = fields[0].record.key;
+        updateRessourceType(entity.id, entity);
+      } else if (action === ADD_SPACE_REQUEST) {
+        console.log(entity);
+        entity.tags = tags;
+        addSpace(entity);
+      } else if (action === UPDATE_SPACE_REQUEST) {
+        entity.id = fields[0].record.key;
+        entity.tags = tags;
+        console.log(entity);
+        updateSpace(entity.id, entity);
       }
     });
   };
@@ -152,27 +167,17 @@ const TableForm = ({
     }
     if (field.inputType === "tags") {
       return (
-        <div>
-          {field.record.tags.map((tag, index) => {
+        <Form.Item label={field.title} {...itemLayout}>
+          {tags.map((tag, index) => {
             const isLongTag = tag.length > 20;
             const tagElem = (
-              <Form.Item
-                style={{ margin: 0 }}
-                label={field.title}
-                {...itemLayout}
+              <Tag
+                key={tag}
+                closable={index !== 0}
+                onClose={() => handleClose(tag)}
               >
-                {field.getFieldDecorator(`tags[${index}]`, {
-                  initialValue: tag
-                })(
-                  <Tag
-                    key={tag}
-                    closable={index !== 0}
-                    onClose={() => handleClose(tag)}
-                  >
-                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                  </Tag>
-                )}
-              </Form.Item>
+                {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+              </Tag>
             );
             return isLongTag ? (
               <span>
@@ -203,8 +208,7 @@ const TableForm = ({
               <Icon type="plus" /> New Tag
             </Tag>
           )}
-          <CheckboxGroup options={tags} value={tags} hidden="hidden" />
-        </div>
+        </Form.Item>
       );
     }
     return (
@@ -257,7 +261,10 @@ const mapDispatchToProps = dispatch => {
   return {
     updateRessourceType: (id, ressourceType) =>
       dispatch(updateRessourceType(id, ressourceType)),
-    addRessourceType: ressourceType => dispatch(addRessourceType(ressourceType))
+    addRessourceType: ressourceType =>
+      dispatch(addRessourceType(ressourceType)),
+    updateSpace: (id, space) => dispatch(updateSpace(id, space)),
+    addSpace: space => dispatch(addSpace(space))
   };
 };
 const mapStateToProps = state => ({
