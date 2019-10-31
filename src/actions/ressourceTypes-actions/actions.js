@@ -81,14 +81,15 @@ export function addRessourceType(ressourceType) {
     dispatch({ type: ADD_RESSOURCE_TYPE_REQUEST });
     RessourceTypesServices.addRessourceType(ressourceType).then(
       response => {
-        dispatch(deleteRessourceTypeRow(undefined));
         dispatch({ type: ADD_RESSOURCE_TYPE_SUCCESS, payload: response.data });
+        // eslint-disable-next-line no-use-before-define
+        dispatch(emptyRessourceTypeForm());
       },
       err => {
         console.log(ADD_RESSOURCE_TYPE_FAILURE, err);
         dispatch({
           type: ADD_RESSOURCE_TYPE_FAILURE,
-          errors: err.response.data
+          errors: err.response.data.errors
         });
       }
     );
