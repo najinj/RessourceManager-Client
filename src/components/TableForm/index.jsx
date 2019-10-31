@@ -8,7 +8,10 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Input, Form, Select, Tag, Tooltip, Icon, Checkbox, Modal } from "antd";
-import { updateRessourceType } from "../../actions/ressourceTypes-actions/actions";
+import {
+  updateRessourceType,
+  addRessourceType
+} from "../../actions/ressourceTypes-actions/actions";
 import {
   ADD_RESSOURCE_TYPE_REQUEST,
   UPDATE_RESSOURCE_TYPE_REQUEST
@@ -26,6 +29,7 @@ const TableForm = ({
   errors,
   validateFields,
   updateRessourceType,
+  addRessourceType,
   loading
 }) => {
   const [tags, SetTags] = useState([]);
@@ -78,7 +82,7 @@ const TableForm = ({
       const ressourceType = { ...row };
       if (action === ADD_RESSOURCE_TYPE_REQUEST) {
         console.log(ressourceType);
-        //   addRessourceType(ressourceType);
+        addRessourceType(ressourceType);
       } else if (action === UPDATE_RESSOURCE_TYPE_REQUEST) {
         ressourceType.id = fields[0].record.key;
         updateRessourceType(ressourceType.id, ressourceType);
@@ -241,7 +245,8 @@ const TableForm = ({
 const mapDispatchToProps = dispatch => {
   return {
     updateRessourceType: (id, ressourceType) =>
-      dispatch(updateRessourceType(id, ressourceType))
+      dispatch(updateRessourceType(id, ressourceType)),
+    addRessourceType: ressourceType => dispatch(addRessourceType(ressourceType))
   };
 };
 const mapStateToProps = state => ({
