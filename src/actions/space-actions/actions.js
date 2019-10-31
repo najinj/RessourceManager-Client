@@ -83,6 +83,8 @@ export function addSpace(ressourceType) {
       response => {
         dispatch(deleteSpaceRow(undefined));
         dispatch({ type: ADD_SPACE_SUCCESS, payload: response.data });
+        // eslint-disable-next-line no-use-before-define
+        dispatch(emptySpaceForm());
       },
       err => {
         console.log(ADD_SPACE_FAILURE, err);
@@ -101,6 +103,8 @@ export function updateSpace(id, ressourceType) {
           type: UPDATE_SPACE_SUCCESS,
           payload: response.data
         });
+        // eslint-disable-next-line no-use-before-define
+        dispatch(emptySpaceForm());
       },
       err => {
         console.log(UPDATE_SPACE_FAILURE, err);
