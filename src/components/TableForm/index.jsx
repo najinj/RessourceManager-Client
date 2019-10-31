@@ -37,16 +37,16 @@ const TableForm = ({
   const [inputValue, SetInputValue] = useState("");
 
   useEffect(() => {
-    if (fields !== null){
-      const tagsArray = fields.reduce((acc,curr)=>{
-        if(curr.inputType === "tags"){
-          console.log("curr.inputType",curr.record.tags)
-           acc.push(curr.record.tags)  
-        }        
+    if (fields !== null) {
+      const tagsArray = fields.reduce((acc, curr) => {
+        if (curr.inputType === "tags") {
+          console.log("curr.inputType", curr.record.tags);
+          acc.push(curr.record.tags);
+        }
         return acc;
-      },[])
-     // SetTags(tagsArray);
-      console.log("fields.tagsArray",tagsArray)
+      }, []);
+      // SetTags(tagsArray);
+      console.log("fields.tagsArray", tagsArray);
     }
   });
 
@@ -66,11 +66,11 @@ const TableForm = ({
   };
 
   const handleInputConfirm = () => {
-     const myTags2 = [ ...tags ];
+    const myTags2 = [...tags];
     // if (inputValue && tags.indexOf(inputValue) === -1) {
-      const myTags = [...tags, inputValue];
+    const myTags = [...tags, inputValue];
     // }
-    console.log('Baaaaaaaaam',myTags,myTags2);
+    console.log("Baaaaaaaaam", myTags, myTags2);
 
     SetTags(myTags);
     SetInputVisible(false);
