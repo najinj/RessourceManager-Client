@@ -36,7 +36,11 @@ const EditableTable = ({
   loadRessourceTypes,
   removeRessourceType,
   openForm,
-  closeForm
+  closeForm,
+  formVisible,
+  formLoading,
+  formErrors,
+  formFields
 }) => {
   const [userAction, SetUserAction] = useState("");
 
@@ -202,6 +206,10 @@ const EditableTable = ({
         action={userAction}
         onCancel={handleCancel}
         validateFields={form.validateFields}
+        visible={formVisible}
+        fields={formFields}
+        isLoading={formLoading}
+        errors={formErrors}
       />
 
       <EditableContext.Provider value={form}>
@@ -231,7 +239,11 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     ressourceTypes: state.ressourceTypeReducer.ressourceTypes,
-    isLoading: state.ressourceTypeReducer.isLoading
+    isLoading: state.ressourceTypeReducer.isLoading,
+    formVisible: state.ressourceTypeReducer.ressourceTypeForm.visible,
+    formFields: state.ressourceTypeReducer.ressourceTypeForm.fields,
+    formErrors: state.ressourceTypeReducer.ressourceTypeForm.errors,
+    formLoading: state.ressourceTypeReducer.ressourceTypeForm.loading
   };
 };
 
@@ -253,7 +265,11 @@ EditableTable.propTypes = {
   loadRessourceTypes: func,
   removeRessourceType: func,
   openForm: func,
-  closeForm: func
+  closeForm: func,
+  formVisible: bool,
+  formFields: arrayOf(shape()),
+  formLoading: bool,
+  formErrors: arrayOf(shape())
 };
 EditableTable.defaultProps = {
   form: {},
@@ -262,7 +278,11 @@ EditableTable.defaultProps = {
   loadRessourceTypes: func,
   removeRessourceType: func,
   openForm: func,
-  closeForm: func
+  closeForm: func,
+  formVisible: false,
+  formFields: null,
+  formLoading: false,
+  formErrors: null
 };
 
 const ConnectedEditableFormTable = connect(
