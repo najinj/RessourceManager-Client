@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button } from "antd";
@@ -35,22 +34,22 @@ const EditableTable = ({
   form,
   ressourceTypes,
   isLoading,
-  fetchRessourceTypes,
-  deleteRessourceType,
-  fillRessourceTypeForm,
-  emptyRessourceTypeForm
+  loadRessourceTypes,
+  removeRessourceType,
+  openForm,
+  closeForm
 }) => {
   const [userAction, SetUserAction] = useState("");
 
-  useEffect(() => fetchRessourceTypes(), []);
+  useEffect(() => loadRessourceTypes(), []);
 
   const handleCancel = () => {
-    emptyRessourceTypeForm();
+    closeForm();
     SetUserAction("");
   };
 
   const deleteRow = key => {
-    deleteRessourceType(key);
+    removeRessourceType(key);
   };
 
   const columns = [
@@ -145,12 +144,12 @@ const EditableTable = ({
   });
   const edit = editableRecord => {
     const record = { ...editableRecord };
-    const columnsMaped = columns.map(col => {
+    const formColumns = columns.map(col => {
       return {
         ...col,
-        onCell: record => ({
+        onCell: ressourceType => ({
           key: `${record.key}_${col.dataIndex}`,
-          record,
+          record: ressourceType,
           required: col.required,
           inputType: col.dataIndex === "type" ? "combo" : "text",
           dataIndex: col.dataIndex,
@@ -161,14 +160,14 @@ const EditableTable = ({
         })
       };
     });
-    const fields = columnsMaped.slice(0, 3).map(col => col.onCell(record));
+    const fields = formColumns.slice(0, 3).map(col => col.onCell(record));
     console.log(fields);
-    fillRessourceTypeForm(fields);
+    openForm(fields);
     SetUserAction(UPDATE_RESSOURCE_TYPE_REQUEST);
   };
 
   const handleAdd = () => {
-    const columnsMaped = columns.map(col => {
+    const formColumns = columns.map(col => {
       return {
         ...col,
         onCell: record => ({
@@ -189,8 +188,8 @@ const EditableTable = ({
       type: "",
       description: ""
     };
-    const fields = columnsMaped.slice(0, 3).map(col => col.onCell(record));
-    fillRessourceTypeForm(fields);
+    const fields = formColumns.slice(0, 3).map(col => col.onCell(record));
+    openForm(fields);
     SetUserAction(ADD_RESSOURCE_TYPE_REQUEST);
   };
 
@@ -223,10 +222,10 @@ const EditableTable = ({
 const EditableFormTable = Form.create()(EditableTable);
 const mapDispatchToProps = dispatch => {
   return {
-    fetchRessourceTypes: () => dispatch(fetchRessourceTypes()),
-    deleteRessourceType: id => dispatch(deleteRessourceType(id)),
-    fillRessourceTypeForm: form => dispatch(fillRessourceTypeForm(form)),
-    emptyRessourceTypeForm: () => dispatch(emptyRessourceTypeForm())
+    loadRessourceTypes: () => dispatch(fetchRessourceTypes()),
+    removeRessourceType: id => dispatch(deleteRessourceType(id)),
+    openForm: form => dispatch(fillRessourceTypeForm(form)),
+    closeForm: () => dispatch(emptyRessourceTypeForm())
   };
 };
 
@@ -252,19 +251,19 @@ EditableTable.propTypes = {
     })
   ),
   isLoading: bool,
-  fetchRessourceTypes: func,
-  deleteRessourceType: func,
-  fillRessourceTypeForm: func,
-  emptyRessourceTypeForm: func
+  loadRessourceTypes: func,
+  removeRessourceType: func,
+  openForm: func,
+  closeForm: func
 };
 EditableTable.defaultProps = {
   form: {},
   ressourceTypes: [],
   isLoading: false,
-  fetchRessourceTypes: func,
-  deleteRessourceType: func,
-  fillRessourceTypeForm: func,
-  emptyRessourceTypeForm: func
+  loadRessourceTypes: func,
+  removeRessourceType: func,
+  openForm: func,
+  closeForm: func
 };
 
 const ConnectedEditableFormTable = connect(
