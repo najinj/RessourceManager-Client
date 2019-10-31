@@ -26,8 +26,7 @@ const TableForm = ({
   errors,
   validateFields,
   updateRessourceType,
-  loading,
-  setFieldsValue
+  loading
 }) => {
   const [tags, SetTags] = useState([]);
   const [inputVisible, SetInputVisible] = useState(false);
@@ -103,6 +102,11 @@ const TableForm = ({
           key={field.key}
           label={field.title}
           {...itemLayout}
+          {...(errors !== null &&
+            getParameterCaseInsensitive(errors, field.dataIndex) && {
+              help: getParameterCaseInsensitive(errors, field.dataIndex),
+              validateStatus: "error"
+            })}
         >
           {field.getFieldDecorator(field.dataIndex, {
             rules: [

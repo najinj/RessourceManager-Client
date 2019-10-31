@@ -268,7 +268,6 @@ const EditableTable = ({
         action={userAction}
         onCancel={handleCancel}
         validateFields={form.validateFields}
-        setFieldsValue={form.setFieldsValue}
       />
 
       <EditableContext.Provider value={form}>
