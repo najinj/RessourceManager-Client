@@ -21,7 +21,9 @@ import {
   REMOVE_ASSET_FROM_SPACE_REQUEST,
   GET_SPACE_REQUEST,
   GET_SPACE_SUCCESS,
-  GET_SPACE_FAILURE
+  GET_SPACE_FAILURE,
+  FILL_SPACE_FORM,
+  EMPTY_SPACE_FORM
 } from "./types";
 import SpaceServices from "./service";
 
@@ -156,5 +158,18 @@ export function RemoveAssetFromSpace(assetId, spaceId) {
         dispatch({ type: REMOVE_ASSET_FROM_SPACE_FAILURE });
       }
     );
+  };
+}
+export function fillSpaceForm(space) {
+  return {
+    type: FILL_SPACE_FORM,
+    payload: space
+  };
+}
+
+export function emptySpaceForm() {
+  return {
+    type: EMPTY_SPACE_FORM,
+    payload: null
   };
 }
