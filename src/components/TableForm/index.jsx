@@ -256,7 +256,7 @@ const mapStateToProps = state => ({
   loading: state.ressourceTypeReducer.ressourceTypeForm.loading
 });
 const ConnectedTableForm = connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(TableForm);
 
