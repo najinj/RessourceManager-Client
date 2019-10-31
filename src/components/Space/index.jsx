@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
@@ -6,15 +7,18 @@ import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button, Tag } from "antd";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
+import TableForm from "../TableForm";
 import {
   fetchSpaces,
-  addSpace,
   deleteSpace,
-  updateSpace,
-  addSpaceRow,
-  deleteSpaceRow
+  fillSpaceForm,
+  emptySpaceForm
 } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
+import {
+  ADD_SPACE_REQUEST,
+  UPDATE_SPACE_REQUEST
+} from "../../actions/space-actions/types";
 
 const EditableContext = React.createContext();
 
@@ -23,22 +27,22 @@ const EditableTable = ({
   spaces,
   filters,
   isLoading,
-  fetchSpaces,
+  loadSpaces,
   getRessourceTypeByType,
-  addSpace,
   deleteSpace,
-  updateSpace,
-  addSpaceRow,
-  deleteSpaceRow
+  openForm,
+  closeForm,
+  formVisible,
+  formLoading,
+  formErrors,
+  formFields
 }) => {
-  const [editingKey, SetEditingKey] = useState("");
+  const [userAction, SetUserAction] = useState("");
 
   useEffect(() => {
     getRessourceTypeByType(1);
-    fetchSpaces();
+    loadSpaces();
   }, []);
-
-  const isEditing = record => record.key === editingKey;
 
   const spaceFilter = filters.map(ressourceType => {
     return {
@@ -46,35 +50,82 @@ const EditableTable = ({
       value: ressourceType.id
     };
   });
-
-  const cancel = key => {
-    if (key === undefined) deleteSpaceRow(undefined);
-    SetEditingKey("");
+  const handleCancel = () => {
+    closeForm();
+    SetUserAction("");
   };
 
-  const save = (formIn, key) => {
-    formIn.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
-      const index = spaces.findIndex(item => item.id === undefined);
-      const space = { ...row };
-      if (index > -1) {
-        addSpace(space);
-        SetEditingKey("");
-      } else {
-        space.id = key;
-        updateSpace(key, space);
-        SetEditingKey("");
-      }
-    });
-  };
   const deleteRow = key => {
     deleteSpace(key);
   };
 
-  const edit = key => {
-    SetEditingKey(key);
+  const edit = editableRecord => {
+    const record = { ...editableRecord };
+    const formColumns = columns.map(col => {
+      if (col.dataIndex === "spaceTypeId") {
+        return {
+          ...col,
+          onCell: record => ({
+            key: `${record.key}_${col.dataIndex}`,
+            record,
+            required: col.required,
+            inputType: "combo",
+            dataIndex: col.dataIndex,
+            title: col.title,
+            options: spaceFilter,
+            getFieldDecorator: form.getFieldDecorator,
+            validateFields: form.validateFields
+          })
+        };
+      }
+      return { 
+        ...col,
+        onCell: record => ({
+          key: `${record.key}_${col.dataIndex}`,
+          record,
+          required: col.required,
+          inputType: col.dataIndex === "tags" ? "tags" : "text",
+          dataIndex: col.dataIndex,
+          title: col.title,
+          getFieldDecorator: form.getFieldDecorator,
+          tagsArray: record.tags,
+          validateFields: form.validateFields
+        })
+      };
+    });
+    const fields = formColumns.slice(0, 5).map(col => col.onCell(record));
+    console.log(fields);
+    openForm(fields);
+    SetUserAction(UPDATE_SPACE_REQUEST);
+  };
+  const handleAdd = () => {
+    const formColumns = columns.map(col => {
+      return {
+        ...col,
+        onCell: record => ({
+          key: `_${col.dataIndex}`,
+          record,
+          required: col.required,
+          inputType: col.dataIndex === "type" ? "combo" : "text",
+          dataIndex: col.dataIndex,
+          title: col.title,
+          options: filters,
+          getFieldDecorator: form.getFieldDecorator,
+          validateFields: form.validateFields
+        })
+      };
+    });
+    const record = {
+      name: "",
+      capacity: 0,
+      spaceTypeId: "",
+      count: 0,
+      tags: [],
+      assests: []
+    };
+    const fields = formColumns.slice(0, 5).map(col => col.onCell(record));
+    openForm(fields);
+    SetUserAction(ADD_SPACE_REQUEST);
   };
 
   const columns = [
@@ -138,53 +189,17 @@ const EditableTable = ({
       title: "Actions",
       dataIndex: "actions",
       render: (text, record) => {
-        const editable = isEditing(record);
-        return editable ? (
+        return (
           <span>
-            <EditableContext.Consumer>
-              {myForm => (
-                <a
-                  role="presentation"
-                  onKeyPress={() => {}}
-                  onClick={() => save(myForm, record.key)}
-                  style={{ marginRight: 8 }}
-                >
-                  Save
-                </a>
-              )}
-            </EditableContext.Consumer>
-            <Divider type="vertical" />
-            <Popconfirm
-              title="Sure to cancel?"
-              onKeyPress={() => {}}
-              onConfirm={() => cancel(record.key)}
-            >
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <span>
-            <a
-              role="presentation"
-              disabled={editingKey !== ""}
-              onKeyPress={() => {}}
-              onClick={() => edit(record.key)}
-            >
+            <Button type="link" onClick={() => edit(record)}>
               Edit
-            </a>
+            </Button>
             <Divider type="vertical" />
             <Popconfirm
               title="Sure to delete?"
               onConfirm={() => deleteRow(record.key)}
             >
-              <a
-                role="presentation"
-                disabled={editingKey !== ""}
-                onKeyPress={() => {}}
-                onClick={() => {}}
-              >
-                Delete
-              </a>
+              <Button type="link">Delete</Button>
             </Popconfirm>
           </span>
         );
@@ -220,13 +235,12 @@ const EditableTable = ({
           inputType: "combo",
           dataIndex: col.dataIndex,
           title: col.title,
-          editing: isEditing(record),
           options: spaceFilter,
           getFieldDecorator: form.getFieldDecorator
         })
       };
     }
-    return {
+    return { 
       ...col,
       onCell: record => ({
         record,
@@ -234,32 +248,27 @@ const EditableTable = ({
         inputType: col.dataIndex === "tags" ? "tags" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
         getFieldDecorator: form.getFieldDecorator,
         tagsArray: record.tags
       })
     };
   });
 
-  const handleAdd = () => {
-    if (editingKey !== undefined) {
-      addSpaceRow({
-        name: "",
-        capacity: 0,
-        spaceTypeId: "",
-        count: 0,
-        tags: [],
-        assests: []
-      });
-      SetEditingKey(undefined);
-    }
-  };
-
   return (
     <>
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
         Add a row
       </Button>
+      <TableForm
+        title="Title"
+        action={userAction}
+        onCancel={handleCancel}
+        validateFields={form.validateFields}
+        visible={formVisible}
+        fields={formFields}
+        isLoading={formLoading}
+        errors={formErrors}
+      />
       <EditableContext.Provider value={form}>
         <Table
           components={components}
@@ -267,9 +276,6 @@ const EditableTable = ({
           dataSource={MappedSpaces}
           columns={columnsMaped}
           rowClassName="editable-row"
-          pagination={{
-            onChange: cancel
-          }}
           loading={isLoading}
         />
       </EditableContext.Provider>
@@ -281,13 +287,11 @@ const EditableFormTable = Form.create()(EditableTable);
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchSpaces: () => dispatch(fetchSpaces()),
-    updateSpace: (id, space) => dispatch(updateSpace(id, space)),
+    loadSpaces: () => dispatch(fetchSpaces()),
     deleteSpace: id => dispatch(deleteSpace(id)),
-    addSpace: space => dispatch(addSpace(space)),
-    addSpaceRow: row => dispatch(addSpaceRow(row)),
-    deleteSpaceRow: id => dispatch(deleteSpaceRow(id)),
-    getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type))
+    getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type)),
+    openForm: form => dispatch(fillSpaceForm(form)),
+    closeForm: () => dispatch(emptySpaceForm())
   };
 };
 
@@ -295,7 +299,12 @@ const mapStateToProps = state => {
   return {
     filters: state.ressourceTypeReducer.filters,
     spaces: state.spaceReducer.spaces,
-    isLoading: state.ressourceTypeReducer.isLoading
+    isLoading: state.ressourceTypeReducer.isLoading,
+
+    formVisible: state.spaceReducer.spaceTypeForm.visible,
+    formFields: state.spaceReducer.spaceTypeForm.fields,
+    formErrors: state.spaceReducer.spaceTypeForm.errors,
+    formLoading: state.spaceReducer.spaceTypeForm.loading
   };
 };
 const ConnectedEditableFormTable = connect(
