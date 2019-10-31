@@ -247,15 +247,30 @@ const EditableTable = ({
   };
 
   const handleAdd = () => {
-    if (editingKey !== undefined) {
-      addRessourceTypeRow({
-        name: "",
-        description: "",
-        type: "",
-        count: 0
-      });
-      SetEditingKey(undefined);
-    }
+    const columnsMaped = columns.map(col => {
+      return {
+        ...col,
+        onCell: record => ({
+          key: `_${col.dataIndex}`,
+          record,
+          required: col.required,
+          inputType: col.dataIndex === "type" ? "combo" : "text",
+          dataIndex: col.dataIndex,
+          title: col.title,
+          options: filters,
+          getFieldDecorator: form.getFieldDecorator,
+          validateFields: form.validateFields
+        })
+      };
+    });
+    const record = {
+      name: "",
+      type: "",
+      description: ""
+    };
+    const fields = columnsMaped.slice(0, 3).map(col => col.onCell(record));
+    fillRessourceTypeForm(fields);
+    SetUserAction(ADD_RESSOURCE_TYPE_REQUEST);
   };
 
   return (
