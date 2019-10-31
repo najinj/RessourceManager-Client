@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable jsx-a11y/anchor-is-valid */
+
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
@@ -50,8 +50,6 @@ const EditableTable = ({
     SetUserAction("");
   };
 
-  const cancel = () => {};
-
   const deleteRow = key => {
     deleteRessourceType(key);
   };
@@ -99,21 +97,15 @@ const EditableTable = ({
       render: (text, record) => {
         return (
           <span>
-            <a
-              role="presentation"
-              onKeyPress={() => {}}
-              onClick={() => editModal(record)}
-            >
+            <Button type="link" onClick={() => edit(record)}>
               Edit
-            </a>
+            </Button>
             <Divider type="vertical" />
             <Popconfirm
               title="Sure to delete?"
               onConfirm={() => deleteRow(record.key)}
             >
-              <a role="presentation" onKeyPress={() => {}} onClick={() => {}}>
-                Delete
-              </a>
+              <Button type="link">Delete</Button>
             </Popconfirm>
           </span>
         );
@@ -152,7 +144,7 @@ const EditableTable = ({
       })
     };
   });
-  const editModal = editableRecord => {
+  const edit = editableRecord => {
     const record = { ...editableRecord };
     const columnsMaped = columns.map(col => {
       return {
@@ -222,9 +214,6 @@ const EditableTable = ({
           dataSource={MappedRessourceTypes}
           columns={columnsMaped}
           rowClassName="editable-row"
-          pagination={{
-            onChange: cancel
-          }}
           loading={isLoading}
         />
       </EditableContext.Provider>
