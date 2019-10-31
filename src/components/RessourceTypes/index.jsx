@@ -1,11 +1,10 @@
 /* eslint-disable no-use-before-define */
-
 /* eslint-disable no-shadow */
-/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button } from "antd";
 import { connect } from "react-redux";
+import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import EditableCell from "../EditableCell";
 import TableForm from "../TableForm";
 
@@ -237,6 +236,37 @@ const mapStateToProps = state => {
     isLoading: state.ressourceTypeReducer.isLoading
   };
 };
+
+EditableTable.propTypes = {
+  form: shape({
+    getFieldDecorator: func,
+    validateFields: func
+  }),
+  ressourceTypes: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      description: string,
+      type: string,
+      count: number
+    })
+  ),
+  isLoading: bool,
+  fetchRessourceTypes: func,
+  deleteRessourceType: func,
+  fillRessourceTypeForm: func,
+  emptyRessourceTypeForm: func
+};
+EditableTable.defaultProps = {
+  form: {},
+  ressourceTypes: [],
+  isLoading: false,
+  fetchRessourceTypes: func,
+  deleteRessourceType: func,
+  fillRessourceTypeForm: func,
+  emptyRessourceTypeForm: func
+};
+
 const ConnectedEditableFormTable = connect(
   mapStateToProps,
   mapDispatchToProps
