@@ -1,22 +1,17 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
-import { Table, Popconfirm, Form, Divider, Button, Modal } from "antd";
+import { Table, Popconfirm, Form, Divider, Button } from "antd";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
 import TableForm from "../TableForm";
 
 import {
   fetchRessourceTypes,
-  updateRessourceType,
   deleteRessourceType,
-  addRessourceType,
-  addRessourceTypeRow,
-  deleteRessourceTypeRow,
   fillRessourceTypeForm,
   emptyRessourceTypeForm
 } from "../../actions/ressourceTypes-actions/actions";
@@ -42,57 +37,23 @@ const EditableTable = ({
   ressourceTypes,
   isLoading,
   fetchRessourceTypes,
-  updateRessourceType,
   deleteRessourceType,
-  addRessourceType,
-  addRessourceTypeRow,
-  deleteRessourceTypeRow,
   fillRessourceTypeForm,
   emptyRessourceTypeForm
 }) => {
-  const [editingKey, SetEditingKey] = useState("");
-
   const [userAction, SetUserAction] = useState("");
 
   useEffect(() => fetchRessourceTypes(), []);
-
-  const isEditing = record => record.key === editingKey;
 
   const handleCancel = () => {
     emptyRessourceTypeForm();
     SetUserAction("");
   };
 
-  const cancel = key => {
-    if (key === undefined) deleteRessourceTypeRow(undefined);
-    SetEditingKey("");
-  };
-
-  const save = (formIn, key) => {
-    formIn.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
-      const index = ressourceTypes.findIndex(item => item.id === undefined);
-      const ressourceType = { ...row };
-      if (index > -1) {
-        console.log(ressourceType);
-        addRessourceType(ressourceType);
-        SetEditingKey("");
-      } else {
-        ressourceType.id = key;
-        updateRessourceType(key, ressourceType);
-        SetEditingKey("");
-      }
-    });
-  };
+  const cancel = () => {};
 
   const deleteRow = key => {
     deleteRessourceType(key);
-  };
-
-  const edit = key => {
-    SetEditingKey(key);
   };
 
   const columns = [
@@ -136,35 +97,10 @@ const EditableTable = ({
       title: "Actions",
       dataIndex: "actions",
       render: (text, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <EditableContext.Consumer>
-              {myForm => (
-                <a
-                  role="presentation"
-                  onKeyPress={() => {}}
-                  onClick={() => save(myForm, record.key)}
-                  style={{ marginRight: 8 }}
-                >
-                  Save
-                </a>
-              )}
-            </EditableContext.Consumer>
-            <Divider type="vertical" />
-            <Popconfirm
-              title="Sure to cancel?"
-              onKeyPress={() => {}}
-              onConfirm={() => cancel(record.key)}
-            >
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : (
+        return (
           <span>
             <a
               role="presentation"
-              disabled={editingKey !== ""}
               onKeyPress={() => {}}
               onClick={() => editModal(record)}
             >
@@ -175,12 +111,7 @@ const EditableTable = ({
               title="Sure to delete?"
               onConfirm={() => deleteRow(record.key)}
             >
-              <a
-                role="presentation"
-                disabled={editingKey !== ""}
-                onKeyPress={() => {}}
-                onClick={() => {}}
-              >
+              <a role="presentation" onKeyPress={() => {}} onClick={() => {}}>
                 Delete
               </a>
             </Popconfirm>
@@ -216,7 +147,6 @@ const EditableTable = ({
         inputType: col.dataIndex === "type" ? "combo" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
         options: filters,
         getFieldDecorator: form.getFieldDecorator
       })
@@ -306,13 +236,7 @@ const EditableFormTable = Form.create()(EditableTable);
 const mapDispatchToProps = dispatch => {
   return {
     fetchRessourceTypes: () => dispatch(fetchRessourceTypes()),
-    updateRessourceType: (id, ressourceType) =>
-      dispatch(updateRessourceType(id, ressourceType)),
     deleteRessourceType: id => dispatch(deleteRessourceType(id)),
-    addRessourceType: ressourceType =>
-      dispatch(addRessourceType(ressourceType)),
-    addRessourceTypeRow: row => dispatch(addRessourceTypeRow(row)),
-    deleteRessourceTypeRow: id => dispatch(deleteRessourceTypeRow(id)),
     fillRessourceTypeForm: form => dispatch(fillRessourceTypeForm(form)),
     emptyRessourceTypeForm: () => dispatch(emptyRessourceTypeForm())
   };
