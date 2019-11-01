@@ -10,15 +10,14 @@ import EditableCell from "../EditableCell";
 import TableForm from "../TableForm";
 import {
   fetchSpaces,
+  addSpace,
+  updateSpace,
   deleteSpace,
   fillSpaceForm,
-  emptySpaceForm
+  emptySpaceForm, 
 } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
-import {
-  ADD_SPACE_REQUEST,
-  UPDATE_SPACE_REQUEST
-} from "../../actions/space-actions/types";
+
 
 const EditableContext = React.createContext();
 
@@ -35,7 +34,9 @@ const EditableTable = ({
   formVisible,
   formLoading,
   formErrors,
-  formFields
+  formFields,
+  addEntitie,
+  updateEntitie
 }) => {
   const [userAction, SetUserAction] = useState("");
 
@@ -52,7 +53,7 @@ const EditableTable = ({
   });
   const handleCancel = () => {
     closeForm();
-    SetUserAction("");
+    SetUserAction(null);
   };
 
   const deleteRow = key => {
@@ -96,7 +97,7 @@ const EditableTable = ({
     const fields = formColumns.slice(0, 5).map(col => col.onCell(record));
     console.log(fields);
     openForm(fields);
-    SetUserAction(UPDATE_SPACE_REQUEST);
+    SetUserAction({execute :updateEntitie});
   };
   const handleAdd = () => {
     const formColumns = columns.map(col => {
@@ -141,7 +142,7 @@ const EditableTable = ({
     };
     const fields = formColumns.slice(0, 5).map(col => col.onCell(record));
     openForm(fields);
-    SetUserAction(ADD_SPACE_REQUEST);
+    SetUserAction({execute :addEntitie});
   };
 
   const columns = [
@@ -307,7 +308,9 @@ const mapDispatchToProps = dispatch => {
     deleteSpace: id => dispatch(deleteSpace(id)),
     getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type)),
     openForm: form => dispatch(fillSpaceForm(form)),
-    closeForm: () => dispatch(emptySpaceForm())
+    closeForm: () => dispatch(emptySpaceForm()),
+    updateEntitie: (id, space) => dispatch(updateSpace(id, space)),
+    addEntitie: space => dispatch(addSpace(space))
   };
 };
 
