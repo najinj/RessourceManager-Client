@@ -75,10 +75,10 @@ export function addAsset(ressourceType) {
   };
 }
 
-export function updateAsset(id, ressourceType) {
+export function updateAsset(asset) {
   return dispatch => {
     dispatch({ type: UPDATE_ASSET_REQUEST });
-    AssetsServices.updateAsset(id, ressourceType).then(
+    AssetsServices.updateAsset(asset.id, asset).then(
       response => {
         dispatch({
           type: UPDATE_ASSET_SUCCESS,
