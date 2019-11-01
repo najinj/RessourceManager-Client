@@ -18,10 +18,16 @@ import {
 import { fetchSpaces } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
 import TableForm from "../TableForm";
- 
+
 const Status = {
-  Chained: 0,
-  Unchained: 1
+  Chained: {
+    value: 0,
+    title: "Chained"
+  },
+  Unchained: {
+    value: 1,
+    title: "Unchained"
+  }
 };
 const EditableContext = React.createContext();
 
@@ -45,7 +51,7 @@ const EditableTable = ({
   filters
 }) => {
   const [userAction, SetUserAction] = useState("");
-  
+
   useEffect(() => {
     getRessourceTypeByType(2);
     fetchSpaces();
@@ -120,34 +126,37 @@ const EditableTable = ({
       onFilter: (value, record) => record.status === value,
       filters: [
         {
-          text: "Chained",
-          value: Status.Chained
+          text: Status.Chained.title,
+          value: Status.Chained.value
         },
         {
-          text: "Unchained",
-          value: Status.Unchained
+          text: Status.Unchained.title,
+          value: Status.Unchained.value
         }
       ],
-      render: value => (value === 0 ? "Chained" : "Unchained")
+      render: value =>
+        value === Status.Chained.value
+          ? Status.Chained.title
+          : Status.Unchained.title
     },
     {
       title: "Actions",
       dataIndex: "actions",
       render: (text, record) => {
         return (
-        <span>
-        <Button type="link" onClick={() => edit(record)}>
+          <span>
+            <Button type="link" onClick={() => edit(record)}>
               Edit
             </Button>
-        <Divider type="vertical" />
-        <Popconfirm
-          title="Sure to delete?"
-          onConfirm={() => deleteRow(record.key)}
-        >
-          <Button type="link">Delete</Button>
-        </Popconfirm>
-      </span>
-      );
+            <Divider type="vertical" />
+            <Popconfirm
+              title="Sure to delete?"
+              onConfirm={() => deleteRow(record.key)}
+            >
+              <Button type="link">Delete</Button>
+            </Popconfirm>
+          </span>
+        );
       }
     }
   ];
@@ -193,20 +202,20 @@ const EditableTable = ({
         title: col.title,
         options: col.dataIndex === "spaceId" ? spaceFiler : null,
         getFieldDecorator: form.getFieldDecorator,
-          tagsArray: record.tags,
-          validateFields: form.validateFields,
-          editable: !col.editable
+        tagsArray: record.tags,
+        validateFields: form.validateFields,
+        editable: !col.editable
       })
     };
   });
 
   const handleAdd = () => {
-      const asset = {
-        name: "",
-        SpaceId: "",
-        assetTypeId: "",
-        status: Status.Unchained
-      };
+    const asset = {
+      name: "",
+      SpaceId: "",
+      assetTypeId: "",
+      status: Status.Unchained
+    };
     const fields = columnsMaped.slice(0, 4).map(col => col.onCell(asset));
     console.log(fields);
     openForm(fields);
@@ -214,7 +223,7 @@ const EditableTable = ({
   };
   const edit = editableRecord => {
     const asset = { ...editableRecord };
-   
+
     const fields = columnsMaped
       .slice(0, 4)
       .map(col => (col.editable ? col.onCell(asset) : col));
