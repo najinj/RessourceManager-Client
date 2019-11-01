@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button } from "antd";
 import { connect } from "react-redux";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
-import EditableCell from "../EditableCell";
 import TableForm from "../TableForm";
 
 import {
@@ -114,12 +113,6 @@ const EditableTable = ({
     }
   ];
 
-  const components = {
-    body: {
-      cell: EditableCell
-    }
-  };
-
   const MappedRessourceTypes = ressourceTypes.map(ressourceType => ({
     key: ressourceType.id,
     name: ressourceType.name,
@@ -214,7 +207,6 @@ const EditableTable = ({
 
       <EditableContext.Provider value={form}>
         <Table
-          components={components}
           bordered
           dataSource={MappedRessourceTypes}
           columns={columnsMaped}
