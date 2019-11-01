@@ -153,6 +153,6 @@ export function fillRessourceTypeForm(ressourceType) {
 export function emptyRessourceTypeForm() {
   return {
     type: EMPTY_RESSOURCE_TYPE_FORM,
-    payload: null
+    payload: []
   };
 }
