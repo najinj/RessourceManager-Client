@@ -57,10 +57,10 @@ export function fetchAssets() {
   };
 }
 
-export function addAsset(ressourceType) {
+export function addAsset(asset) {
   return dispatch => {
     dispatch({ type: ADD_ASSET_REQUEST });
-    AssetsServices.addAsset(ressourceType).then(
+    AssetsServices.addAsset(asset).then(
       response => {
         dispatch(deleteAssetRow(undefined));
         dispatch({ type: ADD_ASSET_SUCCESS, payload: response.data });
