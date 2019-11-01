@@ -118,8 +118,8 @@ export default function spaceReducer(state = intialState, action) {
     case FILL_ASSET_FORM:
       return {
         ...state,
-        spaceTypeForm: {
-          ...state.spaceTypeForm,
+        assetTypeForm: {
+          ...state.assetTypeForm,
           fields: action.payload,
           visible: true,
           errors: null
@@ -128,8 +128,8 @@ export default function spaceReducer(state = intialState, action) {
     case EMPTY_ASSET_FORM:
       return {
         ...state,
-        spaceTypeForm: {
-          ...state.spaceTypeForm,
+        assetTypeForm: {
+          ...state.assetTypeForm,
           visible: false,
           fields: action.payload,
           errors: null
