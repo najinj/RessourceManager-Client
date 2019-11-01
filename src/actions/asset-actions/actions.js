@@ -64,10 +64,12 @@ export function addAsset(ressourceType) {
       response => {
         dispatch(deleteAssetRow(undefined));
         dispatch({ type: ADD_ASSET_SUCCESS, payload: response.data });
+        // eslint-disable-next-line no-use-before-define
+        dispatch(emptyAssetForm());
       },
       err => {
         console.log(ADD_ASSET_FAILURE, err);
-        dispatch({ type: ADD_ASSET_FAILURE });
+        dispatch({ type: ADD_ASSET_FAILURE, errors: err.response.data.errors });
       }
     );
   };
@@ -82,10 +84,15 @@ export function updateAsset(id, ressourceType) {
           type: UPDATE_ASSET_SUCCESS,
           payload: response.data
         });
+        // eslint-disable-next-line no-use-before-define
+        dispatch(emptyAssetForm());
       },
       err => {
         console.log(UPDATE_ASSET_FAILURE, err);
-        dispatch({ type: UPDATE_ASSET_FAILURE });
+        dispatch({
+          type: UPDATE_ASSET_FAILURE,
+          errors: err.response.data.errors
+        });
       }
     );
   };
@@ -119,6 +126,6 @@ export function fillAssetForm(asset) {
 export function emptyAssetForm() {
   return {
     type: EMPTY_ASSET_FORM,
-    payload: null
+    payload: []
   };
 }
