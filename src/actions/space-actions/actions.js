@@ -177,6 +177,6 @@ export function fillSpaceForm(space) {
 export function emptySpaceForm() {
   return {
     type: EMPTY_SPACE_FORM,
-    payload: null
+    payload: []
   };
 }
