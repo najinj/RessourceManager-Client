@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button } from "antd";
+import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
 import {
@@ -225,7 +225,7 @@ const EditableTable = ({
       .slice(0, 4)
       .map(col => (col.editable ? col.onCell(asset) : col));
     console.log(fields);
-    // openForm(fields);
+    openForm(fields);
     SetUserAction({ execute: updateEntitie });
   };
   return (
@@ -270,6 +270,72 @@ const mapDispatchToProps = dispatch => {
     openForm: form => dispatch(fillAssetForm(form)),
     closeForm: () => dispatch(emptyAssetForm())
   };
+};
+EditableTable.propTypes = {
+  form: shape({
+    getFieldDecorator: func,
+    validateFields: func
+  }),
+  assets: arrayOf(
+    shape({
+      name: string,
+      SpaceId: string,
+      assetTypeId: string,
+      status: Status.number
+    })
+  ),
+  spaces: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      capacity: number,
+      spaceTypeId: string,
+      count: number,
+      tags: arrayOf(string),
+      assests: arrayOf(string)
+    })
+  ),
+  isLoading: bool,
+  loadAssets: func,
+  loadSpaces: func,
+  addEntitie: func,
+  deleteEentitie: func,
+  updateEntitie: func,
+  openForm: func,
+  closeForm: func,
+  formVisible: bool,
+  formLoading: bool,
+  formErrors: arrayOf(shape()),
+  formFields: arrayOf(shape()),
+  getAssetRessourceTypes: func,
+  filters: arrayOf(
+    shape({
+      text: string,
+      value: string
+    })
+  )
+};
+EditableTable.defaultProps = {
+  form: shape({
+    getFieldDecorator: func,
+    validateFields: func
+  }),
+  assets: [],
+  spaces: [],
+  isLoading: false,
+  loadAssets: func,
+  loadSpaces: func,
+  addEntitie: func,
+  deleteEentitie: func,
+  updateEntitie: func,
+  openForm: func,
+  closeForm: func,
+  formVisible: false,
+  formLoading: false,
+  formErrors: null,
+  formFields: [],
+  getAssetRessourceTypes: func,
+  filters: []
 };
 
 const mapStateToProps = state => {
