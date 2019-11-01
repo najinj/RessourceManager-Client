@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
@@ -11,12 +12,13 @@ import {
   addAsset,
   deleteAsset,
   updateAsset,
-  addAssetRow,
-  deleteAssetRow
+  fillAssetForm,
+  emptyAssetForm
 } from "../../actions/asset-actions/actions";
 import { fetchSpaces } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
-
+import TableForm from "../TableForm";
+ 
 const Status = {
   Chained: 0,
   Unchained: 1
@@ -30,23 +32,25 @@ const EditableTable = ({
   isLoading,
   fetchAssets,
   fetchSpaces,
-  addAsset,
-  deleteAsset,
-  updateAsset,
-  addAssetRow,
-  deleteAssetRow,
+  addEntitie,
+  deleteEentitie,
+  updateEntitie,
+  openForm,
+  closeForm,
+  formVisible,
+  formLoading,
+  formErrors,
+  formFields,
   getRessourceTypeByType,
   filters
 }) => {
-  const [editingKey, SetEditingKey] = useState("");
-
+  const [userAction, SetUserAction] = useState("");
+  
   useEffect(() => {
     getRessourceTypeByType(2);
     fetchSpaces();
     fetchAssets();
   }, []);
-
-  const isEditing = record => record.key === editingKey;
 
   const spaceFiler = spaces.map(space => {
     return {
@@ -61,34 +65,13 @@ const EditableTable = ({
     };
   });
 
-  const cancel = key => {
-    if (key === undefined) deleteAssetRow(undefined);
-    SetEditingKey("");
+  const handleCancel = () => {
+    closeForm();
+    SetUserAction(null);
   };
 
-  const save = (formIn, key) => {
-    formIn.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
-      const index = assets.findIndex(item => item.id === undefined);
-      const asset = { ...row };
-      if (index > -1) {
-        addAsset(asset);
-        SetEditingKey("");
-      } else {
-        asset.id = key;
-        updateAsset(key, asset);
-        SetEditingKey("");
-      }
-    });
-  };
   const deleteRow = key => {
-    deleteAsset(key);
-  };
-
-  const edit = key => {
-    SetEditingKey(key);
+    deleteEentitie(key);
   };
 
   const columns = [
@@ -151,56 +134,20 @@ const EditableTable = ({
       title: "Actions",
       dataIndex: "actions",
       render: (text, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <EditableContext.Consumer>
-              {myForm => (
-                <a
-                  role="presentation"
-                  onKeyPress={() => {}}
-                  onClick={() => save(myForm, record.key)}
-                  style={{ marginRight: 8 }}
-                >
-                  Save
-                </a>
-              )}
-            </EditableContext.Consumer>
-            <Divider type="vertical" />
-            <Popconfirm
-              title="Sure to cancel?"
-              onKeyPress={() => {}}
-              onConfirm={() => cancel(record.key)}
-            >
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : (
-          <span>
-            <a
-              role="presentation"
-              disabled={editingKey !== ""}
-              onKeyPress={() => {}}
-              onClick={() => edit(record.key)}
-            >
+        return (
+        <span>
+        <Button type="link" onClick={() => edit(record)}>
               Edit
-            </a>
-            <Divider type="vertical" />
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => deleteRow(record.key)}
-            >
-              <a
-                role="presentation"
-                disabled={editingKey !== ""}
-                onKeyPress={() => {}}
-                onClick={() => {}}
-              >
-                Delete
-              </a>
-            </Popconfirm>
-          </span>
-        );
+            </Button>
+        <Divider type="vertical" />
+        <Popconfirm
+          title="Sure to delete?"
+          onConfirm={() => deleteRow(record.key)}
+        >
+          <Button type="link">Delete</Button>
+        </Popconfirm>
+      </span>
+      );
       }
     }
   ];
@@ -219,9 +166,6 @@ const EditableTable = ({
     spaceId: asset.spaceId
   }));
   const columnsMaped = columns.map(col => {
-    if (!col.editable) {
-      return col;
-    }
     if (col.dataIndex === "assetTypeId") {
       return {
         ...col,
@@ -231,9 +175,11 @@ const EditableTable = ({
           inputType: "combo",
           dataIndex: col.dataIndex,
           title: col.title,
-          editing: isEditing(record),
           options: assetFilter,
-          getFieldDecorator: form.getFieldDecorator
+          getFieldDecorator: form.getFieldDecorator,
+          tagsArray: record.tags,
+          validateFields: form.validateFields,
+          editable: !col.editable
         })
       };
     }
@@ -245,30 +191,52 @@ const EditableTable = ({
         inputType: col.dataIndex === "spaceId" ? "combo" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
         options: col.dataIndex === "spaceId" ? spaceFiler : null,
-        getFieldDecorator: form.getFieldDecorator
+        getFieldDecorator: form.getFieldDecorator,
+          tagsArray: record.tags,
+          validateFields: form.validateFields,
+          editable: !col.editable
       })
     };
   });
 
   const handleAdd = () => {
-    if (editingKey !== undefined) {
-      addAssetRow({
+      const asset = {
         name: "",
         SpaceId: "",
         assetTypeId: "",
         status: Status.Unchained
-      });
-      SetEditingKey(undefined);
-    }
+      };
+    const fields = columnsMaped.slice(0, 4).map(col => col.onCell(asset));
+    console.log(fields);
+    openForm(fields);
+    SetUserAction({ execute: addEntitie });
   };
-
+  const edit = editableRecord => {
+    const asset = { ...editableRecord };
+   
+    const fields = columnsMaped
+      .slice(0, 4)
+      .map(col => (col.editable ? col.onCell(asset) : col));
+    console.log(fields);
+    // openForm(fields);
+    SetUserAction({ execute: updateEntitie });
+  };
   return (
     <>
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
         Add a row
       </Button>
+      <TableForm
+        title="Title"
+        action={userAction}
+        onCancel={handleCancel}
+        validateFields={form.validateFields}
+        visible={formVisible}
+        fields={formFields}
+        isLoading={formLoading}
+        errors={formErrors}
+      />
       <EditableContext.Provider value={form}>
         <Table
           components={components}
@@ -276,9 +244,6 @@ const EditableTable = ({
           dataSource={MappedAssets}
           columns={columnsMaped}
           rowClassName="editable-row"
-          pagination={{
-            onChange: cancel
-          }}
           loading={isLoading}
         />
       </EditableContext.Provider>
@@ -291,13 +256,13 @@ const EditableFormTable = Form.create()(EditableTable);
 const mapDispatchToProps = dispatch => {
   return {
     fetchAssets: () => dispatch(fetchAssets()),
-    updateAsset: (id, asset) => dispatch(updateAsset(id, asset)),
-    deleteAsset: id => dispatch(deleteAsset(id)),
-    addAsset: asset => dispatch(addAsset(asset)),
-    addAssetRow: row => dispatch(addAssetRow(row)),
-    deleteAssetRow: id => dispatch(deleteAssetRow(id)),
+    updateEntitie: (id, asset) => dispatch(updateAsset(id, asset)),
+    deleteEentitie: id => dispatch(deleteAsset(id)),
+    addEntitie: asset => dispatch(addAsset(asset)),
     fetchSpaces: () => dispatch(fetchSpaces()),
-    getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type))
+    getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type)),
+    openForm: form => dispatch(fillAssetForm(form)),
+    closeForm: () => dispatch(emptyAssetForm())
   };
 };
 
@@ -306,7 +271,11 @@ const mapStateToProps = state => {
     filters: state.ressourceTypeReducer.filters,
     spaces: state.spaceReducer.spaces,
     assets: state.assetReducer.assets,
-    isLoading: state.ressourceTypeReducer.isLoading
+    isLoading: state.ressourceTypeReducer.isLoading,
+    formVisible: state.assetReducer.assetTypeForm.visible,
+    formFields: state.assetReducer.assetTypeForm.fields,
+    formErrors: state.assetReducer.assetTypeForm.errors,
+    formLoading: state.assetReducer.assetTypeForm.loading
   };
 };
 const ConnectedEditableFormTable = connect(
