@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button } from "antd";
@@ -34,8 +33,8 @@ const EditableTable = ({
   assets,
   spaces,
   isLoading,
-  fetchAssets,
-  fetchSpaces,
+  loadAssets,
+  loadSpaces,
   addEntitie,
   deleteEentitie,
   updateEntitie,
@@ -45,15 +44,15 @@ const EditableTable = ({
   formLoading,
   formErrors,
   formFields,
-  getRessourceTypeByType,
+  getAssetRessourceTypes,
   filters
 }) => {
   const [userAction, SetUserAction] = useState("");
 
   useEffect(() => {
-    getRessourceTypeByType(2);
-    fetchSpaces();
-    fetchAssets();
+    getAssetRessourceTypes(2);
+    loadSpaces();
+    loadAssets();
   }, []);
 
   const spaceFiler = spaces.map(space => {
@@ -262,12 +261,12 @@ const EditableFormTable = Form.create()(EditableTable);
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAssets: () => dispatch(fetchAssets()),
+    loadAssets: () => dispatch(fetchAssets()),
     updateEntitie: (id, asset) => dispatch(updateAsset(id, asset)),
     deleteEentitie: id => dispatch(deleteAsset(id)),
     addEntitie: asset => dispatch(addAsset(asset)),
-    fetchSpaces: () => dispatch(fetchSpaces()),
-    getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type)),
+    loadSpaces: () => dispatch(fetchSpaces()),
+    getAssetRessourceTypes: type => dispatch(getRessourceTypeByType(type)),
     openForm: form => dispatch(fillAssetForm(form)),
     closeForm: () => dispatch(emptyAssetForm())
   };
