@@ -8,14 +8,12 @@ import TableForm from "../TableForm";
 
 import {
   fetchRessourceTypes,
+  addRessourceType,
+  updateRessourceType,
   deleteRessourceType,
   fillRessourceTypeForm,
-  emptyRessourceTypeForm
+  emptyRessourceTypeForm,
 } from "../../actions/ressourceTypes-actions/actions";
-import {
-  ADD_RESSOURCE_TYPE_REQUEST,
-  UPDATE_RESSOURCE_TYPE_REQUEST
-} from "../../actions/ressourceTypes-actions/types";
 
 const EditableContext = React.createContext();
 const filters = [
@@ -33,18 +31,20 @@ const EditableTable = ({
   form,
   ressourceTypes,
   isLoading,
-  loadRessourceTypes,
-  removeRessourceType,
+  loadEntities,
+  removeEntitie,
   openForm,
   closeForm,
   formVisible,
   formLoading,
   formErrors,
-  formFields
+  formFields,
+  addEntitie,
+  updateEntitie
 }) => {
   const [userAction, SetUserAction] = useState("");
 
-  useEffect(() => loadRessourceTypes(), []);
+  useEffect(() => loadEntities(), []);
 
   const handleCancel = () => {
     closeForm();
@@ -52,7 +52,7 @@ const EditableTable = ({
   };
 
   const deleteRow = key => {
-    removeRessourceType(key);
+    removeEntitie(key);
   };
 
   const columns = [
@@ -166,7 +166,7 @@ const EditableTable = ({
     const fields = formColumns.slice(0, 3).map(col => col.onCell(record));
     console.log(fields);
     openForm(fields);
-    SetUserAction(UPDATE_RESSOURCE_TYPE_REQUEST);
+    SetUserAction({execute :updateEntitie});
   };
 
   const handleAdd = () => {
@@ -193,7 +193,7 @@ const EditableTable = ({
     };
     const fields = formColumns.slice(0, 3).map(col => col.onCell(record));
     openForm(fields);
-    SetUserAction(ADD_RESSOURCE_TYPE_REQUEST);
+    SetUserAction({execute :addEntitie});
   };
 
   return (
@@ -229,10 +229,14 @@ const EditableTable = ({
 const EditableFormTable = Form.create()(EditableTable);
 const mapDispatchToProps = dispatch => {
   return {
-    loadRessourceTypes: () => dispatch(fetchRessourceTypes()),
-    removeRessourceType: id => dispatch(deleteRessourceType(id)),
+    loadEntities: () => dispatch(fetchRessourceTypes()),
+    removeEntitie: id => dispatch(deleteRessourceType(id)),
     openForm: form => dispatch(fillRessourceTypeForm(form)),
-    closeForm: () => dispatch(emptyRessourceTypeForm())
+    closeForm: () => dispatch(emptyRessourceTypeForm()),
+    updateEntitie: (id, ressourceType) =>
+      dispatch(updateRessourceType(id, ressourceType)),
+    addEntitie: ressourceType =>
+      dispatch(addRessourceType(ressourceType)),
   };
 };
 
@@ -262,27 +266,31 @@ EditableTable.propTypes = {
     })
   ),
   isLoading: bool,
-  loadRessourceTypes: func,
-  removeRessourceType: func,
+  loadEntities: func,
+  removeEntitie: func,
   openForm: func,
   closeForm: func,
   formVisible: bool,
   formFields: arrayOf(shape()),
   formLoading: bool,
-  formErrors: arrayOf(shape())
+  formErrors: arrayOf(shape()),
+  addEntitie : func,
+  updateEntitie : func
 };
 EditableTable.defaultProps = {
   form: {},
   ressourceTypes: [],
   isLoading: false,
-  loadRessourceTypes: func,
-  removeRessourceType: func,
+  loadEntities: func,
+  removeEntitie: func,
   openForm: func,
   closeForm: func,
   formVisible: false,
   formFields: null,
   formLoading: false,
-  formErrors: null
+  formErrors: null,
+  addEntitie : null,
+  updateEntitie : null
 };
 
 const ConnectedEditableFormTable = connect(
