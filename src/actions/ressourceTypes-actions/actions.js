@@ -96,10 +96,10 @@ export function addRessourceType(ressourceType) {
   };
 }
 
-export function updateRessourceType(id, ressourceType) {
+export function updateRessourceType(ressourceType) {
   return dispatch => {
     dispatch({ type: UPDATE_RESSOURCE_TYPE_REQUEST });
-    RessourceTypesServices.updateRessourceType(id, ressourceType).then(
+    RessourceTypesServices.updateRessourceType(ressourceType.id, ressourceType).then(
       response => {
         dispatch({
           type: UPDATE_RESSOURCE_TYPE_SUCCESS,
