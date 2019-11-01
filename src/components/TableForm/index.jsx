@@ -13,14 +13,6 @@ import {
   addRessourceType
 } from "../../actions/ressourceTypes-actions/actions";
 import { addSpace, updateSpace } from "../../actions/space-actions/actions";
-import {
-  ADD_RESSOURCE_TYPE_REQUEST,
-  UPDATE_RESSOURCE_TYPE_REQUEST
-} from "../../actions/ressourceTypes-actions/types";
-import {
-  ADD_SPACE_REQUEST,
-  UPDATE_SPACE_REQUEST
-} from "../../actions/space-actions/types";
 
 const { Option } = Select;
 
@@ -31,13 +23,9 @@ const TableForm = ({
   visible,
   errors,
   validateFields,
-  updateRessourceType,
-  addRessourceType,
-  updateSpace,
-  addSpace,
   loading
 }) => {
-  const [tags, SetTags] = useState([]);
+  const [tags, SetTags] = useState(null);
   const [inputVisible, SetInputVisible] = useState(false);
   const [inputValue, SetInputValue] = useState("");
 
@@ -88,31 +76,16 @@ const TableForm = ({
   };
 
   const saveOrUpdate = () => {
-    console.log(updateRessourceType);
-
     validateFields((error, row) => {
       if (error) {
         console.log(error);
         return;
       }
       const entity = { ...row };
-      console.log(action);
-      if (action === ADD_RESSOURCE_TYPE_REQUEST) {
-        console.log(entity);
-        addRessourceType(entity);
-      } else if (action === UPDATE_RESSOURCE_TYPE_REQUEST) {
-        entity.id = fields[0].record.key;
-        updateRessourceType(entity.id, entity);
-      } else if (action === ADD_SPACE_REQUEST) {
-        console.log(entity);
+      entity.id = fields[0].record.key !== "undefined" ? fields[0].record.key : "";
+      if(tags !== null)
         entity.tags = tags;
-        addSpace(entity);
-      } else if (action === UPDATE_SPACE_REQUEST) {
-        entity.id = fields[0].record.key;
-        entity.tags = tags;
-        console.log(entity);
-        updateSpace(entity.id, entity);
-      }
+      action.execute(entity);
     });
   };
 
@@ -132,7 +105,7 @@ const TableForm = ({
           key={field.key}
           label={field.title}
           {...itemLayout}
-          {...(errors !== null &&
+          {...(errors !== null && errors !== undefined &&
             getParameterCaseInsensitive(errors, field.dataIndex) && {
               help: getParameterCaseInsensitive(errors, field.dataIndex),
               validateStatus: "error"
@@ -168,7 +141,7 @@ const TableForm = ({
     if (field.inputType === "tags") {
       return (
         <Form.Item label={field.title} {...itemLayout}>
-          {tags.map((tag, index) => {
+          {tags!==null ? tags.map((tag, index) => {
             const isLongTag = tag.length > 20;
             const tagElem = (
               <Tag
@@ -188,7 +161,7 @@ const TableForm = ({
             ) : (
               <span>{tagElem}</span>
             );
-          })}
+          }) : "" }
           {inputVisible && (
             <Input
               type="text"
@@ -217,7 +190,7 @@ const TableForm = ({
         key={field.key}
         label={field.title}
         {...itemLayout}
-        {...(errors !== null &&
+        {...(errors !== null &&  errors !== undefined &&
           getParameterCaseInsensitive(errors, field.dataIndex) && {
             help: getParameterCaseInsensitive(errors, field.dataIndex),
             validateStatus: "error"
