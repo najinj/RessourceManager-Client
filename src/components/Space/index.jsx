@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button, Tag } from "antd";
+import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
 import EditableCell from "../EditableCell";
 import TableForm from "../TableForm";
@@ -23,9 +23,9 @@ const EditableTable = ({
   spaces,
   filters,
   isLoading,
-  loadSpaces,
+  loadEntities,
   getSpaceRessourceTypes,
-  removeSpace,
+  removeEntitie,
   openForm,
   closeForm,
   formVisible,
@@ -39,7 +39,7 @@ const EditableTable = ({
 
   useEffect(() => {
     getSpaceRessourceTypes(1);
-    loadSpaces();
+    loadEntities();
   }, []);
 
   const spaceFilter = filters.map(ressourceType => {
@@ -54,7 +54,7 @@ const EditableTable = ({
   };
 
   const deleteRow = key => {
-    removeSpace(key);
+    removeEntitie(key);
   };
 
   const edit = editableRecord => {
@@ -296,13 +296,65 @@ const EditableTable = ({
     </>
   );
 };
+EditableTable.propTypes = {
+  form: shape({
+    getFieldDecorator: func,
+    validateFields: func
+  }),
+  spaces: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      capacity: number,
+      spaceTypeId: string,
+      count: number,
+      tags: arrayOf(string),
+      assests: arrayOf(string)
+    })
+  ),
+  filters : arrayOf(
+    shape({
+      text : string,
+      value: string
+    })
+  ),
+  isLoading: bool,
+  loadEntities: func,
+  getSpaceRessourceTypes : func,
+  removeEntitie: func,
+  openForm: func,
+  closeForm: func,
+  formVisible: bool,
+  formFields: arrayOf(shape()),
+  formLoading: bool,
+  formErrors: arrayOf(shape()),
+  addEntitie : func,
+  updateEntitie : func
+};
+EditableTable.defaultProps = {
+  form: {},
+  spaces: [],
+  filters : [],
+  isLoading: false,
+  getSpaceRessourceTypes : func,
+  loadEntities: func,
+  removeEntitie: func,
+  openForm: func,
+  closeForm: func,
+  formVisible: false,
+  formFields: null,
+  formLoading: false,
+  formErrors: null,
+  addEntitie : null,
+  updateEntitie : null
+};
 
 const EditableFormTable = Form.create()(EditableTable);
 
 const mapDispatchToProps = dispatch => {
   return {
-    loadSpaces: () => dispatch(fetchSpaces()),
-    removeSpace: id => dispatch(deleteSpace(id)),
+    loadEntities: () => dispatch(fetchSpaces()),
+    removeEntitie: id => dispatch(deleteSpace(id)),
     getSpaceRessourceTypes: type => dispatch(getRessourceTypeByType(type)),
     openForm: form => dispatch(fillSpaceForm(form)),
     closeForm: () => dispatch(emptySpaceForm()),
