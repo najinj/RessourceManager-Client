@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button } from "antd";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
-import EditableCell from "../EditableCell";
 import {
   fetchAssets,
   addAsset,
@@ -158,12 +157,6 @@ const EditableTable = ({
     }
   ];
 
-  const components = {
-    body: {
-      cell: EditableCell
-    }
-  };
-
   const MappedAssets = assets.map(asset => ({
     key: asset.id,
     name: asset.name,
@@ -245,7 +238,6 @@ const EditableTable = ({
       />
       <EditableContext.Provider value={form}>
         <Table
-          components={components}
           bordered
           dataSource={MappedAssets}
           columns={columnsMaped}
