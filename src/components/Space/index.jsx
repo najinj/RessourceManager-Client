@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Table, Popconfirm, Form, Divider, Button, Tag } from "antd";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
-import EditableCell from "../EditableCell";
 import TableForm from "../TableForm";
 import {
   fetchSpaces,
@@ -220,12 +219,6 @@ const EditableTable = ({
     }
   ];
 
-  const components = {
-    body: {
-      cell: EditableCell
-    }
-  };
-
   const MappedSpaces = spaces.map(space => ({
     key: space.id,
     name: space.name,
@@ -284,7 +277,6 @@ const EditableTable = ({
       />
       <EditableContext.Provider value={form}>
         <Table
-          components={components}
           bordered
           dataSource={MappedSpaces}
           columns={columnsMaped}
