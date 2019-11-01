@@ -82,9 +82,9 @@ const TableForm = ({
         return;
       }
       const entity = { ...row };
-      entity.id = fields[0].record.key !== "undefined" ? fields[0].record.key : "";
-      if(tags !== null)
-        entity.tags = tags;
+      entity.id =
+        fields[0].record.key !== "undefined" ? fields[0].record.key : "";
+      if (tags !== null) entity.tags = tags;
       action.execute(entity);
     });
   };
@@ -105,7 +105,8 @@ const TableForm = ({
           key={field.key}
           label={field.title}
           {...itemLayout}
-          {...(errors !== null && errors !== undefined &&
+          {...(errors !== null &&
+            errors !== undefined &&
             getParameterCaseInsensitive(errors, field.dataIndex) && {
               help: getParameterCaseInsensitive(errors, field.dataIndex),
               validateStatus: "error"
@@ -141,27 +142,29 @@ const TableForm = ({
     if (field.inputType === "tags") {
       return (
         <Form.Item label={field.title} {...itemLayout}>
-          {tags!==null ? tags.map((tag, index) => {
-            const isLongTag = tag.length > 20;
-            const tagElem = (
-              <Tag
-                key={tag}
-                closable={index !== 0}
-                onClose={() => handleClose(tag)}
-              >
-                {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-              </Tag>
-            );
-            return isLongTag ? (
-              <span>
-                <Tooltip title={tag} key={tag}>
-                  {tagElem}
-                </Tooltip>
-              </span>
-            ) : (
-              <span>{tagElem}</span>
-            );
-          }) : "" }
+          {tags !== null
+            ? tags.map((tag, index) => {
+                const isLongTag = tag.length > 20;
+                const tagElem = (
+                  <Tag
+                    key={tag}
+                    closable={index !== 0}
+                    onClose={() => handleClose(tag)}
+                  >
+                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                  </Tag>
+                );
+                return isLongTag ? (
+                  <span>
+                    <Tooltip title={tag} key={tag}>
+                      {tagElem}
+                    </Tooltip>
+                  </span>
+                ) : (
+                  <span>{tagElem}</span>
+                );
+              })
+            : ""}
           {inputVisible && (
             <Input
               type="text"
@@ -190,7 +193,8 @@ const TableForm = ({
         key={field.key}
         label={field.title}
         {...itemLayout}
-        {...(errors !== null &&  errors !== undefined &&
+        {...(errors !== null &&
+          errors !== undefined &&
           getParameterCaseInsensitive(errors, field.dataIndex) && {
             help: getParameterCaseInsensitive(errors, field.dataIndex),
             validateStatus: "error"

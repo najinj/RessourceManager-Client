@@ -88,7 +88,7 @@ export function addSpace(ressourceType) {
       },
       err => {
         console.log(ADD_SPACE_FAILURE, err);
-        dispatch({ type: ADD_SPACE_FAILURE ,errors: err.response.data.errors});
+        dispatch({ type: ADD_SPACE_FAILURE, errors: err.response.data.errors });
       }
     );
   };
@@ -108,7 +108,10 @@ export function updateSpace(ressourceType) {
       },
       err => {
         console.log(UPDATE_SPACE_FAILURE, err);
-        dispatch({ type: UPDATE_SPACE_FAILURE ,errors: err.response.data.errors});
+        dispatch({
+          type: UPDATE_SPACE_FAILURE,
+          errors: err.response.data.errors
+        });
       }
     );
   };

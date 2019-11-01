@@ -12,7 +12,7 @@ import {
   updateRessourceType,
   deleteRessourceType,
   fillRessourceTypeForm,
-  emptyRessourceTypeForm,
+  emptyRessourceTypeForm
 } from "../../actions/ressourceTypes-actions/actions";
 
 const EditableContext = React.createContext();
@@ -166,7 +166,7 @@ const EditableTable = ({
     const fields = formColumns.slice(0, 3).map(col => col.onCell(record));
     console.log(fields);
     openForm(fields);
-    SetUserAction({execute :updateEntitie});
+    SetUserAction({ execute: updateEntitie });
   };
 
   const handleAdd = () => {
@@ -193,7 +193,7 @@ const EditableTable = ({
     };
     const fields = formColumns.slice(0, 3).map(col => col.onCell(record));
     openForm(fields);
-    SetUserAction({execute :addEntitie});
+    SetUserAction({ execute: addEntitie });
   };
 
   return (
@@ -235,8 +235,7 @@ const mapDispatchToProps = dispatch => {
     closeForm: () => dispatch(emptyRessourceTypeForm()),
     updateEntitie: (id, ressourceType) =>
       dispatch(updateRessourceType(id, ressourceType)),
-    addEntitie: ressourceType =>
-      dispatch(addRessourceType(ressourceType)),
+    addEntitie: ressourceType => dispatch(addRessourceType(ressourceType))
   };
 };
 
@@ -274,8 +273,8 @@ EditableTable.propTypes = {
   formFields: arrayOf(shape()),
   formLoading: bool,
   formErrors: arrayOf(shape()),
-  addEntitie : func,
-  updateEntitie : func
+  addEntitie: func,
+  updateEntitie: func
 };
 EditableTable.defaultProps = {
   form: {},
@@ -289,8 +288,8 @@ EditableTable.defaultProps = {
   formFields: null,
   formLoading: false,
   formErrors: null,
-  addEntitie : null,
-  updateEntitie : null
+  addEntitie: null,
+  updateEntitie: null
 };
 
 const ConnectedEditableFormTable = connect(

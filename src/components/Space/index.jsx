@@ -11,10 +11,9 @@ import {
   updateSpace,
   deleteSpace,
   fillSpaceForm,
-  emptySpaceForm, 
+  emptySpaceForm
 } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
-
 
 const EditableContext = React.createContext();
 
@@ -94,7 +93,7 @@ const EditableTable = ({
     const fields = formColumns.slice(0, 5).map(col => col.onCell(space));
     console.log(fields);
     openForm(fields);
-    SetUserAction({execute :updateEntitie});
+    SetUserAction({ execute: updateEntitie });
   };
   const handleAdd = () => {
     const formColumns = columns.map(col => {
@@ -139,7 +138,7 @@ const EditableTable = ({
     };
     const fields = formColumns.slice(0, 5).map(col => col.onCell(record));
     openForm(fields);
-    SetUserAction({execute :addEntitie});
+    SetUserAction({ execute: addEntitie });
   };
 
   const columns = [
@@ -312,15 +311,15 @@ EditableTable.propTypes = {
       assests: arrayOf(string)
     })
   ),
-  filters : arrayOf(
+  filters: arrayOf(
     shape({
-      text : string,
+      text: string,
       value: string
     })
   ),
   isLoading: bool,
   loadEntities: func,
-  getSpaceRessourceTypes : func,
+  getSpaceRessourceTypes: func,
   removeEntitie: func,
   openForm: func,
   closeForm: func,
@@ -328,15 +327,15 @@ EditableTable.propTypes = {
   formFields: arrayOf(shape()),
   formLoading: bool,
   formErrors: arrayOf(shape()),
-  addEntitie : func,
-  updateEntitie : func
+  addEntitie: func,
+  updateEntitie: func
 };
 EditableTable.defaultProps = {
   form: {},
   spaces: [],
-  filters : [],
+  filters: [],
   isLoading: false,
-  getSpaceRessourceTypes : func,
+  getSpaceRessourceTypes: func,
   loadEntities: func,
   removeEntitie: func,
   openForm: func,
@@ -345,8 +344,8 @@ EditableTable.defaultProps = {
   formFields: null,
   formLoading: false,
   formErrors: null,
-  addEntitie : null,
-  updateEntitie : null
+  addEntitie: null,
+  updateEntitie: null
 };
 
 const EditableFormTable = Form.create()(EditableTable);
