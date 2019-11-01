@@ -14,11 +14,19 @@ import {
   UPDATE_ASSET_SUCCESS,
   ADD_ASSET_TO_TABLE,
   DELETE_ASSET_FROM_TABLE,
-  UPDATE_ASSET_FROM_TABLE
+  UPDATE_ASSET_FROM_TABLE,
+  FILL_ASSET_FORM,
+  EMPTY_ASSET_FORM
 } from "../actions/asset-actions/types";
 
 const intialState = {
   assets: [],
+  assetTypeForm: {
+    visible: false,
+    loading: false,
+    errors: null,
+    fields: []
+  },
   isLoading: false
 };
 
@@ -45,7 +53,14 @@ export default function spaceReducer(state = intialState, action) {
         assets: [...state.assets, action.payload]
       };
     case ADD_ASSET_FAILURE:
-      return state;
+      return {
+        ...state,
+        assetTypeForm: {
+          ...state.assetTypeForm,
+          loading: false,
+          errors: action.errors
+        }
+      };
     /* *************************** */
 
     case UPDATE_ASSET_REQUEST:
@@ -59,7 +74,14 @@ export default function spaceReducer(state = intialState, action) {
         })
       };
     case UPDATE_ASSET_FAILURE:
-      return state;
+      return {
+        ...state,
+        assetTypeForm: {
+          ...state.assetTypeForm,
+          loading: false,
+          errors: action.errors
+        }
+      };
     /* *************************** */
 
     case DELETE_ASSET_REQUEST:
@@ -92,6 +114,26 @@ export default function spaceReducer(state = intialState, action) {
         assets: state.assets.map(asset =>
           asset.id === undefined ? { ...asset, status: action.payload } : asset
         )
+      };
+    case FILL_ASSET_FORM:
+      return {
+        ...state,
+        spaceTypeForm: {
+          ...state.spaceTypeForm,
+          fields: action.payload,
+          visible: true,
+          errors: null
+        }
+      };
+    case EMPTY_ASSET_FORM:
+      return {
+        ...state,
+        spaceTypeForm: {
+          ...state.spaceTypeForm,
+          visible: false,
+          fields: action.payload,
+          errors: null
+        }
       };
     default:
       return state;
