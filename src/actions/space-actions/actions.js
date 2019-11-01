@@ -88,16 +88,16 @@ export function addSpace(ressourceType) {
       },
       err => {
         console.log(ADD_SPACE_FAILURE, err);
-        dispatch({ type: ADD_SPACE_FAILURE });
+        dispatch({ type: ADD_SPACE_FAILURE ,errors: err.response.data.errors});
       }
     );
   };
 }
 
-export function updateSpace(id, ressourceType) {
+export function updateSpace(ressourceType) {
   return dispatch => {
     dispatch({ type: UPDATE_SPACE_REQUEST });
-    SpaceServices.updateSpace(id, ressourceType).then(
+    SpaceServices.updateSpace(ressourceType.id, ressourceType).then(
       response => {
         dispatch({
           type: UPDATE_SPACE_SUCCESS,
@@ -108,7 +108,7 @@ export function updateSpace(id, ressourceType) {
       },
       err => {
         console.log(UPDATE_SPACE_FAILURE, err);
-        dispatch({ type: UPDATE_SPACE_FAILURE });
+        dispatch({ type: UPDATE_SPACE_FAILURE ,errors: err.response.data.errors});
       }
     );
   };
