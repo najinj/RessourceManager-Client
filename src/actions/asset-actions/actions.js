@@ -13,7 +13,9 @@ import {
   UPDATE_ASSET_SUCCESS,
   ADD_ASSET_TO_TABLE,
   DELETE_ASSET_FROM_TABLE,
-  UPDATE_ASSET_FROM_TABLE
+  UPDATE_ASSET_FROM_TABLE,
+  FILL_ASSET_FORM,
+  EMPTY_ASSET_FORM
 } from "./types";
 import AssetsServices from "./service";
 
@@ -104,5 +106,19 @@ export function deleteAsset(id) {
         dispatch({ type: DELETE_ASSET_FAILURE });
       }
     );
+  };
+}
+
+export function fillAssetForm(asset) {
+  return {
+    type: FILL_ASSET_FORM,
+    payload: asset
+  };
+}
+
+export function emptyAssetForm() {
+  return {
+    type: EMPTY_ASSET_FORM,
+    payload: null
   };
 }
