@@ -1,6 +1,5 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from "react";
@@ -27,8 +26,8 @@ const EditableTable = ({
   filters,
   isLoading,
   loadSpaces,
-  getRessourceTypeByType,
-  deleteSpace,
+  getSpaceRessourceTypes,
+  removeSpace,
   openForm,
   closeForm,
   formVisible,
@@ -41,7 +40,7 @@ const EditableTable = ({
   const [userAction, SetUserAction] = useState("");
 
   useEffect(() => {
-    getRessourceTypeByType(1);
+    getSpaceRessourceTypes(1);
     loadSpaces();
   }, []);
 
@@ -57,11 +56,11 @@ const EditableTable = ({
   };
 
   const deleteRow = key => {
-    deleteSpace(key);
+    removeSpace(key);
   };
 
   const edit = editableRecord => {
-    const record = { ...editableRecord };
+    const space = { ...editableRecord };
     const formColumns = columns.map(col => {
       if (col.dataIndex === "spaceTypeId") {
         return {
@@ -94,7 +93,7 @@ const EditableTable = ({
         })
       };
     });
-    const fields = formColumns.slice(0, 5).map(col => col.onCell(record));
+    const fields = formColumns.slice(0, 5).map(col => col.onCell(space));
     console.log(fields);
     openForm(fields);
     SetUserAction({execute :updateEntitie});
@@ -305,8 +304,8 @@ const EditableFormTable = Form.create()(EditableTable);
 const mapDispatchToProps = dispatch => {
   return {
     loadSpaces: () => dispatch(fetchSpaces()),
-    deleteSpace: id => dispatch(deleteSpace(id)),
-    getRessourceTypeByType: type => dispatch(getRessourceTypeByType(type)),
+    removeSpace: id => dispatch(deleteSpace(id)),
+    getSpaceRessourceTypes: type => dispatch(getRessourceTypeByType(type)),
     openForm: form => dispatch(fillSpaceForm(form)),
     closeForm: () => dispatch(emptySpaceForm()),
     updateEntitie: (id, space) => dispatch(updateSpace(id, space)),
