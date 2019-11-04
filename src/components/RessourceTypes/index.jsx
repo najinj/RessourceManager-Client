@@ -15,7 +15,7 @@ import {
 } from "../../actions/ressourceTypes-actions/actions";
 
 const EditableContext = React.createContext();
-const { confirm } = Modal;
+const { confirm, error } = Modal;
 const filters = [
   {
     text: "Space",
@@ -55,20 +55,26 @@ const EditableTable = ({
     removeEntitie(key);
   };
   const showDeleteConfirm = (type, record) => {
-    confirm({
-      title: `Are you sure delete this ${type}?`,
-      content: `Name : ${record.name}`,
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk() {
-        console.log("OK");
-        deleteRow(record.key);
-      },
-      onCancel() {
-        console.log("Cancel");
-      }
-    });
+    if (record.count) {
+      error({
+        title: `Can't delete this ${type}`,
+        content: `${record.name} has ${record.count} resources attached to it`
+      });
+    } else
+      confirm({
+        title: `Are you sure delete this ${type}?`,
+        content: `Name : ${record.name}`,
+        okText: "Yes",
+        okType: "danger",
+        cancelText: "No",
+        onOk() {
+          console.log("OK");
+          deleteRow(record.key);
+        },
+        onCancel() {
+          console.log("Cancel");
+        }
+      });
   };
 
   const columns = [
