@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from "react";
-import { Table, Popconfirm, Form, Divider, Button, Tag } from "antd";
+import { Table, Modal, Form, Divider, Button, Tag } from "antd";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
 import TableForm from "../TableForm";
@@ -15,6 +15,7 @@ import {
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
 
 const EditableContext = React.createContext();
+const {confirm} = Modal;
 
 const EditableTable = ({
   form,
@@ -54,6 +55,23 @@ const EditableTable = ({
   const deleteRow = key => {
     removeEntitie(key);
   };
+
+  const showDeleteConfirm = (type,record) => {
+    confirm({
+      title: `Are you sure delete this ${type}?`,
+      content : `Name : ${record.name}`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        console.log('OK');
+        deleteRow(record.key);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
 
   const edit = editableRecord => {
     const space = { ...editableRecord };
@@ -207,12 +225,7 @@ const EditableTable = ({
               Edit
             </Button>
             <Divider type="vertical" />
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => deleteRow(record.key)}
-            >
-              <Button type="link">Delete</Button>
-            </Popconfirm>
+            <Button type="link" onClick={()=>showDeleteConfirm("Space",record)}>Delete</Button>
           </span>
         );
       }
