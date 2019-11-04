@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from "react";
-import { Table, Popconfirm, Form, Divider, Button } from "antd";
+import { Table, Modal, Form, Divider, Button } from "antd";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -26,6 +26,7 @@ const Status = {
   }
 };
 const EditableContext = React.createContext();
+const {confirm} = Modal;
 
 const EditableTable = ({
   form,
@@ -75,6 +76,22 @@ const EditableTable = ({
   const deleteRow = key => {
     deleteEentitie(key);
   };
+  const showDeleteConfirm = (type,record) => {
+    confirm({
+      title: `Are you sure delete this ${type}?`,
+      content : `Name : ${record.name}`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        console.log('OK');
+        deleteRow(record.key);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
 
   const columns = [
     {
@@ -145,12 +162,7 @@ const EditableTable = ({
               Edit
             </Button>
             <Divider type="vertical" />
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => deleteRow(record.key)}
-            >
-              <Button type="link">Delete</Button>
-            </Popconfirm>
+            <Button type="link" onClick={()=>showDeleteConfirm("Resource Type",record)}>Delete</Button>
           </span>
         );
       }
