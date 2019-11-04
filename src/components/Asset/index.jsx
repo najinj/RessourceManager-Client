@@ -26,7 +26,7 @@ const Status = {
   }
 };
 const EditableContext = React.createContext();
-const {confirm} = Modal;
+const { confirm } = Modal;
 
 const EditableTable = ({
   form,
@@ -76,22 +76,22 @@ const EditableTable = ({
   const deleteRow = key => {
     deleteEentitie(key);
   };
-  const showDeleteConfirm = (type,record) => {
+  const showDeleteConfirm = (type, record) => {
     confirm({
       title: `Are you sure delete this ${type}?`,
-      content : `Name : ${record.name}`,
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      content: `Name : ${record.name}`,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk() {
-        console.log('OK');
+        console.log("OK");
         deleteRow(record.key);
       },
       onCancel() {
-        console.log('Cancel');
-      },
+        console.log("Cancel");
+      }
     });
-  }
+  };
 
   const columns = [
     {
@@ -162,7 +162,12 @@ const EditableTable = ({
               Edit
             </Button>
             <Divider type="vertical" />
-            <Button type="link" onClick={()=>showDeleteConfirm("Resource Type",record)}>Delete</Button>
+            <Button
+              type="link"
+              onClick={() => showDeleteConfirm("Resource Type", record)}
+            >
+              Delete
+            </Button>
           </span>
         );
       }

@@ -15,7 +15,7 @@ import {
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
 
 const EditableContext = React.createContext();
-const {confirm} = Modal;
+const { confirm } = Modal;
 
 const EditableTable = ({
   form,
@@ -56,22 +56,22 @@ const EditableTable = ({
     removeEntitie(key);
   };
 
-  const showDeleteConfirm = (type,record) => {
+  const showDeleteConfirm = (type, record) => {
     confirm({
       title: `Are you sure delete this ${type}?`,
-      content : `Name : ${record.name}`,
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      content: `Name : ${record.name}`,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk() {
-        console.log('OK');
+        console.log("OK");
         deleteRow(record.key);
       },
       onCancel() {
-        console.log('Cancel');
-      },
+        console.log("Cancel");
+      }
     });
-  }
+  };
 
   const edit = editableRecord => {
     const space = { ...editableRecord };
@@ -225,7 +225,12 @@ const EditableTable = ({
               Edit
             </Button>
             <Divider type="vertical" />
-            <Button type="link" onClick={()=>showDeleteConfirm("Space",record)}>Delete</Button>
+            <Button
+              type="link"
+              onClick={() => showDeleteConfirm("Space", record)}
+            >
+              Delete
+            </Button>
           </span>
         );
       }

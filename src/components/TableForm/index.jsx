@@ -9,7 +9,6 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Input, Form, Select, Tag, Tooltip, Icon, Modal } from "antd";
 
-
 const Status = {
   Chained: {
     value: 0,
@@ -276,5 +275,3 @@ const getParameterCaseInsensitive = (object, key) => {
 };
 
 export default TableForm;
-
-
