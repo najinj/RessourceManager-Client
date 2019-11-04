@@ -8,11 +8,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Input, Form, Select, Tag, Tooltip, Icon, Modal } from "antd";
-import {
-  updateRessourceType,
-  addRessourceType
-} from "../../actions/ressourceTypes-actions/actions";
-import { addSpace, updateSpace } from "../../actions/space-actions/actions";
+
 
 const Status = {
   Chained: {
@@ -273,32 +269,12 @@ const TableForm = ({
     </Modal>
   );
 };
-
-const mapDispatchToProps = dispatch => {
-  return {
-    updateRessourceType: (id, ressourceType) =>
-      dispatch(updateRessourceType(id, ressourceType)),
-    addRessourceType: ressourceType =>
-      dispatch(addRessourceType(ressourceType)),
-    updateSpace: (id, space) => dispatch(updateSpace(id, space)),
-    addSpace: space => dispatch(addSpace(space))
-  };
-};
-const mapStateToProps = state => ({
-  visible: state.ressourceTypeReducer.ressourceTypeForm.visible,
-  fields: state.ressourceTypeReducer.ressourceTypeForm.fields,
-  errors: state.ressourceTypeReducer.ressourceTypeForm.errors,
-  loading: state.ressourceTypeReducer.ressourceTypeForm.loading
-});
-const ConnectedTableForm = connect(
-  null,
-  mapDispatchToProps
-)(TableForm);
-
-export default ConnectedTableForm;
-
 const getParameterCaseInsensitive = (object, key) => {
   return object[
     Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())
   ];
 };
+
+export default TableForm;
+
+
