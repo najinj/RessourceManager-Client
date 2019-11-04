@@ -290,7 +290,7 @@ const EditableTable = ({
         validateFields={form.validateFields}
         visible={formVisible}
         fields={formFields}
-        isLoading={formLoading}
+        loading={formLoading}
         errors={formErrors}
       />
       <EditableContext.Provider value={form}>
