@@ -75,76 +75,12 @@ const EditableTable = ({
 
   const edit = editableRecord => {
     const space = { ...editableRecord };
-    const formColumns = columns.map(col => {
-      if (col.dataIndex === "spaceTypeId") {
-        return {
-          ...col,
-          onCell: record => ({
-            key: `${record.key}_${col.dataIndex}`,
-            record,
-            required: col.required,
-            inputType: "combo",
-            dataIndex: col.dataIndex,
-            title: col.title,
-            options: spaceFilter,
-            getFieldDecorator: form.getFieldDecorator,
-            validateFields: form.validateFields
-          })
-        };
-      }
-      return {
-        ...col,
-        onCell: record => ({
-          key: `${record.key}_${col.dataIndex}`,
-          record,
-          required: col.required,
-          inputType: col.dataIndex === "tags" ? "tags" : "text",
-          dataIndex: col.dataIndex,
-          title: col.title,
-          getFieldDecorator: form.getFieldDecorator,
-          tagsArray: record.tags,
-          validateFields: form.validateFields
-        })
-      };
-    });
-    const fields = formColumns.slice(0, 5).map(col => col.onCell(space));
+    const fields = columnsMaped.slice(0, 5).map(col => col.onCell(space));
     console.log(fields);
     openForm(fields);
     SetUserAction({ execute: updateEntitie });
   };
   const handleAdd = () => {
-    const formColumns = columns.map(col => {
-      if (col.dataIndex === "spaceTypeId") {
-        return {
-          ...col,
-          onCell: record => ({
-            key: `_${col.dataIndex}`,
-            record,
-            required: col.required,
-            inputType: "combo",
-            dataIndex: col.dataIndex,
-            title: col.title,
-            options: spaceFilter,
-            getFieldDecorator: form.getFieldDecorator,
-            validateFields: form.validateFields
-          })
-        };
-      }
-      return {
-        ...col,
-        onCell: record => ({
-          key: `_${col.dataIndex}`,
-          record,
-          required: col.required,
-          inputType: col.dataIndex === "tags" ? "tags" : "text",
-          dataIndex: col.dataIndex,
-          title: col.title,
-          getFieldDecorator: form.getFieldDecorator,
-          tagsArray: record.tags,
-          validateFields: form.validateFields
-        })
-      };
-    });
     const record = {
       name: "",
       capacity: 0,
@@ -153,7 +89,7 @@ const EditableTable = ({
       tags: [],
       assests: []
     };
-    const fields = formColumns.slice(0, 5).map(col => col.onCell(record));
+    const fields = columnsMaped.slice(0, 5).map(col => col.onCell(record));
     openForm(fields);
     SetUserAction({ execute: addEntitie });
   };
@@ -207,7 +143,7 @@ const EditableTable = ({
       title: "Capacity",
       dataIndex: "capacity",
       width: "10%",
-      editable: false
+      editable: true
     },
     {
       title: "Assets",
@@ -247,33 +183,36 @@ const EditableTable = ({
     assests: space.assests
   }));
   const columnsMaped = columns.map(col => {
-    if (!col.editable) {
-      return col;
-    }
     if (col.dataIndex === "spaceTypeId") {
       return {
         ...col,
         onCell: record => ({
+          key: `_${col.dataIndex}`,
           record,
           required: col.required,
           inputType: "combo",
           dataIndex: col.dataIndex,
           title: col.title,
           options: spaceFilter,
-          getFieldDecorator: form.getFieldDecorator
+          getFieldDecorator: form.getFieldDecorator,
+          validateFields: form.validateFields,
+          editable: !col.editable
         })
       };
     }
     return {
       ...col,
       onCell: record => ({
+        key: `_${col.dataIndex}`,
         record,
         required: col.required,
         inputType: col.dataIndex === "tags" ? "tags" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         getFieldDecorator: form.getFieldDecorator,
-        tagsArray: record.tags
+        tagsArray: record.tags,
+        validateFields: form.validateFields,
+        editable: !col.editable
       })
     };
   });

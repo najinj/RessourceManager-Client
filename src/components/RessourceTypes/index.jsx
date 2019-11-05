@@ -157,29 +157,14 @@ const EditableTable = ({
         dataIndex: col.dataIndex,
         title: col.title,
         options: filters,
-        getFieldDecorator: form.getFieldDecorator
+        getFieldDecorator: form.getFieldDecorator,
+        validateFields: form.validateFields
       })
     };
   });
   const edit = editableRecord => {
     const record = { ...editableRecord };
-    const formColumns = columns.map(col => {
-      return {
-        ...col,
-        onCell: ressourceType => ({
-          key: `${record.key}_${col.dataIndex}`,
-          record: ressourceType,
-          required: col.required,
-          inputType: col.dataIndex === "type" ? "combo" : "text",
-          dataIndex: col.dataIndex,
-          title: col.title,
-          options: filters,
-          getFieldDecorator: form.getFieldDecorator,
-          validateFields: form.validateFields
-        })
-      };
-    });
-    const fields = formColumns.slice(0, 3).map(col => col.onCell(record));
+    const fields = columnsMaped.slice(0, 3).map(col => col.onCell(record));
     console.log(fields);
     openForm(fields);
     SetUserAction({ execute: updateEntitie });
