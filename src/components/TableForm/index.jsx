@@ -37,7 +37,7 @@ const TableForm = ({
   const [assetStatus, SetAssetStatus] = useState("");
 
   useEffect(() => {
-    if (fields.length) {
+    if (fields !== null && fields.length) {
       if (fields[0].record.tags !== undefined) {
         const tagsArray = fields
           .reduce((acc, curr) => {
