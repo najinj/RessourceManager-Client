@@ -58,7 +58,10 @@ export default function ressourceTypeReducer(state = intialState, action) {
     case ADD_RESSOURCE_TYPE_SUCCESS:
       return {
         ...state,
-        ressourceTypes: [...state.ressourceTypes, action.payload]
+        ressourceTypes: [...state.ressourceTypes, action.payload],
+        ressourceTypeForm: {
+          loading: false
+        }
       };
     case ADD_RESSOURCE_TYPE_FAILURE:
       return {
