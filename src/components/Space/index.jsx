@@ -24,15 +24,15 @@ const EditableTable = ({
   isLoading,
   loadEntities,
   getSpaceRessourceTypes,
-  removeEntitie,
+  removeEntity,
   openForm,
   closeForm,
   formVisible,
   formLoading,
   formErrors,
   formFields,
-  addEntitie,
-  updateEntitie
+  addEntity,
+  updateEntity
 }) => {
   const [userAction, SetUserAction] = useState("");
 
@@ -53,7 +53,7 @@ const EditableTable = ({
   };
 
   const deleteRow = key => {
-    removeEntitie(key);
+    removeEntity(key);
   };
 
   const showDeleteConfirm = (type, record) => {
@@ -78,7 +78,7 @@ const EditableTable = ({
     const fields = columnsMaped.slice(0, 5).map(col => col.onCell(space));
     console.log(fields);
     openForm(fields);
-    SetUserAction({ execute: updateEntitie });
+    SetUserAction({ execute: updateEntity });
   };
   const handleAdd = () => {
     const record = {
@@ -87,11 +87,11 @@ const EditableTable = ({
       spaceTypeId: "",
       count: 0,
       tags: [],
-      assests: []
+      assets: []
     };
     const fields = columnsMaped.slice(0, 5).map(col => col.onCell(record));
     openForm(fields);
-    SetUserAction({ execute: addEntitie });
+    SetUserAction({ execute: addEntity });
   };
 
   const columns = [
@@ -147,7 +147,7 @@ const EditableTable = ({
     },
     {
       title: "Assets",
-      dataIndex: "assests",
+      dataIndex: "assets",
       width: "10%",
       editable: false
     },
@@ -180,7 +180,7 @@ const EditableTable = ({
     spaceTypeId: space.spaceTypeId,
     count: space.count,
     tags: space.tags,
-    assests: space.assests
+    assets: space.assets
   }));
   const columnsMaped = columns.map(col => {
     if (col.dataIndex === "spaceTypeId") {
@@ -257,7 +257,7 @@ EditableTable.propTypes = {
       spaceTypeId: string,
       count: number,
       tags: arrayOf(string),
-      assests: arrayOf(string)
+      assets: arrayOf(string)
     })
   ),
   filters: arrayOf(
@@ -269,15 +269,15 @@ EditableTable.propTypes = {
   isLoading: bool,
   loadEntities: func,
   getSpaceRessourceTypes: func,
-  removeEntitie: func,
+  removeEntity: func,
   openForm: func,
   closeForm: func,
   formVisible: bool,
   formFields: arrayOf(shape()),
   formLoading: bool,
   formErrors: arrayOf(shape()),
-  addEntitie: func,
-  updateEntitie: func
+  addEntity: func,
+  updateEntity: func
 };
 EditableTable.defaultProps = {
   form: {},
@@ -286,15 +286,15 @@ EditableTable.defaultProps = {
   isLoading: false,
   getSpaceRessourceTypes: func,
   loadEntities: func,
-  removeEntitie: func,
+  removeEntity: func,
   openForm: func,
   closeForm: func,
   formVisible: false,
   formFields: null,
   formLoading: false,
   formErrors: null,
-  addEntitie: null,
-  updateEntitie: null
+  addEntity: null,
+  updateEntity: null
 };
 
 const EditableFormTable = Form.create()(EditableTable);
@@ -302,12 +302,12 @@ const EditableFormTable = Form.create()(EditableTable);
 const mapDispatchToProps = dispatch => {
   return {
     loadEntities: () => dispatch(fetchSpaces()),
-    removeEntitie: id => dispatch(deleteSpace(id)),
+    removeEntity: id => dispatch(deleteSpace(id)),
     getSpaceRessourceTypes: type => dispatch(getRessourceTypeByType(type)),
     openForm: form => dispatch(fillSpaceForm(form)),
     closeForm: () => dispatch(emptySpaceForm()),
-    updateEntitie: (id, space) => dispatch(updateSpace(id, space)),
-    addEntitie: space => dispatch(addSpace(space))
+    updateEntity: (id, space) => dispatch(updateSpace(id, space)),
+    addEntity: space => dispatch(addSpace(space))
   };
 };
 
