@@ -115,7 +115,7 @@ const TableForm = ({
             wrapperCol: { span: 14 }
           };
 
-    if (field.inputType === "combo") {
+    if (field.inputType === "select") {
       return (
         <Form.Item
           style={{ margin: 0 }}
@@ -219,6 +219,43 @@ const TableForm = ({
             })}
         >
           <span>{assetStatus.title}</span>
+        </Form.Item>
+      );
+    }
+    if (field.inputType === "multiSelect") {
+      return (
+        <Form.Item
+          style={{ margin: 0 }}
+          key={field.key}
+          label={field.title}
+          {...itemLayout}
+          {...(errors !== null &&
+            errors !== undefined &&
+            getParameterCaseInsensitive(errors, field.dataIndex) && {
+              help: getParameterCaseInsensitive(errors, field.dataIndex),
+              validateStatus: "error"
+            })}
+        >
+          {field.getFieldDecorator(field.dataIndex, {
+            rules: [
+              {
+                required: field.required,
+                message: `Please Input ${field.title}!`
+              }
+            ],
+            initialValue: field.record[field.dataIndex].map(asset => asset.id)
+          })(
+            <Select mode="multiple" style={{ width: "100%" }}>
+              {field.options.map(option => (
+                <Option
+                  value={option.value}
+                  key={`${field.key}_${field.dataIndex}_${option.text}`}
+                >
+                  {option.text}
+                </Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
       );
     }
