@@ -188,7 +188,7 @@ const EditableTable = ({
         onCell: record => ({
           record,
           required: col.required,
-          inputType: "combo",
+          inputType: "select",
           dataIndex: col.dataIndex,
           title: col.title,
           options: assetFilter,
@@ -204,7 +204,7 @@ const EditableTable = ({
       onCell: record => ({
         record,
         required: col.required,
-        inputType: col.dataIndex === "spaceId" ? "combo" : "text",
+        inputType: col.dataIndex === "spaceId" ? "select" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         options: col.dataIndex === "spaceId" ? spaceFiler : null,
@@ -290,7 +290,7 @@ EditableTable.propTypes = {
       name: string,
       SpaceId: string,
       assetTypeId: string,
-      status: Status.number
+      status: number
     })
   ),
   spaces: arrayOf(
