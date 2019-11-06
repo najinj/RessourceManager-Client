@@ -13,6 +13,7 @@ import {
   emptySpaceForm
 } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
+import { fetchAssets } from "../../actions/asset-actions/actions";
 
 const EditableContext = React.createContext();
 const { confirm } = Modal;
@@ -32,19 +33,28 @@ const EditableTable = ({
   formErrors,
   formFields,
   addEntity,
-  updateEntity
+  updateEntity,
+  loadAssets,
+  assets
 }) => {
   const [userAction, SetUserAction] = useState("");
 
   useEffect(() => {
     getSpaceRessourceTypes(1);
     loadEntities();
+    loadAssets();
   }, []);
 
   const spaceFilter = filters.map(ressourceType => {
     return {
       text: ressourceType.name,
       value: ressourceType.id
+    };
+  });
+  const assetFilter = assets.map(asset => {
+    return {
+      text: asset.name,
+      value: asset.id
     };
   });
   const handleCancel = () => {
@@ -87,7 +97,7 @@ const EditableTable = ({
       spaceTypeId: "",
       count: 0,
       tags: [],
-      assets: []
+      assests: []
     };
     const fields = columnsMaped.slice(0, 5).map(col => col.onCell(record));
     openForm(fields);
@@ -149,7 +159,18 @@ const EditableTable = ({
       title: "Assets",
       dataIndex: "assets",
       width: "10%",
-      editable: false
+      editable: true,
+      render: assetts => (
+        <span>
+          {assetts.map(asset => {
+            return (
+              <Tag key={`${asset.id}__${asset.name}`}>
+                {asset.name.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </span>
+      )
     },
     {
       title: "Actions",
@@ -180,20 +201,20 @@ const EditableTable = ({
     spaceTypeId: space.spaceTypeId,
     count: space.count,
     tags: space.tags,
-    assets: space.assets
+    assets: space.assests
   }));
   const columnsMaped = columns.map(col => {
-    if (col.dataIndex === "spaceTypeId") {
+    if (col.dataIndex === "spaceTypeId" || col.dataIndex === "assets") {
       return {
         ...col,
         onCell: record => ({
           key: `_${col.dataIndex}`,
           record,
           required: col.required,
-          inputType: "combo",
+          inputType: col.dataIndex === "spaceTypeId" ? "select" : "multiSelect",
           dataIndex: col.dataIndex,
           title: col.title,
-          options: spaceFilter,
+          options: col.dataIndex === "spaceTypeId" ? spaceFilter : assetFilter,
           getFieldDecorator: form.getFieldDecorator,
           validateFields: form.validateFields,
           editable: !col.editable
@@ -277,7 +298,16 @@ EditableTable.propTypes = {
   formLoading: bool,
   formErrors: arrayOf(shape()),
   addEntity: func,
-  updateEntity: func
+  updateEntity: func,
+  loadAssets: func,
+  assets: arrayOf(
+    shape({
+      name: string,
+      SpaceId: string,
+      assetTypeId: string,
+      status: number
+    })
+  )
 };
 EditableTable.defaultProps = {
   form: {},
@@ -294,7 +324,9 @@ EditableTable.defaultProps = {
   formLoading: false,
   formErrors: null,
   addEntity: null,
-  updateEntity: null
+  updateEntity: null,
+  loadAssets: func,
+  assets: []
 };
 
 const EditableFormTable = Form.create()(EditableTable);
@@ -307,7 +339,8 @@ const mapDispatchToProps = dispatch => {
     openForm: form => dispatch(fillSpaceForm(form)),
     closeForm: () => dispatch(emptySpaceForm()),
     updateEntity: (id, space) => dispatch(updateSpace(id, space)),
-    addEntity: space => dispatch(addSpace(space))
+    addEntity: space => dispatch(addSpace(space)),
+    loadAssets: () => dispatch(fetchAssets())
   };
 };
 
@@ -316,7 +349,7 @@ const mapStateToProps = state => {
     filters: state.ressourceTypeReducer.filters,
     spaces: state.spaceReducer.spaces,
     isLoading: state.ressourceTypeReducer.isLoading,
-
+    assets: state.assetReducer.assets,
     formVisible: state.spaceReducer.spaceTypeForm.visible,
     formFields: state.spaceReducer.spaceTypeForm.fields,
     formErrors: state.spaceReducer.spaceTypeForm.errors,
