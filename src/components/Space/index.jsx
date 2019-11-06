@@ -97,7 +97,7 @@ const EditableTable = ({
       spaceTypeId: "",
       count: 0,
       tags: [],
-      assests: []
+      assets: []
     };
     const fields = columnsMaped.slice(0, 5).map(col => col.onCell(record));
     openForm(fields);
