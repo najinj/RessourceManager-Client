@@ -1,7 +1,5 @@
 /* eslint-disable no-use-before-define */
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 
 import React, { useState, useEffect } from "react";
