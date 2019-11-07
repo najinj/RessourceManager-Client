@@ -243,7 +243,10 @@ const ModalForm = ({
                 message: `Please Input ${field.title}!`
               }
             ],
-            initialValue: field.record[field.dataIndex]!== undefined ? field.record[field.dataIndex].map(asset => asset.id) : undefined
+            initialValue:
+              field.record[field.dataIndex] !== undefined
+                ? field.record[field.dataIndex].map(asset => asset.id)
+                : undefined
           })(
             <Select mode="multiple" style={{ width: "100%" }}>
               {field.options.map(option => (
