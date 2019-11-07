@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 
@@ -17,6 +16,12 @@ const Status = {
 };
 
 const { Option } = Select;
+
+const getParameterCaseInsensitive = (object, key) => {
+  return object[
+    Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())
+  ];
+};
 
 const TableForm = ({
   fields,
@@ -301,10 +306,6 @@ const TableForm = ({
     </Modal>
   );
 };
-const getParameterCaseInsensitive = (object, key) => {
-  return object[
-    Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())
-  ];
-};
+
 
 export default TableForm;
