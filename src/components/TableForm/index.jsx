@@ -1,12 +1,10 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
 import { Input, Form, Select, Tag, Tooltip, Icon, Modal } from "antd";
 
 const Status = {
