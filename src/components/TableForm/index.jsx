@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/prop-types */
-
 import React, { useState, useEffect } from "react";
 import { Input, Form, Select, Tag, Tooltip, Icon, Modal } from "antd";
+import { shape, func, arrayOf, bool, string } from "prop-types";
 
 const Status = {
   Chained: {
@@ -306,6 +305,44 @@ const TableForm = ({
     </Modal>
   );
 };
-
+TableForm.propTypes = {
+  fields: arrayOf(
+    shape({
+      dataIndex: string,
+      getFieldDecorator: func,
+      inputType: string,
+      key: string,
+      options: arrayOf(
+        shape({
+          text: string,
+          value: string
+        })
+      ),
+      required: bool,
+      validateFields: func,
+      record: shape({
+        key: string,
+        name: string
+      })
+    })
+  ),
+  action: shape({
+    execute: func
+  }),
+  onCancel: func,
+  visible: bool,
+  errors: arrayOf(shape()),
+  validateFields: func,
+  loading: bool
+};
+TableForm.defaultProps = {
+  fields: null,
+  action: {},
+  onCancel: func,
+  visible: false,
+  errors: null,
+  validateFields: func,
+  loading: bool
+};
 
 export default TableForm;
