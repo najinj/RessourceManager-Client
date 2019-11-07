@@ -22,7 +22,7 @@ const getParameterCaseInsensitive = (object, key) => {
   ];
 };
 
-const TableForm = ({
+const ModalForm = ({
   fields,
   action,
   onCancel,
@@ -305,7 +305,7 @@ const TableForm = ({
     </Modal>
   );
 };
-TableForm.propTypes = {
+ModalForm.propTypes = {
   fields: arrayOf(
     shape({
       dataIndex: string,
@@ -335,7 +335,7 @@ TableForm.propTypes = {
   validateFields: func,
   loading: bool
 };
-TableForm.defaultProps = {
+ModalForm.defaultProps = {
   fields: null,
   action: {},
   onCancel: func,
@@ -345,4 +345,4 @@ TableForm.defaultProps = {
   loading: bool
 };
 
-export default TableForm;
+export default ModalForm;
