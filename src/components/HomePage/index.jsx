@@ -19,7 +19,12 @@ const SideNav = () => {
   return (
     <Router>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={onCollapse}
+          width={230}
+        >
           <div className="logo" />
           <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
             <Menu.Item key="1">
@@ -34,7 +39,7 @@ const SideNav = () => {
               key="sub1"
               title={
                 <span>
-                  <Icon type="ressourceManagment" />
+                  <Icon type="form" />
                   <span>Ressource Managment</span>
                 </span>
               }
