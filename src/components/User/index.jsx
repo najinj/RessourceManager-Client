@@ -81,7 +81,6 @@ const EditableTable = ({
     }
   ];
 
-
   const MappedRessourceTypes = users.map(user => ({
     key: user.email,
     name: user.name,
