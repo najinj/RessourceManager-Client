@@ -6,6 +6,9 @@ import Spaces from "../Space";
 import Assets from "../Asset";
 import Users from "../User";
 import Breadcrumbs from "../Breadcrumb";
+import Calendar from "../calendar";
+
+import "./main.css";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -61,6 +64,24 @@ const SideNav = () => {
               key="sub2"
               title={
                 <span>
+                  <Icon type="form" />
+                  <span>Reservations</span>
+                </span>
+              }
+            >
+              <Menu.Item key="3">
+                <span>Availability</span>
+                <Link to="/RessourceTypes" />
+              </Menu.Item>
+              <Menu.Item key="4">
+                <span>Calendar</span>
+                <Link to="/Calendar" />
+              </Menu.Item>
+            </SubMenu>
+            <SubMenu
+              key="sub3"
+              title={
+                <span>
                   <Icon type="team" />
                   <span>Users Managment</span>
                 </span>
@@ -86,6 +107,7 @@ const SideNav = () => {
               <Route exact path="/Spaces" component={Spaces} />
               <Route exact path="/Assets" component={Assets} />
               <Route exact path="/Users" component={Users} />
+              <Route exact path="/Calendar" component={Calendar} />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
