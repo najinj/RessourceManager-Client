@@ -4,6 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
+import { Button } from "antd";
 
 const Calendar = () => {
   const [calendarWeekends, SetCalendarWeekends] = useState(true);
@@ -24,38 +25,43 @@ const Calendar = () => {
   const handleDateClick = arg => {
     // eslint-disable-next-line no-restricted-globals
     if (confirm(`Would you like to add an event to ${arg.dateStr} ?`)) {
-      SetCalendarEvents({
+      SetCalendarEvents(
+        [
+          ...calendarEvents,
+          {
+            title: "New Event",
+            start: arg.start,
+            end: arg.end,
+            allDay: arg.allDay
+          }
+        ]
         // add new event data
-        calendarEvents: calendarEvents.concat({
-          // creates a new array
-          title: "New Event",
-          start: arg.date,
-          allDay: arg.allDay
-        })
-      });
+      );
+      console.log(calendarEvents);
     }
   };
 
   return (
     <div className="demo-app">
       <div className="demo-app-top">
-        <button onClick={toggleWeekends}>toggle weekends</button>
-        <button onClick={gotoPast}>go to a date in the past</button>
+        <Button onClick={toggleWeekends}>toggle weekends</Button>
+        <Button onClick={gotoPast}>go to a date in the past</Button>
         (also, click a date/time to add an event)
       </div>
       <div className="demo-app-calendar">
         <FullCalendar
-          defaultView="dayGridMonth"
+          defaultView="timeGridWeek"
           header={{
             left: "prev,next today",
             center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek"
+            right: "timeGridWeek"
           }}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           ref={calendarComponentRef}
           weekends={calendarWeekends}
           events={calendarEvents}
-          dateClick={handleDateClick}
+          selectable
+          select={handleDateClick}
         />
       </div>
     </div>
