@@ -6,7 +6,6 @@
 import React, { useEffect } from "react";
 import { Table, Form, Button } from "antd";
 import { connect } from "react-redux";
-import EditableCell from "../EditableCell";
 import {
   fetchUsers,
   ActivateOrDeactivateUser
@@ -82,12 +81,6 @@ const EditableTable = ({
     }
   ];
 
-  const components = {
-    body: {
-      cell: EditableCell
-    }
-  };
-
   const MappedRessourceTypes = users.map(user => ({
     key: user.email,
     name: user.name,
@@ -117,7 +110,6 @@ const EditableTable = ({
     <>
       <EditableContext.Provider value={form}>
         <Table
-          components={components}
           bordered
           dataSource={MappedRessourceTypes}
           columns={columnsMaped}

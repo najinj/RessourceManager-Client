@@ -13,7 +13,7 @@ import {
 } from "../../actions/asset-actions/actions";
 import { fetchSpaces } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
-import TableForm from "../TableForm";
+import ModalForm from "../ModalForm";
 
 const Status = {
   Chained: {
@@ -243,7 +243,7 @@ const EditableTable = ({
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
         Add a row
       </Button>
-      <TableForm
+      <ModalForm
         title="Title"
         action={userAction}
         onCancel={handleCancel}

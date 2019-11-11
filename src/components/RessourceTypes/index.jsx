@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Form, Divider, Button, Modal } from "antd";
 import { connect } from "react-redux";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
-import TableForm from "../TableForm";
+import ModalForm from "../ModalForm";
 
 import {
   fetchRessourceTypes,
@@ -202,7 +202,7 @@ const EditableTable = ({
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
         Add a row
       </Button>
-      <TableForm
+      <ModalForm
         title="Title"
         action={userAction}
         onCancel={handleCancel}

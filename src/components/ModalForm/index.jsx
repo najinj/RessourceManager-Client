@@ -1,13 +1,7 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-shadow */
-/* eslint-disable react/prop-types */
-
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
 import { Input, Form, Select, Tag, Tooltip, Icon, Modal } from "antd";
+import { shape, func, arrayOf, bool, string } from "prop-types";
 
 const Status = {
   Chained: {
@@ -22,7 +16,13 @@ const Status = {
 
 const { Option } = Select;
 
-const TableForm = ({
+const getParameterCaseInsensitive = (object, key) => {
+  return object[
+    Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())
+  ];
+};
+
+const ModalForm = ({
   fields,
   action,
   onCancel,
@@ -243,7 +243,10 @@ const TableForm = ({
                 message: `Please Input ${field.title}!`
               }
             ],
-            initialValue: field.record[field.dataIndex].map(asset => asset.id)
+            initialValue:
+              field.record[field.dataIndex] !== undefined
+                ? field.record[field.dataIndex].map(asset => asset.id)
+                : undefined
           })(
             <Select mode="multiple" style={{ width: "100%" }}>
               {field.options.map(option => (
@@ -305,10 +308,44 @@ const TableForm = ({
     </Modal>
   );
 };
-const getParameterCaseInsensitive = (object, key) => {
-  return object[
-    Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())
-  ];
+ModalForm.propTypes = {
+  fields: arrayOf(
+    shape({
+      dataIndex: string,
+      getFieldDecorator: func,
+      inputType: string,
+      key: string,
+      options: arrayOf(
+        shape({
+          text: string,
+          value: string
+        })
+      ),
+      required: bool,
+      validateFields: func,
+      record: shape({
+        key: string,
+        name: string
+      })
+    })
+  ),
+  action: shape({
+    execute: func
+  }),
+  onCancel: func,
+  visible: bool,
+  errors: arrayOf(shape()),
+  validateFields: func,
+  loading: bool
+};
+ModalForm.defaultProps = {
+  fields: null,
+  action: {},
+  onCancel: func,
+  visible: false,
+  errors: null,
+  validateFields: func,
+  loading: bool
 };
 
-export default TableForm;
+export default ModalForm;

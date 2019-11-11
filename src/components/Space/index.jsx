@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Modal, Form, Divider, Button, Tag } from "antd";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
-import TableForm from "../TableForm";
+import ModalForm from "../ModalForm";
 import {
   fetchSpaces,
   addSpace,
@@ -243,7 +243,7 @@ const EditableTable = ({
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
         Add a row
       </Button>
-      <TableForm
+      <ModalForm
         title="Title"
         action={userAction}
         onCancel={handleCancel}
