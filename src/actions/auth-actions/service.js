@@ -12,8 +12,9 @@ function logoutRequest() {
 function signinRequest(body) {
   return axiosInstance({
     method: "post",
-    url: "Account/Login",
-    data: body
+    url: "token",
+    data: body,
+    headers: { "Content-Type": "multipart/form-data" }
   });
 }
 
