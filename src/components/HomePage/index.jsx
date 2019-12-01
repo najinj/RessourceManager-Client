@@ -69,11 +69,11 @@ const SideNav = () => {
                 </span>
               }
             >
-              <Menu.Item key="3">
+              <Menu.Item key="6">
                 <span>Availability</span>
                 <Link to="/RessourceTypes" />
               </Menu.Item>
-              <Menu.Item key="4">
+              <Menu.Item key="7">
                 <span>Calendar</span>
                 <Link to="/Calendar" />
               </Menu.Item>
@@ -87,7 +87,7 @@ const SideNav = () => {
                 </span>
               }
             >
-              <Menu.Item key="6">
+              <Menu.Item key="8">
                 <span>Activate Accounts</span>
                 <Link to="/Users" />
               </Menu.Item>
