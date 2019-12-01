@@ -16,7 +16,10 @@ import AuthServices from "./service";
 export function signIn(values) {
   return dispatch => {
     dispatch({ type: SIGNIN_REQUEST });
-    AuthServices.signinRequest(values).then(
+    const bodyFormData = new FormData();
+    bodyFormData.set("username", values.Email);
+    bodyFormData.set("password", values.password);
+    AuthServices.signinRequest(bodyFormData).then(
       response => {
         localStorage.setItem("token", response.data.token);
         console.log("token ", localStorage.getItem("token"));
