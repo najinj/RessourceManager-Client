@@ -26,12 +26,20 @@ import {
   GET_USER_RESERVATIONS_FAILURE,
   CHECK_AVAILABILITY_REQUEST,
   CHECK_AVAILABILITY_SUCCESS,
-  CHECK_AVAILABILITY_FAILURE
+  CHECK_AVAILABILITY_FAILURE,
+  FILL_RESERVATION_FORM,
+  EMPTY_RESERVATION_FORM
 } from "../actions/reservation-action/types";
 
 const intialState = {
   calendarState: {
     reservations: [],
+    reservationForm: {
+      visible: false,
+      loading: false,
+      errors: null,
+      fields: []
+    },
     resourceId: null
   },
   allReservations: [],
@@ -68,6 +76,7 @@ const reservationReducer = (state = intialState, action) => {
       return {
         ...state,
         calendarState: {
+          ...state.calendarState,
           reservations: action.payload,
           resourceId: action.payload.resourceId
         }
@@ -94,6 +103,32 @@ const reservationReducer = (state = intialState, action) => {
       };
     case ADD_RESERVATION_FAILURE:
       return state;
+    case FILL_RESERVATION_FORM:
+      return {
+        ...state,
+        calendarState: {
+          ...state.calendarState,
+          reservationForm: {
+            fields: action.payload,
+            loading: false,
+            visible: true,
+            errors: null
+          }
+        }
+      };
+    case EMPTY_RESERVATION_FORM:
+      return {
+        ...state,
+        calendarState: {
+          ...state.calendarState,
+          reservationForm: {
+            loading: false,
+            visible: false,
+            fields: action.payload,
+            errors: null
+          }
+        }
+      };
 
     default:
       return state;
