@@ -134,9 +134,11 @@ export function getReservationsByResource(resourceId) {
     dispatch({ type: GET_RESERVATIONS_BY_RESOURCE_REQUEST });
     ReservationsServices.getReservationsByResource(resourceId).then(
       response => {
+        const payload = response.data;
+        payload.resourceId = resourceId;
         dispatch({
           type: GET_RESERVATIONS_BY_RESOURCE_SUCCESS,
-          payload: response.data
+          payload
         });
       },
       err => {
