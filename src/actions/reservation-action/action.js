@@ -25,7 +25,9 @@ import {
   GET_USER_RESERVATIONS_FAILURE,
   CHECK_AVAILABILITY_REQUEST,
   CHECK_AVAILABILITY_SUCCESS,
-  CHECK_AVAILABILITY_FAILURE
+  CHECK_AVAILABILITY_FAILURE,
+  FILL_RESERVATION_FORM,
+  EMPTY_RESERVATION_FORM
 } from "./types";
 import ReservationsServices from "./service";
 
@@ -212,5 +214,18 @@ export function getAvailability(reservationModel) {
         });
       }
     );
+  };
+}
+export function fillReservationForm(ressourceType) {
+  return {
+    type: FILL_RESERVATION_FORM,
+    payload: ressourceType
+  };
+}
+
+export function emptyReservationForm() {
+  return {
+    type: EMPTY_RESERVATION_FORM,
+    payload: []
   };
 }
