@@ -262,6 +262,58 @@ const ModalForm = ({
         </Form.Item>
       );
     }
+    if (field.inputType === "readOnly") {
+      return (
+        <Form.Item
+          style={{ margin: 0 }}
+          key={field.key}
+          label={field.title}
+          {...itemLayout}
+          {...(errors !== null &&
+            errors !== undefined &&
+            getParameterCaseInsensitive(errors, field.dataIndex) && {
+              help: getParameterCaseInsensitive(errors, field.dataIndex),
+              validateStatus: "error"
+            })}
+        >
+          {field.getFieldDecorator(field.dataIndex, {
+            rules: [
+              {
+                required: field.required,
+                message: `Please Input ${field.title}!`
+              }
+            ],
+            initialValue: field.record[field.dataIndex]
+          })(<span>{field.record[field.dataIndex].toString()}</span>)}
+        </Form.Item>
+      );
+    }
+    if (field.inputType === "hidden") {
+      return (
+        <Form.Item
+          style={{ margin: 0, display: "none" }}
+          key={field.key}
+          label={field.title}
+          {...itemLayout}
+          {...(errors !== null &&
+            errors !== undefined &&
+            getParameterCaseInsensitive(errors, field.dataIndex) && {
+              help: getParameterCaseInsensitive(errors, field.dataIndex),
+              validateStatus: "error"
+            })}
+        >
+          {field.getFieldDecorator(field.dataIndex, {
+            rules: [
+              {
+                required: field.required,
+                message: `Please Input ${field.title}!`
+              }
+            ],
+            initialValue: field.record[field.dataIndex]
+          })(<span>{field.record[field.dataIndex].toString()}</span>)}
+        </Form.Item>
+      );
+    }
     return (
       <Form.Item
         style={{ margin: 0 }}
