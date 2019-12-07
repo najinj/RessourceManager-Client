@@ -69,7 +69,7 @@ const reservationReducer = (state = intialState, action) => {
         ...state,
         calendarState: {
           reservations: action.payload,
-          resourceId: action.payload[0].resourceId
+          resourceId: action.payload.resourceId
         }
       };
     case GET_RESERVATIONS_BY_RESOURCE_FAILURE:
