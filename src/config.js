@@ -5,14 +5,14 @@ import { createBrowserHistory } from "history";
 export const history = createBrowserHistory();
 dotenv.config();
 
-// const token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 const axiosInstance = axios.create({
   baseURL: "https://localhost:44397/api/", // process.env.REACT_APP_API_URL,
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json"
-    // Authorization: `Bearer ${token}`
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`
   }
 });
 
