@@ -263,6 +263,14 @@ const ModalForm = ({
       );
     }
     if (field.inputType === "readOnly") {
+      const fieldValue =
+        field.record[field.dataIndex].value === undefined
+          ? field.record[field.dataIndex]
+          : field.record[field.dataIndex].value;
+      const fieldText =
+        field.record[field.dataIndex].text === undefined
+          ? field.record[field.dataIndex]
+          : field.record[field.dataIndex].text;
       return (
         <Form.Item
           style={{ margin: 0 }}
@@ -283,8 +291,8 @@ const ModalForm = ({
                 message: `Please Input ${field.title}!`
               }
             ],
-            initialValue: field.record[field.dataIndex]
-          })(<span>{field.record[field.dataIndex].toString()}</span>)}
+            initialValue: fieldValue
+          })(<span>{fieldText.toString()}</span>)}
         </Form.Item>
       );
     }
