@@ -103,7 +103,17 @@ const reservationReducer = (state = intialState, action) => {
         }
       };
     case ADD_RESERVATION_FAILURE:
-      return state;
+      return {
+        ...state,
+        calendarState: {
+          ...state.calendarState,
+          reservationForm: {
+            ...state.calendarState.reservationForm,
+            loading: false,
+            errors: action.error
+          }
+        }
+      };
     case FILL_RESERVATION_FORM:
       return {
         ...state,
