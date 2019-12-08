@@ -90,6 +90,7 @@ const reservationReducer = (state = intialState, action) => {
       return {
         ...state,
         calendarState: {
+          ...state.calendarState,
           reservations:
             // eslint-disable-next-line no-nested-ternary
             !Array.isArray(action.payload) &&
