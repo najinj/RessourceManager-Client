@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
-import { Calendar, Select, Form } from "antd";
+import { Calendar, Select, Form, Modal } from "antd";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
@@ -45,6 +45,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 const { Option } = Select;
+const { error } = Modal;
 
 const columns = [
   {
@@ -70,7 +71,7 @@ const columns = [
   },
   {
     title: "Description",
-    dataIndex: "description",
+    dataIndex: "title",
     editable: true,
     required: false,
     inputType: "text"
@@ -138,45 +139,52 @@ const CalendarView = ({
 
 */
   const handleAdd = arg => {
-    const formColumns = columns.map(col => {
-      return {
-        ...col,
-        onCell: record => ({
-          key: `_${col.dataIndex}`,
-          record,
-          required: col.required,
-          inputType: col.inputType,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          getFieldDecorator: form.getFieldDecorator,
-          validateFields: form.validateFields
-        })
+    if (resourceId == null) {
+      error({
+        title: `Can't Add a reservation`,
+        content: `No resource has been selected , please select a resource before adding a reservation`
+      });
+    } else {
+      const formColumns = columns.map(col => {
+        return {
+          ...col,
+          onCell: record => ({
+            key: `_${col.dataIndex}`,
+            record,
+            required: col.required,
+            inputType: col.inputType,
+            dataIndex: col.dataIndex,
+            title: col.title,
+            getFieldDecorator: form.getFieldDecorator,
+            validateFields: form.validateFields
+          })
+        };
+      });
+      const record = {
+        resourceName: spaceOptions.reduce(
+          (acc, curr) => (curr.value === resourceId ? curr.text : acc),
+          ""
+        ),
+        start: {
+          value: arg.start,
+          text: `${moment(arg.start).format("DD/MM/YYYY")} at ${moment(
+            arg.start
+          ).format("HH:mm")}`
+        },
+        end: {
+          value: arg.end,
+          text: `${moment(arg.end).format("DD/MM/YYYY")} at ${moment(
+            arg.end
+          ).format("HH:mm")}`
+        },
+        title: "",
+        resourceType: 1,
+        resourceId
       };
-    });
-    const record = {
-      resourceName: spaceOptions.reduce(
-        (acc, curr) => (curr.value === resourceId ? curr.text : acc),
-        ""
-      ),
-      start: {
-        value: arg.start,
-        text: `${moment(arg.start).format("DD/MM/YYYY")} at ${moment(
-          arg.start
-        ).format("HH:mm")}`
-      },
-      end: {
-        value: arg.end,
-        text: `${moment(arg.end).format("DD/MM/YYYY")} at ${moment(
-          arg.end
-        ).format("HH:mm")}`
-      },
-      description: "",
-      resourceType: 1,
-      resourceId
-    };
-    const fields = formColumns.map(col => col.onCell(record));
-    openForm(fields);
-    SetUserAction({ execute: addEntitie });
+      const fields = formColumns.map(col => col.onCell(record));
+      openForm(fields);
+      SetUserAction({ execute: addEntitie });
+    }
   };
   const mappedReservations = reservations.map(reservation => {
     return {
