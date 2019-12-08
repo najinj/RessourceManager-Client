@@ -111,7 +111,7 @@ export function addReservations(reservation) {
         console.log(ADD_RESERVATION_FAILURE, err);
         dispatch({
           type: ADD_RESERVATION_FAILURE,
-          error: err.response.data
+          error: err.response.data.errors
         });
       }
     );
