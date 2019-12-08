@@ -31,6 +31,13 @@ import {
 } from "./types";
 import ReservationsServices from "./service";
 
+export function emptyReservationForm() {
+  return {
+    type: EMPTY_RESERVATION_FORM,
+    payload: []
+  };
+}
+
 export function fetchReservations() {
   return dispatch => {
     dispatch({ type: FETCH_RESERVATIONS_REQUEST });
@@ -98,6 +105,7 @@ export function addReservations(reservation) {
           type: ADD_RESERVATION_SUCCESS,
           payload: response.data
         });
+        dispatch(emptyReservationForm());
       },
       err => {
         console.log(ADD_RESERVATION_FAILURE, err);
@@ -220,12 +228,5 @@ export function fillReservationForm(ressourceType) {
   return {
     type: FILL_RESERVATION_FORM,
     payload: ressourceType
-  };
-}
-
-export function emptyReservationForm() {
-  return {
-    type: EMPTY_RESERVATION_FORM,
-    payload: []
   };
 }
