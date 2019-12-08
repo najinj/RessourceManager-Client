@@ -344,7 +344,7 @@ const ModalForm = ({
           ],
           initialValue: field.record[field.dataIndex]
         })(
-          field.dataIndex === "description" ? (
+          field.dataIndex === "title" || field.dataIndex === "description" ? (
             <Input.TextArea
               autosize={{ minRows: 4, maxRows: 8 }}
               {...itemLayout}
