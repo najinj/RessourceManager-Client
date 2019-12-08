@@ -10,6 +10,7 @@ import { Calendar, Select, Form } from "antd";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
+import moment from "moment";
 import {
   getReservationsByResource,
   addReservations,
@@ -48,7 +49,7 @@ const { Option } = Select;
 const columns = [
   {
     title: "Resource",
-    dataIndex: "resourceId",
+    dataIndex: "resourceName",
     required: true,
     editable: false,
     inputType: "readOnly"
@@ -77,6 +78,13 @@ const columns = [
   {
     title: "Resource Type",
     dataIndex: "resourceType",
+    editable: false,
+    hidden: true,
+    inputType: "hidden"
+  },
+  {
+    title: "Resource",
+    dataIndex: "resourceId",
     editable: false,
     hidden: true,
     inputType: "hidden"
@@ -146,11 +154,25 @@ const CalendarView = ({
       };
     });
     const record = {
-      resourceId,
-      start: arg.start,
-      end: arg.end,
+      resourceName: spaceOptions.reduce(
+        (acc, curr) => (curr.value === resourceId ? curr.text : acc),
+        ""
+      ),
+      start: {
+        value: arg.start,
+        text: `${moment(arg.start).format("DD/MM/YYYY")} at ${moment(
+          arg.start
+        ).format("HH:mm")}`
+      },
+      end: {
+        value: arg.end,
+        text: `${moment(arg.end).format("DD/MM/YYYY")} at ${moment(
+          arg.end
+        ).format("HH:mm")}`
+      },
       description: "",
-      resourceType: 1
+      resourceType: 1,
+      resourceId
     };
     const fields = formColumns.map(col => col.onCell(record));
     openForm(fields);
