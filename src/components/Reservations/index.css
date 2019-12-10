@@ -1,0 +1,36 @@
+.reservation-container .ant-card-body {
+  display: flex;
+}
+.reservation-container .ant-card {
+  margin: auto;
+}
+.reservation-info {
+  width: 80%;
+}
+.resource-time-info {
+  display: flex;
+}
+.resourceName,
+.resourceType,
+.resource-date,
+.resource-time {
+  padding: 10px;
+}
+.reservation-actions {
+  display: flex;
+  align-items: center;
+}
+.reservation-container {
+  padding: 10px;
+}
+.reservation-root-container {
+  display: flex;
+  flex-direction: row;
+}
+.reservation-filters {
+  width: 30%;
+  padding-top: 22px;
+}
+.reservations-list {
+  width: 70%;
+}
