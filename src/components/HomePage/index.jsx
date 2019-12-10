@@ -7,6 +7,7 @@ import Assets from "../Asset";
 import Users from "../User";
 import Breadcrumbs from "../Breadcrumb";
 import Calendar from "../calendar";
+import Reservations from "../Reservations";
 
 import "./main.css";
 
@@ -70,8 +71,8 @@ const SideNav = () => {
               }
             >
               <Menu.Item key="6">
-                <span>Availability</span>
-                <Link to="/RessourceTypes" />
+                <span>Reservations</span>
+                <Link to="/Reservations" />
               </Menu.Item>
               <Menu.Item key="7">
                 <span>Calendar</span>
@@ -108,6 +109,11 @@ const SideNav = () => {
               <Route exact path="/Assets" component={Assets} />
               <Route exact path="/Users" component={Users} />
               <Route exact path="/Calendar" component={Calendar} />
+              <Route
+                exact
+                path="/Reservations"
+                render={() => <Reservations isAdmin={false} />}
+              />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
