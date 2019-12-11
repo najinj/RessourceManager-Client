@@ -99,6 +99,14 @@ const Reservations = ({
 }) => {
   const [filteredUserReservations, SetFilteredUserReservations] = useState([]);
   const [filteredAllReservations, SetFilteredAllReservations] = useState([]);
+  const [filtredBy, SetFiltredBy] = useState({
+    resourceId: "",
+    resourceType: "",
+    startDate: "",
+    startTime: "",
+    endDate: "",
+    endTime: ""
+  });
   useEffect(() => {
     loadSpaces();
     if (!isAdmin) {
@@ -117,19 +125,28 @@ const Reservations = ({
     }
   }, [userReservations, allReservations]);
 
+  useEffect(() => {
+    SetFilteredUserReservations([
+      ...userReservations.filter(reservation => {
+        return Object.keys(filtredBy).every(key => {
+          if (filtredBy[key] === "") return true;
+          if (!moment.isMoment(filtredBy[key]))
+            return filtredBy[key] === reservation[key];
+          return true;
+        });
+      })
+    ]);
+  }, [filtredBy]);
+
   const filterReservations = (fieldId, val) => {
     if (!moment.isMoment(val)) {
-      isAdmin
-        ? SetFilteredAllReservations([
-            ...allReservations.filter(
-              reservation => reservation[fieldId] === val
-            )
-          ])
-        : SetFilteredUserReservations([
-            ...userReservations.filter(
-              reservation => reservation[fieldId] === val
-            )
-          ]);
+      if (!isAdmin && !moment.isMoment(val)) {
+        if (val == null || val === "") return;
+        SetFiltredBy({
+          ...filtredBy,
+          [fieldId]: val
+        });
+      }
     }
   };
 
