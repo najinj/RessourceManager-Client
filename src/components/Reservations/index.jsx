@@ -143,20 +143,37 @@ const Reservations = ({
   }, [userReservations, allReservations]);
 
   useEffect(() => {
-    SetFilteredUserReservations([
-      ...userReservations.filter(reservation => {
-        return Object.keys(filtredBy).every(key => {
-          if (filtredBy[key] === "") return true;
-          if (!moment.isMoment(filtredBy[key]))
-            return filtredBy[key] === reservation[key];
-          if (key.includes("start"))
-            return filterByDateOrTime(key, filtredBy[key], reservation.start);
-          if (key.includes("end"))
-            return filterByDateOrTime(key, filtredBy[key], reservation.end);
-          return true;
-        });
-      })
-    ]);
+    if (!isAdmin) {
+      SetFilteredUserReservations([
+        ...userReservations.filter(reservation => {
+          return Object.keys(filtredBy).every(key => {
+            if (filtredBy[key] === "") return true;
+            if (!moment.isMoment(filtredBy[key]))
+              return filtredBy[key] === reservation[key];
+            if (key.includes("start"))
+              return filterByDateOrTime(key, filtredBy[key], reservation.start);
+            if (key.includes("end"))
+              return filterByDateOrTime(key, filtredBy[key], reservation.end);
+            return true;
+          });
+        })
+      ]);
+    } else {
+      SetFilteredUserReservations([
+        ...allReservations.filter(reservation => {
+          return Object.keys(filtredBy).every(key => {
+            if (filtredBy[key] === "") return true;
+            if (!moment.isMoment(filtredBy[key]))
+              return filtredBy[key] === reservation[key];
+            if (key.includes("start"))
+              return filterByDateOrTime(key, filtredBy[key], reservation.start);
+            if (key.includes("end"))
+              return filterByDateOrTime(key, filtredBy[key], reservation.end);
+            return true;
+          });
+        })
+      ]);
+    }
   }, [filtredBy]);
 
   const filterReservations = (fieldId, val) => {
