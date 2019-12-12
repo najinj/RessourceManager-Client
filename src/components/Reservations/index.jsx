@@ -87,6 +87,23 @@ const Reservation = ({ reservation, spaces }) => {
     </div>
   );
 };
+const minutesOfDay = date => {
+  return date.minutes() + date.hours() * 60;
+};
+const filterByDateOrTime = (fieldId, fieldValue, item) => {
+  switch (fieldId) {
+    case "startDate":
+      return moment(fieldValue).isSameOrBefore(moment(item), "day");
+    case "startTime":
+      return minutesOfDay(moment(fieldValue)) <= minutesOfDay(moment(item));
+    case "endDate":
+      return !moment(fieldValue).isSameOrBefore(moment(item), "day");
+    case "endTime":
+      return minutesOfDay(moment(fieldValue)) >= minutesOfDay(moment(item));
+    default:
+      return false;
+  }
+};
 
 const Reservations = ({
   userReservations,
@@ -132,6 +149,10 @@ const Reservations = ({
           if (filtredBy[key] === "") return true;
           if (!moment.isMoment(filtredBy[key]))
             return filtredBy[key] === reservation[key];
+          if (key.includes("start"))
+            return filterByDateOrTime(key, filtredBy[key], reservation.start);
+          if (key.includes("end"))
+            return filterByDateOrTime(key, filtredBy[key], reservation.end);
           return true;
         });
       })
@@ -139,15 +160,10 @@ const Reservations = ({
   }, [filtredBy]);
 
   const filterReservations = (fieldId, val) => {
-    if (!moment.isMoment(val)) {
-      if (!isAdmin && !moment.isMoment(val)) {
-        if (val == null || val === "") return;
-        SetFiltredBy({
-          ...filtredBy,
-          [fieldId]: val
-        });
-      }
-    }
+    SetFiltredBy({
+      ...filtredBy,
+      [fieldId]: val == null ? "" : val
+    });
   };
 
   return (
