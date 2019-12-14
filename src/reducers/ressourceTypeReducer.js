@@ -52,6 +52,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
       return {
         ...state,
         ressourceTypeForm: {
+          ...state.ressourceTypeForm,
           loading: true
         }
       };
@@ -60,6 +61,7 @@ export default function ressourceTypeReducer(state = intialState, action) {
         ...state,
         ressourceTypes: [...state.ressourceTypes, action.payload],
         ressourceTypeForm: {
+          ...state.ressourceTypeForm,
           loading: false
         }
       };
