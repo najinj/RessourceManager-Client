@@ -153,7 +153,7 @@ const EditableTable = ({
         key: `${record.key}_${col.dataIndex}`,
         record: { ...record },
         required: col.required,
-        inputType: col.dataIndex === "type" ? "combo" : "text",
+        inputType: col.dataIndex === "type" ? "select" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
         options: filters,
