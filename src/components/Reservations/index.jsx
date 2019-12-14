@@ -84,10 +84,8 @@ const Reservations = ({
     loadSpaces();
     if (!isAdmin) {
       getUserEntities();
-      SetFilteredUserReservations(userReservations);
     } else {
       getEntitiesByDate(new Date());
-      SetFilteredAllReservations(allReservations);
     }
   }, []);
 
@@ -108,7 +106,7 @@ const Reservations = ({
         })
       ]);
     } else {
-      SetFilteredUserReservations([
+      SetFilteredAllReservations([
         ...allReservations.filter(reservation => {
           return Object.keys(filtredBy).every(key => {
             if (filtredBy[key] === "") return true;
