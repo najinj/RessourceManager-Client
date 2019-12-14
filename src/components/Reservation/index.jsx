@@ -91,17 +91,22 @@ const Reservation = ({
     <div className="reservation-container">
       <Card bordered style={{ borderLeft: "1px solid #1890ff" }}>
         <div className="icons-container">
-          <Popover
-            content="This reservation is included in a perdiodic reservation"
-            trigger="hover"
-          >
-            <Icon type="calendar" style={{ fontSize: "20px" }} />
-            <Icon type="sync" style={{ fontSize: "14px" }} rotate={60} />
-          </Popover>
           {reservation.periodicId !== "" ? (
-            <Popover content="Show parent periodic reservation" trigger="hover">
-              <Button onClick={show} icon="tag" />
-            </Popover>
+            <>
+              <Popover
+                content="This reservation is included in a perdiodic reservation"
+                trigger="hover"
+              >
+                <Icon type="calendar" style={{ fontSize: "20px" }} />
+                <Icon type="sync" style={{ fontSize: "14px" }} rotate={60} />
+              </Popover>
+              <Popover
+                content="Show parent periodic reservation"
+                trigger="hover"
+              >
+                <Button onClick={show} icon="tag" />
+              </Popover>
+            </>
           ) : (
             <div style={{ width: 32 }} />
           )}
