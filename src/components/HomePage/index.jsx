@@ -28,6 +28,8 @@ const SideNav = () => {
           collapsed={collapsed}
           onCollapse={onCollapse}
           width={230}
+          breakpoint="lg"
+          collapsedWidth="80"
         >
           <div className="logo" />
           <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
@@ -101,7 +103,7 @@ const SideNav = () => {
         </Sider>
         <Layout>
           <Header style={{ background: "#fff", padding: 0 }} />
-          <Content style={{ margin: "0 16px" }}>
+          <Content style={{ margin: "0 16px", minWidth: 660 }}>
             <Breadcrumbs style={{ margin: "16px 0" }} />
             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
               <Route exact path="/RessourceTypes" component={RessourceTypes} />
