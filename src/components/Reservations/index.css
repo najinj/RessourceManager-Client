@@ -19,6 +19,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .reservation-container {
   padding: 10px;
@@ -26,15 +27,14 @@
 .reservation-root-container {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 .reservation-filters {
-  width: 30%;
   padding-top: 22px;
+  flex-basis: 33.33%;
 }
 .reservations-list {
-  width: 70%;
-}
-.reservation-actions .anticon-calendar {
+  flex-basis: 66.66%;
 }
 .ant-card-body .anticon-sync {
   position: absolute;
@@ -57,4 +57,10 @@
 }
 .parent-reservation .anticon-sync {
   right: -5.5px;
+}
+@media only screen and (max-width: 1350px) {
+  .reservation-filters,
+  .reservations-list {
+    flex-basis: 100%;
+  }
 }
