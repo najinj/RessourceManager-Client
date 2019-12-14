@@ -62,7 +62,8 @@ export function deleteReservation(reservationId) {
     ReservationsServices.deleteReservation(reservationId).then(
       () => {
         dispatch({
-          type: DELETE_RESERVATION_SUCCESS
+          type: DELETE_RESERVATION_SUCCESS,
+          payload: reservationId
         });
       },
       err => {
@@ -82,7 +83,8 @@ export function deletePeriodicReservations(periodicId) {
     ReservationsServices.deletePeriodicReservations(periodicId).then(
       () => {
         dispatch({
-          type: DELETE_PERIODIC_RESERVATION_SUCCESS
+          type: DELETE_PERIODIC_RESERVATION_SUCCESS,
+          payload: periodicId
         });
       },
       err => {
