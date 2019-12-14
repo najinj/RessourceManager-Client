@@ -1,8 +1,15 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
-import { Card, Button, Icon, Popover, Tag } from "antd";
+import { Card, Button, Icon, Popover, Tag, Modal } from "antd";
 import QueueAnim from "rc-queue-anim";
 import moment from "moment";
+import { connect } from "react-redux";
+import {
+  deletePeriodicReservations,
+  deleteReservation
+} from "../../actions/reservation-action/action";
+
+const { confirm } = Modal;
 
 const resourceTypes = [
   {
@@ -15,7 +22,19 @@ const resourceTypes = [
   }
 ];
 
-const Reservation = ({ reservation, spaces }) => {
+const mapDispatchToProps = dispatch => {
+  return {
+    removeReservation: id => dispatch(deleteReservation(id)),
+    removePeriodicReservation: id => dispatch(deletePeriodicReservations(id))
+  };
+};
+
+const Reservation = ({
+  reservation,
+  spaces,
+  removeReservation,
+  removePeriodicReservation
+}) => {
   const [showPeriodicReservation, SetPeriodicReservation] = useState(false);
 
   useEffect(() => {
@@ -38,15 +57,39 @@ const Reservation = ({ reservation, spaces }) => {
     console.log(defaultWeekdays);
     return indexes.map(i => defaultWeekdays[i]);
   };
-  const cancelReservation = id => {
-    alert(id);
+  const cancelReservation = reserv => {
+    confirm({
+      title: `Are you sure delete this Reservation?`,
+      content: `Name : ${reserv.title}`,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        removeReservation(reserv.id);
+      },
+      onCancel() {
+        console.log("Cancel");
+      }
+    });
   };
-  const cancelPeriodicReservation = id => {
-    alert(id);
+  const cancelPeriodicReservation = reserv => {
+    confirm({
+      title: `Are you sure delete this Periodic Reservation?`,
+      content: `Deleting this reservation will result in the removal of all related reservations `,
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        removePeriodicReservation(reserv.periodicId);
+      },
+      onCancel() {
+        console.log("Cancel");
+      }
+    });
   };
   return (
     <div className="reservation-container">
-      <Card bordered style={{ borderLeft: "1px solid red" }}>
+      <Card bordered style={{ borderLeft: "1px solid #1890ff" }}>
         <div className="icons-container">
           <Popover
             content="This reservation is included in a perdiodic reservation"
@@ -63,7 +106,7 @@ const Reservation = ({ reservation, spaces }) => {
             <div style={{ width: 32 }} />
           )}
         </div>
-        <div className="reservation-info ant-col-20">
+        <div className="reservation-info ant-col-19">
           <div className="reservation-header">
             <span>Resource Title</span>
 
@@ -74,11 +117,11 @@ const Reservation = ({ reservation, spaces }) => {
               <span>Resource Name</span>
               <h4>{resourceName}</h4>
             </div>
-            <div className="resourceType ant-col-5">
+            <div className="resourceType ant-col-4">
               <span>Resource Type</span>
               <h4>{resourceType}</h4>
             </div>
-            <div className="resource-date ant-col-4">
+            <div className="resource-date ant-col-5">
               <span>Date</span>
               <h4>{moment(reservation.start).format("DD/MM/YYYY")}</h4>
             </div>
@@ -93,10 +136,7 @@ const Reservation = ({ reservation, spaces }) => {
           </div>
         </div>
         <div className="reservation-actions ant-col-4">
-          <Button
-            type="danger"
-            onClick={() => cancelReservation(reservation.id)}
-          >
+          <Button type="danger" onClick={() => cancelReservation(reservation)}>
             Cancel
           </Button>
         </div>
@@ -112,7 +152,7 @@ const Reservation = ({ reservation, spaces }) => {
           ? [
               <Card
                 bordered
-                style={{ borderLeft: "1px solid red" }}
+                style={{ borderLeft: "1px solid #1890ff" }}
                 size="small"
               >
                 <div className="icons-container">
@@ -125,7 +165,7 @@ const Reservation = ({ reservation, spaces }) => {
                     />
                   </Popover>
                 </div>
-                <div className="reservation-info ant-col-20">
+                <div className="reservation-info ant-col-19">
                   <div className="reservation-header">
                     <span>Recurrency</span>
                     <h4>
@@ -165,9 +205,7 @@ const Reservation = ({ reservation, spaces }) => {
                   >
                     <Button
                       type="danger"
-                      onClick={() =>
-                        cancelPeriodicReservation(reservation.periodicId)
-                      }
+                      onClick={() => cancelPeriodicReservation(reservation)}
                     >
                       Cancel
                     </Button>
@@ -180,5 +218,8 @@ const Reservation = ({ reservation, spaces }) => {
     </div>
   );
 };
-
-export default Reservation;
+const ConnectedTeservation = connect(
+  null,
+  mapDispatchToProps
+)(Reservation);
+export default ConnectedTeservation;
