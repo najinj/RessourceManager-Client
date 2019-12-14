@@ -8,6 +8,7 @@ import Users from "../User";
 import Breadcrumbs from "../Breadcrumb";
 import Calendar from "../calendar";
 import Reservations from "../Reservations";
+import Availability from "../Availability";
 import JwtDecoder, { ROLES_CLAIMS } from "../../Utils";
 
 import "./main.css";
@@ -83,17 +84,21 @@ const SideNav = () => {
               }
             >
               <Menu.Item key="6">
+                <span>Availability</span>
+                <Link to="/Availability" />
+              </Menu.Item>
+              <Menu.Item key="7">
                 <span>My Reservations</span>
                 <Link to="/MyReservations" />
               </Menu.Item>
               {isAdmin ? (
-                <Menu.Item key="7">
+                <Menu.Item key="8">
                   <span>All Reservations</span>
                   <Link to="/Reservations" />
                 </Menu.Item>
               ) : null}
 
-              <Menu.Item key="8">
+              <Menu.Item key="9">
                 <span>Calendar</span>
                 <Link to="/Calendar" />
               </Menu.Item>
@@ -108,14 +113,14 @@ const SideNav = () => {
                   </span>
                 }
               >
-                <Menu.Item key="9">
+                <Menu.Item key="10">
                   <span>Activate Accounts</span>
                   <Link to="/Users" />
                 </Menu.Item>
               </SubMenu>
             ) : null}
 
-            <Menu.Item key="10">
+            <Menu.Item key="11">
               <Icon type="file" />
               <span>File</span>
             </Menu.Item>
@@ -141,6 +146,7 @@ const SideNav = () => {
                 path="/Reservations"
                 render={() => <Reservations isAdmin={isAdmin} />}
               />
+              <Route exact path="/Availability" component={Availability} />
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
