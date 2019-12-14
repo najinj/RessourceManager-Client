@@ -140,6 +140,52 @@ const reservationReducer = (state = intialState, action) => {
           }
         }
       };
+    case DELETE_RESERVATION_REQUEST:
+      return state;
+    case DELETE_RESERVATION_SUCCESS:
+      return {
+        ...state,
+        calendarState: {
+          ...state.calendarState,
+          reservations: state.calendarState.reservations.filter(
+            reservation => reservation.id !== action.payload
+          )
+        },
+        allReservations: state.allReservations.filter(
+          reservation => reservation.id !== action.payload
+        ),
+        userReservations: state.userReservations.filter(
+          reservation => reservation.id !== action.payload
+        )
+      };
+    case DELETE_RESERVATION_FAILURE:
+      return state;
+    case DELETE_PERIODIC_RESERVATION_REQUEST:
+      return state;
+    case DELETE_PERIODIC_RESERVATION_SUCCESS:
+      return {
+        ...state,
+        calendarState: {
+          ...state.calendarState,
+          reservations: state.calendarState.reservations.filter(
+            reservation =>
+              reservation.periodicId !== undefined &&
+              reservation.periodicId !== action.payload
+          )
+        },
+        allReservations: state.allReservations.filter(
+          reservation =>
+            reservation.periodicId !== undefined &&
+            reservation.periodicId !== action.payload
+        ),
+        userReservations: state.userReservations.filter(
+          reservation =>
+            reservation.periodicId !== undefined &&
+            reservation.periodicId !== action.payload
+        )
+      };
+    case DELETE_PERIODIC_RESERVATION_FAILURE:
+      return state;
 
     default:
       return state;
