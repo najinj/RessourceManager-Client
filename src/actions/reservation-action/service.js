@@ -55,7 +55,7 @@ const addReservation = ressourceType =>
 const deleteReservation = id =>
   axiosInstance({
     method: "DELETE",
-    url: `Reservation/Delete/${id}`
+    url: `Reservation/RemoveReservation/${id}`
   });
 
 const deletePeriodicReservations = periodicId =>
