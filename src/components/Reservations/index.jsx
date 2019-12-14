@@ -45,6 +45,10 @@ const mapStateToProps = state => {
 
 const Reservation = ({ reservation, spaces }) => {
   const [showPeriodicReservation, SetPeriodicReservation] = useState(false);
+
+  useEffect(() => {
+    SetPeriodicReservation(false);
+  }, [reservation]);
   const resourceName = spaces.reduce(
     (acc, curr) => (curr.id === reservation.resourceId ? curr.name : acc),
     ""
@@ -73,6 +77,11 @@ const Reservation = ({ reservation, spaces }) => {
             <Icon type="calendar" style={{ fontSize: "20px" }} />
             <Icon type="sync" style={{ fontSize: "14px" }} rotate={60} />
           </Popover>
+          {reservation.periodicId !== "" ? (
+            <Popover content="Show parent periodic reservation" trigger="hover">
+              <Button onClick={show} icon="tag" />
+            </Popover>
+          ) : null}
         </div>
         <div className="reservation-info ant-col-20">
           <div className="reservation-header">
@@ -104,14 +113,7 @@ const Reservation = ({ reservation, spaces }) => {
           </div>
         </div>
         <div className="reservation-actions ant-col-4">
-          <Popover content="Cancel Reservation" trigger="hover">
-            <Button type="danger" icon="close" />
-          </Popover>
-          {reservation.periodicId !== "" ? (
-            <Popover content="Show parent periodic reservation" trigger="hover">
-              <Button onClick={show} icon="tag" />
-            </Popover>
-          ) : null}
+          <Button type="danger">Cancel</Button>
         </div>
       </Card>
       <QueueAnim
@@ -129,10 +131,7 @@ const Reservation = ({ reservation, spaces }) => {
                 size="small"
               >
                 <div className="icons-container">
-                  <Popover
-                    content="This is the parent reservation"
-                    trigger="hover"
-                  >
+                  <Popover content="Parent reservation" trigger="hover">
                     <Icon type="calendar" style={{ fontSize: "20px" }} />
                     <Icon
                       type="sync"
@@ -179,7 +178,7 @@ const Reservation = ({ reservation, spaces }) => {
                     content="Cancel Perdoidic Reservation"
                     trigger="hover"
                   >
-                    <Button icon="close" type="danger" />
+                    <Button type="danger">Cancel</Button>
                   </Popover>
                 </div>
               </Card>
