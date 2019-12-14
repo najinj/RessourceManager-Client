@@ -24,6 +24,7 @@ const Filter = ({ form, spaces, filterReservations, resourceTypes }) => {
             initialValue=""
             onChange={val => hadnleSelectChange("resourceId", val)}
           >
+            <Option value="">&nbsp;</Option>
             {spaces.map(option => (
               <Option value={option.id} key={option.id}>
                 {option.name}
@@ -45,6 +46,7 @@ const Filter = ({ form, spaces, filterReservations, resourceTypes }) => {
             initialValue=""
             onChange={val => hadnleSelectChange("resourceType", val)}
           >
+            <Option value="">&nbsp;</Option>
             {resourceTypes.map(option => (
               <Option value={option.value} key={option.value}>
                 {option.text}
