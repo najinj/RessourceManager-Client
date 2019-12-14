@@ -1,11 +1,9 @@
 .reservation-container .ant-card-body {
   display: flex;
+  padding: 10px;
 }
 .reservation-container .ant-card {
   margin: auto;
-}
-.reservation-info {
-  width: 80%;
 }
 .resource-time-info {
   display: flex;
@@ -13,12 +11,14 @@
 .resourceName,
 .resourceType,
 .resource-date,
-.resource-time {
+.resource-time,
+.reservation-header {
   padding: 10px;
 }
 .reservation-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 .reservation-container {
   padding: 10px;
@@ -33,4 +33,21 @@
 }
 .reservations-list {
   width: 70%;
+}
+.reservation-actions .anticon-calendar {
+}
+.ant-card-body .anticon-sync {
+  position: absolute;
+  top: 10px;
+  right: -4.5px;
+}
+.icons-container {
+  position: relative;
+}
+.parent-reservation {
+  width: 80%;
+  margin: auto;
+}
+.parent-reservation .ant-card {
+  margin-top: 2%;
 }
