@@ -90,15 +90,8 @@ const Reservations = ({
       SetFilteredAllReservations(allReservations);
     }
   }, []);
-  useEffect(() => {
-    if (!isAdmin) {
-      SetFilteredUserReservations(userReservations);
-    } else {
-      SetFilteredAllReservations(allReservations);
-    }
-  }, [userReservations, allReservations]);
 
-  useEffect(() => {
+  const filterReservations = () => {
     if (!isAdmin) {
       SetFilteredUserReservations([
         ...userReservations.filter(reservation => {
@@ -130,9 +123,15 @@ const Reservations = ({
         })
       ]);
     }
+  };
+  useEffect(() => {
+    filterReservations();
+  }, [userReservations, allReservations]);
+  useEffect(() => {
+    filterReservations();
   }, [filtredBy]);
 
-  const filterReservations = (fieldId, val) => {
+  const setFilters = (fieldId, val) => {
     SetFiltredBy({
       ...filtredBy,
       [fieldId]: val == null ? "" : val
@@ -144,7 +143,7 @@ const Reservations = ({
       <div className="reservation-filters">
         <FilterForm
           spaces={spaces}
-          filterReservations={filterReservations}
+          filterReservations={setFilters}
           resourceTypes={resourceTypes}
         />
       </div>
