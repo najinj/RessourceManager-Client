@@ -47,7 +47,7 @@ const getUserReservations = () =>
   });
 
 const getAvailability = reservation =>
-  axiosInstance.post("Reservation/Create", reservation);
+  axiosInstance.post("Reservation/Availability", reservation);
 
 const addReservation = ressourceType =>
   axiosInstance.post("Reservation/Create", ressourceType);
