@@ -8,8 +8,15 @@ import Users from "../User";
 import Breadcrumbs from "../Breadcrumb";
 import Calendar from "../calendar";
 import Reservations from "../Reservations";
+import JwtDecoder, { ROLES_CLAIMS } from "../../Utils";
 
 import "./main.css";
+
+const isAdmin = JwtDecoder(localStorage.getItem("token"))[
+  ROLES_CLAIMS
+].includes("Admin");
+
+console.log("isAdmin", isAdmin);
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -41,28 +48,31 @@ const SideNav = () => {
               <Icon type="desktop" />
               <span>Option 2</span>
             </Menu.Item>
-            <SubMenu
-              key="sub1"
-              title={
-                <span>
-                  <Icon type="form" />
-                  <span>Ressource Managment</span>
-                </span>
-              }
-            >
-              <Menu.Item key="3">
-                <span>Ressource Types</span>
-                <Link to="/RessourceTypes" />
-              </Menu.Item>
-              <Menu.Item key="4">
-                <span>Spaces</span>
-                <Link to="/Spaces" />
-              </Menu.Item>
-              <Menu.Item key="5">
-                <span>Assets</span>
-                <Link to="/Assets" />
-              </Menu.Item>
-            </SubMenu>
+            {isAdmin ? (
+              <SubMenu
+                key="sub1"
+                title={
+                  <span>
+                    <Icon type="form" />
+                    <span>Ressource Managment</span>
+                  </span>
+                }
+              >
+                <Menu.Item key="3">
+                  <span>Ressource Types</span>
+                  <Link to="/RessourceTypes" />
+                </Menu.Item>
+                <Menu.Item key="4">
+                  <span>Spaces</span>
+                  <Link to="/Spaces" />
+                </Menu.Item>
+                <Menu.Item key="5">
+                  <span>Assets</span>
+                  <Link to="/Assets" />
+                </Menu.Item>
+              </SubMenu>
+            ) : null}
+
             <SubMenu
               key="sub2"
               title={
@@ -73,29 +83,39 @@ const SideNav = () => {
               }
             >
               <Menu.Item key="6">
-                <span>Reservations</span>
-                <Link to="/Reservations" />
+                <span>My Reservations</span>
+                <Link to="/MyReservations" />
               </Menu.Item>
-              <Menu.Item key="7">
+              {isAdmin ? (
+                <Menu.Item key="7">
+                  <span>All Reservations</span>
+                  <Link to="/Reservations" />
+                </Menu.Item>
+              ) : null}
+
+              <Menu.Item key="8">
                 <span>Calendar</span>
                 <Link to="/Calendar" />
               </Menu.Item>
             </SubMenu>
-            <SubMenu
-              key="sub3"
-              title={
-                <span>
-                  <Icon type="team" />
-                  <span>Users Managment</span>
-                </span>
-              }
-            >
-              <Menu.Item key="8">
-                <span>Activate Accounts</span>
-                <Link to="/Users" />
-              </Menu.Item>
-            </SubMenu>
-            <Menu.Item key="9">
+            {isAdmin ? (
+              <SubMenu
+                key="sub3"
+                title={
+                  <span>
+                    <Icon type="team" />
+                    <span>Users Managment</span>
+                  </span>
+                }
+              >
+                <Menu.Item key="9">
+                  <span>Activate Accounts</span>
+                  <Link to="/Users" />
+                </Menu.Item>
+              </SubMenu>
+            ) : null}
+
+            <Menu.Item key="10">
               <Icon type="file" />
               <span>File</span>
             </Menu.Item>
@@ -113,8 +133,13 @@ const SideNav = () => {
               <Route exact path="/Calendar" component={Calendar} />
               <Route
                 exact
-                path="/Reservations"
+                path="/MyReservations"
                 render={() => <Reservations isAdmin={false} />}
+              />
+              <Route
+                exact
+                path="/Reservations"
+                render={() => <Reservations isAdmin={isAdmin} />}
               />
             </div>
           </Content>
