@@ -5,7 +5,11 @@ import { Breadcrumb } from "antd";
 const breadcrumbNameMap = {
   "/Assets": "Assets",
   "/Spaces": "Spaces",
-  "/RessourceTypes": "RessourceTypes"
+  "/RessourceTypes": "RessourceTypes",
+  "/Reservations": "All Reservations",
+  "/MyReservations": "My Reservations",
+  "/Calendar": "Calendar View",
+  "/Availability": "Availability"
 };
 const Breadcrumbs = withRouter(props => {
   const { location, style } = props;
