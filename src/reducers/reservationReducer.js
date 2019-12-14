@@ -186,7 +186,15 @@ const reservationReducer = (state = intialState, action) => {
       };
     case DELETE_PERIODIC_RESERVATION_FAILURE:
       return state;
-
+    case GET_RESERVATIONS_BY_DATE_REQUEST:
+      return state;
+    case GET_RESERVATIONS_BY_DATE_SUCCESS:
+      return {
+        ...state,
+        allReservations: action.payload
+      };
+    case GET_RESERVATIONS_BY_DATE_FAILURE:
+      return state;
     default:
       return state;
   }
