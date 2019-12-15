@@ -41,7 +41,24 @@ const AvailabilitySearch = ({
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
-        search(values);
+        if (values.startDate.isAfter(values.endDate)) {
+          form.setFields({
+            endDate: {
+              value: values.endDate,
+              errors: [new Error("End Date cannot be before start date")]
+            }
+          });
+        } else if (
+          values.startDate.isSame(values.endDate, "day") &&
+          values.startTime.isAfter(values.endTime)
+        ) {
+          form.setFields({
+            endTime: {
+              value: values.endTime,
+              errors: [new Error("End time cannot be before start time")]
+            }
+          });
+        } else search(values);
         console.log("Received values of form: ", values);
       }
     });
@@ -77,10 +94,7 @@ const AvailabilitySearch = ({
         wrapperCol={{ span: 14 }}
       >
         {form.getFieldDecorator("resourceSubType", {
-          rules: [
-            { required: true, message: "Please input a  Sub Resource Type!" }
-          ],
-          initialValue: null
+          initialValue: ""
         })(
           <Select initialValue="">
             <Option value="">&nbsp;</Option>
@@ -159,10 +173,7 @@ const AvailabilitySearch = ({
           style={{ margin: 0, padding: 10 }}
         >
           <Col span={24}>
-            {form.getFieldDecorator("periodic", {
-              rules: [{ required: false }],
-              initialValue: null
-            })(<Switch onChange={switchToPeriodic} />)}
+            <Switch onChange={switchToPeriodic} />
           </Col>
         </Form.Item>
         <Form.Item
