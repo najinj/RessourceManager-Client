@@ -44,7 +44,10 @@ const intialState = {
   },
   allReservations: [],
   userReservations: [],
-  availability: [],
+  availability: {
+    resourceType: null,
+    resources: []
+  },
   errors: null
 };
 
@@ -55,7 +58,10 @@ const reservationReducer = (state = intialState, action) => {
     case CHECK_AVAILABILITY_SUCCESS:
       return {
         ...state,
-        availability: action.payload
+        availability: {
+          resources: action.payload,
+          resourceType: action.payload.resourceType
+        }
       };
     case CHECK_AVAILABILITY_FAILURE:
       return state;
