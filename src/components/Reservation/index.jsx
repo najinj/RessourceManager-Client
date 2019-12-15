@@ -107,9 +107,7 @@ const Reservation = ({
                 <Button onClick={show} icon="tag" />
               </Popover>
             </>
-          ) : (
-            <div style={{ width: 32 }} />
-          )}
+          ) : null}
         </div>
         <div className="reservation-info ant-col-19">
           <div className="reservation-header">
@@ -169,6 +167,7 @@ const Reservation = ({
                       rotate={60}
                     />
                   </Popover>
+                  <div style={{ width: 32 }} />
                 </div>
                 <div className="reservation-info ant-col-19">
                   <div className="reservation-header">
