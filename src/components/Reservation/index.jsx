@@ -6,7 +6,8 @@ import moment from "moment";
 import { connect } from "react-redux";
 import {
   deletePeriodicReservations,
-  deleteReservation
+  deleteReservation,
+  addReservations
 } from "../../actions/reservation-action/action";
 
 import "./index.css";
@@ -27,7 +28,8 @@ const resourceTypes = [
 const mapDispatchToProps = dispatch => {
   return {
     removeReservation: id => dispatch(deleteReservation(id)),
-    removePeriodicReservation: id => dispatch(deletePeriodicReservations(id))
+    removePeriodicReservation: id => dispatch(deletePeriodicReservations(id)),
+    addReservation: reservation => dispatch(addReservations(reservation))
   };
 };
 
@@ -35,17 +37,22 @@ const Reservation = ({
   reservation,
   spaces,
   removeReservation,
-  removePeriodicReservation
+  removePeriodicReservation,
+  isAvailability,
+  addReservation
 }) => {
   const [showPeriodicReservation, SetPeriodicReservation] = useState(false);
 
   useEffect(() => {
     SetPeriodicReservation(false);
   }, [reservation]);
-  const resourceName = spaces.reduce(
-    (acc, curr) => (curr.id === reservation.resourceId ? curr.name : acc),
-    ""
-  );
+  const resourceName =
+    reservation.name !== undefined
+      ? reservation.name
+      : spaces.reduce(
+          (acc, curr) => (curr.id === reservation.resourceId ? curr.name : acc),
+          ""
+        );
   const resourceType = resourceTypes.reduce(
     (acc, curr) => (curr.value === reservation.resourceType ? curr.text : acc),
     ""
@@ -89,11 +96,16 @@ const Reservation = ({
       }
     });
   };
+
+  const bookReservation = reservationIn => {
+    addReservation(reservationIn);
+  };
   return (
     <div className="reservation-container">
       <Card bordered style={{ borderLeft: "1px solid #1890ff" }}>
         <div className="icons-container">
-          {reservation.periodicId !== "" ? (
+          {reservation.periodicId !== undefined &&
+          reservation.periodicId !== "" ? (
             <>
               <Popover
                 content="This reservation is included in a perdiodic reservation"
@@ -141,9 +153,18 @@ const Reservation = ({
           </div>
         </div>
         <div className="reservation-actions ant-col-4">
-          <Button type="danger" onClick={() => cancelReservation(reservation)}>
-            Cancel
-          </Button>
+          {isAvailability ? (
+            <Button type="primiry" onClick={() => bookReservation(reservation)}>
+              Add
+            </Button>
+          ) : (
+            <Button
+              type="danger"
+              onClick={() => cancelReservation(reservation)}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
       </Card>
       <QueueAnim
