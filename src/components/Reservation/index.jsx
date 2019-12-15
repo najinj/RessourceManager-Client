@@ -9,6 +9,8 @@ import {
   deleteReservation
 } from "../../actions/reservation-action/action";
 
+import "./index.css";
+
 const { confirm } = Modal;
 
 const resourceTypes = [
