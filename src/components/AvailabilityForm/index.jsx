@@ -19,6 +19,10 @@ import "./index.css";
 
 const { Option } = Select;
 
+const minutesOfDay = date => {
+  return date.minutes() + date.hours() * 60;
+};
+
 const AvailabilitySearch = ({
   form,
   search,
@@ -41,21 +45,33 @@ const AvailabilitySearch = ({
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
-        if (values.startDate.isAfter(values.endDate)) {
+        if (values.start.isAfter(values.end)) {
           form.setFields({
-            endDate: {
-              value: values.endDate,
+            end: {
+              value: values.end,
               errors: [new Error("End Date cannot be before start date")]
             }
           });
         } else if (
-          values.startDate.isSame(values.endDate, "day") &&
-          values.startTime.isAfter(values.endTime)
+          values.start.isSame(values.end, "day") &&
+          minutesOfDay(values.startTime) >= minutesOfDay(values.endTime)
         ) {
           form.setFields({
             endTime: {
               value: values.endTime,
               errors: [new Error("End time cannot be before start time")]
+            }
+          });
+        } else if (
+          periodic &&
+          !(Array.isArray(values.weekDays) && values.weekDays.length)
+        ) {
+          form.setFields({
+            weekDays: {
+              value: values.weekDays,
+              errors: [
+                new Error("Please select week days for this reservation")
+              ]
             }
           });
         } else search(values);
@@ -117,7 +133,7 @@ const AvailabilitySearch = ({
           className="ant-col-16"
         >
           <Col span={24}>
-            {form.getFieldDecorator("startDate", {
+            {form.getFieldDecorator("start", {
               rules: [
                 { required: true, message: "Please input a  start Date!" }
               ],
@@ -146,7 +162,7 @@ const AvailabilitySearch = ({
           className="ant-col-16"
         >
           <Col span={24}>
-            {form.getFieldDecorator("endDate", {
+            {form.getFieldDecorator("end", {
               rules: [{ required: true, message: "Please input a  end Date!" }],
               initialValue: null
             })(<DatePicker style={{ width: "100%" }} />)}
@@ -184,7 +200,7 @@ const AvailabilitySearch = ({
           className="ant-col-16"
         >
           <Col span={24}>
-            {form.getFieldDecorator("WeekDays", {
+            {form.getFieldDecorator("weekDays", {
               rules: [
                 {
                   required: false,
