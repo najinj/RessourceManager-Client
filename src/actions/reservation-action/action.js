@@ -211,9 +211,11 @@ export function getAvailability(reservationModel) {
     dispatch({ type: CHECK_AVAILABILITY_REQUEST });
     ReservationsServices.getAvailability(reservationModel).then(
       response => {
+        const payload = response.data;
+        payload.resourceType = reservationModel.resourceType;
         dispatch({
           type: CHECK_AVAILABILITY_SUCCESS,
-          payload: response.data
+          payload
         });
       },
       err => {
