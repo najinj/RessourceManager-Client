@@ -14,17 +14,6 @@ import "./index.css";
 
 const { confirm } = Modal;
 
-const resourceTypes = [
-  {
-    text: "Space",
-    value: 1
-  },
-  {
-    text: "Asset",
-    value: 2
-  }
-];
-
 const mapDispatchToProps = dispatch => {
   return {
     removeReservation: id => dispatch(deleteReservation(id)),
@@ -53,10 +42,19 @@ const Reservation = ({
           (acc, curr) => (curr.id === reservation.resourceId ? curr.name : acc),
           ""
         );
-  const resourceType = resourceTypes.reduce(
-    (acc, curr) => (curr.value === reservation.resourceType ? curr.text : acc),
-    ""
-  );
+  const getResourceType = () => {
+    let resourceType = "";
+    if (!isAvailability && reservation.resourceType === 1) {
+      resourceType = "Space";
+    } else if (!isAvailability && reservation.resourceType === 2) {
+      resourceType = "Asset";
+    } else if (isAvailability && reservation.resourceType === 1) {
+      resourceType = reservation.spaceTypeName;
+    } else if (isAvailability && reservation.resourceType === 2) {
+      resourceType = reservation.assetTypeName;
+    }
+    return resourceType;
+  };
 
   const show = () => {
     SetPeriodicReservation(!showPeriodicReservation);
@@ -136,7 +134,7 @@ const Reservation = ({
             </div>
             <div className="resourceType ant-col-4">
               <span>Resource Type</span>
-              <h4>{resourceType}</h4>
+              <h4>{getResourceType()}</h4>
             </div>
             <div className="resource-date ant-col-5">
               <span>Date</span>
