@@ -27,9 +27,25 @@ import {
   CHECK_AVAILABILITY_SUCCESS,
   CHECK_AVAILABILITY_FAILURE,
   FILL_RESERVATION_FORM,
-  EMPTY_RESERVATION_FORM
+  EMPTY_RESERVATION_FORM,
+  EMPTY_AVAILABILITY_FORM,
+  FILL_AVAILABILITY_FORM
 } from "./types";
 import ReservationsServices from "./service";
+
+export function emptyAvailabilityForm() {
+  return {
+    type: EMPTY_AVAILABILITY_FORM,
+    payload: []
+  };
+}
+
+export function fillAvailabilityForm(fields) {
+  return {
+    type: FILL_AVAILABILITY_FORM,
+    payload: fields
+  };
+}
 
 export function emptyReservationForm() {
   return {
