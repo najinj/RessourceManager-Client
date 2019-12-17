@@ -89,6 +89,13 @@ const columns = [
     editable: false,
     hidden: true,
     inputType: "hidden"
+  },
+  {
+    title: "Resource Type Name",
+    dataIndex: "resourceTypeName",
+    editable: false,
+    hidden: true,
+    inputType: "hidden"
   }
 ];
 
@@ -179,7 +186,11 @@ const CalendarView = ({
         },
         title: "",
         resourceType: 1,
-        resourceId
+        resourceId,
+        resourceTypeName: spaceOptions.reduce(
+          (acc, curr) => (curr.value === resourceId ? curr.text : acc),
+          ""
+        )
       };
       const fields = formColumns.map(col => col.onCell(record));
       openForm(fields);
