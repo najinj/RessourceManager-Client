@@ -28,7 +28,9 @@ import {
   CHECK_AVAILABILITY_SUCCESS,
   CHECK_AVAILABILITY_FAILURE,
   FILL_RESERVATION_FORM,
-  EMPTY_RESERVATION_FORM
+  EMPTY_RESERVATION_FORM,
+  FILL_AVAILABILITY_FORM,
+  EMPTY_AVAILABILITY_FORM
 } from "../actions/reservation-action/types";
 
 const intialState = {
@@ -45,6 +47,15 @@ const intialState = {
   allReservations: [],
   userReservations: [],
   availability: {
+    availabilityForm: {
+      resourceType: 0,
+      resourceSubTypes: undefined,
+      start: null,
+      startTime: null,
+      end: null,
+      endTime: null,
+      weekDays: undefined
+    },
     resourceType: null,
     resources: []
   },
@@ -59,6 +70,7 @@ const reservationReducer = (state = intialState, action) => {
       return {
         ...state,
         availability: {
+          ...state.availability,
           resources: action.payload,
           resourceType: action.payload.resourceType
         }
@@ -201,6 +213,31 @@ const reservationReducer = (state = intialState, action) => {
       };
     case GET_RESERVATIONS_BY_DATE_FAILURE:
       return state;
+    case FILL_AVAILABILITY_FORM:
+      return {
+        ...state,
+        availability: {
+          ...state.availability,
+          availabilityForm: {
+            resourceType: action.payload.resourceType,
+            resourceSubTypes: action.payload.resourceSubTypes,
+            start: action.payload.start,
+            startTime: action.payload.startTime,
+            end: action.payload.end,
+            endTime: action.payload.endTime,
+            weekDays: action.payload.weekDays
+          }
+        }
+      };
+    case EMPTY_AVAILABILITY_FORM:
+      return {
+        ...state,
+        availability: {
+          ...state.availability,
+          availabilityForm: intialState.availability.availabilityForm
+        }
+      };
+
     default:
       return state;
   }
