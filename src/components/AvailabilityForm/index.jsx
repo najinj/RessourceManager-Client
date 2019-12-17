@@ -13,8 +13,12 @@ import {
 } from "antd";
 import moment from "moment";
 
+import {
+  fillAvailabilityForm,
+  getAvailability,
+  emptyAvailabilityForm
+} from "../../actions/reservation-action/action";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
-
 import "./index.css";
 
 const { Option } = Select;
@@ -22,13 +26,19 @@ const { Option } = Select;
 const minutesOfDay = date => {
   return date.minutes() + date.hours() * 60;
 };
+const getCronosExpression = (date, days) => {
+  return `${date.format("mm")} ${date.format("HH")} * * ${
+    days.length === 7 ? "*" : days.toString()
+  }`;
+};
 
 const AvailabilitySearch = ({
   form,
-  search,
+  fillForm,
   resourceTypes,
   resourceSubTypes,
-  getSubResourceTypes
+  getSubResourceTypes,
+  checkAvailability
 }) => {
   const [resourceTypeValue, SetResourceTypeValue] = useState("");
   const [periodic, SetPeriodic] = useState(false);
@@ -39,6 +49,31 @@ const AvailabilitySearch = ({
 
   const switchToPeriodic = val => {
     SetPeriodic(val);
+  };
+
+  const search = values => {
+    const reservation = { ...values };
+    if (Array.isArray(values.weekDays) && values.weekDays.length) {
+      reservation.CronosExpression = getCronosExpression(
+        values.startTime,
+        values.weekDays
+      );
+    }
+    reservation.start.utcOffset(0);
+    reservation.end.utcOffset(0);
+    reservation.start.set({
+      hour: reservation.startTime.hours(),
+      minute: reservation.startTime.minutes(),
+      second: 0,
+      millisecond: 0
+    });
+    reservation.end.set({
+      hour: reservation.endTime.hours(),
+      minute: reservation.endTime.minutes(),
+      second: 0,
+      millisecond: 0
+    });
+    checkAvailability(reservation);
   };
 
   const handleSubmit = e => {
@@ -74,8 +109,10 @@ const AvailabilitySearch = ({
               ]
             }
           });
-        } else search(values);
-        console.log("Received values of form: ", values);
+        } else {
+          fillForm(values);
+          search(values);
+        }
       }
     });
   };
@@ -109,10 +146,10 @@ const AvailabilitySearch = ({
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 14 }}
       >
-        {form.getFieldDecorator("resourceSubType", {
-          initialValue: ""
+        {form.getFieldDecorator("resourceSubTypes", {
+          initialValue: undefined
         })(
-          <Select initialValue="">
+          <Select initialValue="" mode="multiple">
             <Option value="">&nbsp;</Option>
             {resourceTypeValue === ""
               ? null
@@ -237,7 +274,10 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getSubResourceTypes: type => dispatch(getRessourceTypeByType(type))
+    getSubResourceTypes: type => dispatch(getRessourceTypeByType(type)),
+    fillForm: fields => dispatch(fillAvailabilityForm(fields)),
+    checkAvailability: criteria => dispatch(getAvailability(criteria)),
+    emptyForm: () => dispatch(emptyAvailabilityForm())
   };
 };
 
