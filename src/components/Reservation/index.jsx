@@ -4,6 +4,8 @@ import { Card, Button, Icon, Popover, Tag, Modal } from "antd";
 import QueueAnim from "rc-queue-anim";
 import moment from "moment";
 import { connect } from "react-redux";
+import { shape, func, arrayOf, bool, number, string } from "prop-types";
+
 import {
   deletePeriodicReservations,
   deleteReservation,
@@ -242,6 +244,42 @@ const Reservation = ({
       </QueueAnim>
     </div>
   );
+};
+
+Reservation.propTypes = {
+  reservation: shape({
+    periodicId: string,
+    title: string,
+    name: string,
+    resourceId: string,
+    assetTypeName: string,
+    spaceTypeName: string,
+    start: shape(),
+    end: shape()
+  }),
+  spaces: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      capacity: number,
+      spaceTypeId: string,
+      count: number,
+      tags: arrayOf(string),
+      assets: arrayOf(string)
+    })
+  ),
+  removeReservation: func,
+  removePeriodicReservation: func,
+  isAvailability: bool,
+  addReservation: func
+};
+Reservation.defaultProps = {
+  reservation: null,
+  spaces: [],
+  removeReservation: func,
+  removePeriodicReservation: func,
+  isAvailability: bool,
+  addReservation: func
 };
 const ConnectedTeservation = connect(
   null,
