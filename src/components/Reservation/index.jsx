@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { Card, Button, Icon, Popover, Tag, Modal } from "antd";
 import QueueAnim from "rc-queue-anim";
