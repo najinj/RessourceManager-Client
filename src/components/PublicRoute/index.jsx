@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { func } from "prop-types";
+import { func, bool } from "prop-types";
 
-// eslint-disable-next-line react/prop-types
 const PublicRoute = ({ component: Component, authenticated, ...options }) => {
   console.log("PublicRoute authenticated", authenticated);
   return (
@@ -18,9 +17,11 @@ const PublicRoute = ({ component: Component, authenticated, ...options }) => {
 };
 
 PublicRoute.propTypes = {
-  component: func
+  component: func,
+  authenticated: bool
 };
 PublicRoute.defaultProps = {
-  component: null
+  component: null,
+  authenticated: false
 };
 export default PublicRoute;
