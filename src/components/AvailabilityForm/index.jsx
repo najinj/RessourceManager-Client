@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import {
@@ -12,6 +11,7 @@ import {
   Switch
 } from "antd";
 import moment from "moment";
+import { shape, func, arrayOf, string, number } from "prop-types";
 
 import {
   fillAvailabilityForm,
@@ -282,6 +282,36 @@ const mapDispatchToProps = dispatch => {
 };
 
 const AvailabilitySearchForm = Form.create()(AvailabilitySearch);
+
+AvailabilitySearch.propTypes = {
+  form: shape(),
+  fillForm: func,
+  resourceTypes: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      description: string,
+      type: string,
+      count: number
+    })
+  ),
+  resourceSubTypes: arrayOf(
+    shape({
+      id: string,
+      name: string
+    })
+  ),
+  getSubResourceTypes: func,
+  checkAvailability: func
+};
+AvailabilitySearch.defaultProps = {
+  form: null,
+  fillForm: func,
+  resourceTypes: [],
+  resourceSubTypes: [],
+  getSubResourceTypes: func,
+  checkAvailability: func
+};
 
 const ConnectedAvailabilitySearchForm = connect(
   mapStateToProps,
