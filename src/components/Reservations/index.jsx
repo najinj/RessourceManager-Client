@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { List } from "antd";
 import moment from "moment";
 import Reservation from "../Reservation";
@@ -191,7 +191,34 @@ const Reservations = ({
     </div>
   );
 };
-
+Reservations.propTypes = {
+  userReservations: func,
+  allReservations: func,
+  getEntitiesByDate: func,
+  getUserEntities: func,
+  loadSpaces: func,
+  spaces: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      capacity: number,
+      spaceTypeId: string,
+      count: number,
+      tags: arrayOf(string),
+      assets: arrayOf(string)
+    })
+  ),
+  isAdmin: bool
+};
+Reservations.defaultProps = {
+  userReservations: func,
+  allReservations: func,
+  getEntitiesByDate: func,
+  getUserEntities: func,
+  loadSpaces: func,
+  spaces: [],
+  isAdmin: false
+};
 const ConnectedReservations = connect(
   mapStateToProps,
   mapDispachToProps
