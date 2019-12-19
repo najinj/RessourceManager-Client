@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-template */
 /* eslint-disable no-alert */
@@ -104,7 +103,6 @@ const CalendarView = ({
   reservations,
   resourceId,
   loadReservations,
-  addReservation,
   loadSpaces,
   spaces,
   openForm,
@@ -115,12 +113,8 @@ const CalendarView = ({
   formErrors,
   formFields
 }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [calendarWeekends, SetCalendarWeekends] = useState(true);
   const [userAction, SetUserAction] = useState("");
-  const [calendarEvents, SetCalendarEvents] = useState([
-    { title: "Event Now", start: new Date() }
-  ]);
+
   const calendarComponentRef = React.createRef();
 
   useEffect(() => {
@@ -139,12 +133,6 @@ const CalendarView = ({
     SetUserAction("");
   };
 
-  /*
-  const toggleWeekends = () => {
-    SetCalendarWeekends(!calendarWeekends);
-  };
-
-*/
   const handleAdd = arg => {
     if (resourceId == null) {
       error({
@@ -205,31 +193,14 @@ const CalendarView = ({
       daysOfWeek: null
     };
   });
-  const handleDateClick = arg => {
-    // eslint-disable-next-line no-restricted-globals
-    if (confirm(`Would you like to add an event to ${arg.dateStr} ?`)) {
-      SetCalendarEvents(
-        [
-          ...calendarEvents,
-          {
-            title: "New Event",
-            start: arg.start,
-            end: arg.end
-          }
-        ]
-        // add new event data
-      );
-      console.log(calendarEvents);
-      console.log("start", arg.start);
-    }
-  };
+
   const eventClick = info => {
     console.log(info.event);
     alert("Event: " + info.event.title);
     alert("Coordinates: " + info.jsEvent.pageX + "," + info.jsEvent.pageY);
     alert("View: " + info.view.type);
   };
-  const onPanelChange = (value, mode) => {
+  const onPanelChange = value => {
     const calendarApi = calendarComponentRef.current.getApi();
     calendarApi.gotoDate(value.format("YYYY-MM-DD")); // call a method on the Calendar object
   };
@@ -279,7 +250,7 @@ const CalendarView = ({
           }}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           ref={calendarComponentRef}
-          weekends={calendarWeekends}
+          weekends
           events={mappedReservations}
           selectable
           select={handleAdd}
