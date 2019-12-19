@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-template */
-/* eslint-disable react/button-has-type */
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
