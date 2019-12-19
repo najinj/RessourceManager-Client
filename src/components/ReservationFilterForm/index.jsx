@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { Form, Select, DatePicker, TimePicker, Row, Col } from "antd";
+import { shape, func, arrayOf, number, string } from "prop-types";
 
 const { Option } = Select;
 
@@ -106,5 +107,33 @@ const Filter = ({ form, spaces, filterReservations, resourceTypes }) => {
 };
 
 const FilterForm = Form.create()(Filter);
+
+Filter.propTypes = {
+  form: shape(),
+  spaces: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      capacity: number,
+      spaceTypeId: string,
+      count: number,
+      tags: arrayOf(string),
+      assets: arrayOf(string)
+    })
+  ),
+  filterReservations: func,
+  resourceTypes: arrayOf(
+    shape({
+      value: string,
+      test: string
+    })
+  )
+};
+Filter.defaultProps = {
+  form: {},
+  spaces: [],
+  filterReservations: func,
+  resourceTypes: []
+};
 
 export default FilterForm;
