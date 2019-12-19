@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
@@ -7,6 +6,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import moment from "moment";
+import { shape, func, arrayOf, bool, number, string } from "prop-types";
+
 import {
   getReservationsByResource,
   addReservations,
@@ -99,9 +100,9 @@ const CalendarView = ({
   form,
   reservations,
   resourceId,
+  spaces,
   loadReservations,
   loadSpaces,
-  spaces,
   openForm,
   closeForm,
   addEntitie,
@@ -274,6 +275,50 @@ const CalendarView = ({
   );
 };
 const CalendarViewForm = Form.create()(CalendarView);
+
+CalendarView.propTypes = {
+  form: shape({
+    getFieldDecorator: func,
+    validateFields: func
+  }),
+  reservations: arrayOf(shape()),
+  resourceId: string,
+  spaces: arrayOf(
+    shape({
+      id: string,
+      name: string,
+      capacity: number,
+      spaceTypeId: string,
+      count: number,
+      tags: arrayOf(string),
+      assets: arrayOf(string)
+    })
+  ),
+  loadReservations: func,
+  loadSpaces: func,
+  openForm: func,
+  closeForm: func,
+  formVisible: bool,
+  formFields: arrayOf(shape()),
+  formLoading: bool,
+  formErrors: arrayOf(shape()),
+  addEntitie: func
+};
+CalendarView.defaultProps = {
+  form: {},
+  reservations: [],
+  resourceId: null,
+  loadReservations: func,
+  loadSpaces: func,
+  spaces: [],
+  openForm: func,
+  closeForm: func,
+  formVisible: false,
+  formFields: null,
+  formLoading: false,
+  formErrors: null,
+  addEntitie: null
+};
 
 const ConnectedCalendar = connect(
   mapStateToProps,
