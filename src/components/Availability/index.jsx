@@ -1,7 +1,7 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import { connect } from "react-redux";
 import { List } from "antd";
+import { shape, arrayOf, string, number } from "prop-types";
 import AvailabilityForm from "../AvailabilityForm";
 import Reservation from "../Reservation";
 
@@ -60,5 +60,30 @@ const ConnectedAvailability = connect(
   mapStateToProps,
   null
 )(Availability);
+
+Availability.propTypes = {
+  resources: arrayOf(shape()),
+  availabilityForm: shape({
+    resourceType: number,
+    resourceSubTypes: arrayOf(shape()),
+    start: string,
+    startTime: string,
+    end: string,
+    endTime: string,
+    weekDays: arrayOf(shape())
+  })
+};
+Availability.defaultProps = {
+  resources: [],
+  availabilityForm: {
+    resourceType: 0,
+    resourceSubTypes: undefined,
+    start: null,
+    startTime: null,
+    end: null,
+    endTime: null,
+    weekDays: undefined
+  }
+};
 
 export default ConnectedAvailability;
