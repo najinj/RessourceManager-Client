@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable prefer-template */
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
@@ -194,9 +193,6 @@ const CalendarView = ({
 
   const eventClick = info => {
     console.log(info.event);
-    alert("Event: " + info.event.title);
-    alert("Coordinates: " + info.jsEvent.pageX + "," + info.jsEvent.pageY);
-    alert("View: " + info.view.type);
   };
   const onPanelChange = value => {
     const calendarApi = calendarComponentRef.current.getApi();
