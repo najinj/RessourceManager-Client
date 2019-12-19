@@ -6,7 +6,7 @@ import Spaces from "../Space";
 import Assets from "../Asset";
 import Users from "../User";
 import Breadcrumbs from "../Breadcrumb";
-import Calendar from "../calendar";
+import Calendar from "../Calendar";
 import Reservations from "../Reservations";
 import Availability from "../Availability";
 import JwtDecoder, { ROLES_CLAIMS } from "../../Utils";
