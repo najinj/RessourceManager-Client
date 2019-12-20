@@ -15,7 +15,7 @@ import {
   emptyReservationForm
 } from "../../actions/reservation-action/action";
 import { fetchSpaces } from "../../actions/space-actions/actions";
-import ModalForm from "../ModalForm";
+import ModalForm from "../../components/ModalForm";
 
 import "./index.css";
 
