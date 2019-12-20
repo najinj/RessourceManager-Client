@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Modal, Form, Divider, Button, Tag } from "antd";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { connect } from "react-redux";
-import ModalForm from "../ModalForm";
+import ModalForm from "../../components/ModalForm";
 import {
   fetchSpaces,
   addSpace,
