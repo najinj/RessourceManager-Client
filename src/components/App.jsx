@@ -4,7 +4,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import WrappedSignInForm from "./SignInForm";
+import WrappedSignInForm from "../Pages/SignInForm";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import LoginForm from "./LoginForm";
