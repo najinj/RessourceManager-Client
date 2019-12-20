@@ -13,7 +13,7 @@ import {
 } from "../../actions/asset-actions/actions";
 import { fetchSpaces } from "../../actions/space-actions/actions";
 import { getRessourceTypeByType } from "../../actions/ressourceTypes-actions/actions";
-import ModalForm from "../ModalForm";
+import ModalForm from "../../components/ModalForm";
 
 const Status = {
   Chained: {
