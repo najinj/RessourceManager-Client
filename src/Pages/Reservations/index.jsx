@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { shape, func, arrayOf, bool, number, string } from "prop-types";
 import { List } from "antd";
 import moment from "moment";
-import Reservation from "../Reservation";
-import FilterForm from "../ReservationFilterForm";
+import Reservation from "../../components/Reservation";
+import FilterForm from "../../components/ReservationFilterForm";
 
 import {
   getUserReservations,
