@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Layout, Menu, Icon } from "antd";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import RessourceTypes from "../RessourceTypes";
-import Spaces from "../Space";
-import Assets from "../Asset";
-import Users from "../User";
+import RessourceTypes from "../../Pages/RessourceTypes";
+import Spaces from "../../Pages/Space";
+import Assets from "../../Pages/Asset";
+import Users from "../../Pages/User";
 import Breadcrumbs from "../Breadcrumb";
-import Calendar from "../Calendar";
-import Reservations from "../Reservations";
-import Availability from "../Availability";
+import Calendar from "../../Pages/Calendar";
+import Reservations from "../../Pages/Reservations";
+import Availability from "../../Pages/Availability";
 import JwtDecoder, { ROLES_CLAIMS } from "../../Utils";
 
 import "./main.css";
