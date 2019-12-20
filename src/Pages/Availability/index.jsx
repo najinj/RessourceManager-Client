@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { List } from "antd";
 import { shape, arrayOf, string, number } from "prop-types";
-import AvailabilityForm from "../AvailabilityForm";
-import Reservation from "../Reservation";
+import AvailabilityForm from "../../components/AvailabilityForm";
+import Reservation from "../../components/Reservation";
 
 const resourceTypes = [
   {
