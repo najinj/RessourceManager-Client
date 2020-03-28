@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { List } from "antd";
-import { shape, arrayOf, string, number } from "prop-types";
+import { shape, arrayOf, string, number, bool, func } from "prop-types";
 import AvailabilityForm from "../../components/AvailabilityForm";
 import Reservation from "../../components/Reservation";
+import { emptyAvailabilityResouces } from "../../actions/reservation-action/action";
 
 const resourceTypes = [
   {
@@ -16,7 +17,15 @@ const resourceTypes = [
   }
 ];
 
-const Availability = ({ resources, availabilityForm }) => {
+const Availability = ({
+  resources,
+  availabilityForm,
+  loading,
+  resetAvailability
+}) => {
+  useEffect(() => {
+    resetAvailability();
+  }, []);
   const mappedReservations = resources.map(resource => {
     return {
       ...resource,
@@ -41,7 +50,11 @@ const Availability = ({ resources, availabilityForm }) => {
         dataSource={mappedReservations}
         renderItem={reservation => (
           <List.Item key={reservation.id} noBorder>
-            <Reservation reservation={reservation} isAvailability />
+            <Reservation
+              reservation={reservation}
+              isAvailability
+              loading={loading}
+            />
           </List.Item>
         )}
       />
@@ -52,13 +65,20 @@ const Availability = ({ resources, availabilityForm }) => {
 const mapStateToProps = state => {
   return {
     resources: state.reservationReducer.availability.resources,
+    loading: state.reservationReducer.availability.loading,
     availabilityForm: state.reservationReducer.availability.availabilityForm
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    resetAvailability: () => dispatch(emptyAvailabilityResouces())
   };
 };
 
 const ConnectedAvailability = connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Availability);
 
 Availability.propTypes = {
@@ -71,7 +91,9 @@ Availability.propTypes = {
     end: string,
     endTime: string,
     weekDays: arrayOf(shape())
-  })
+  }),
+  loading: bool,
+  resetAvailability: func
 };
 Availability.defaultProps = {
   resources: [],
@@ -83,7 +105,9 @@ Availability.defaultProps = {
     end: null,
     endTime: null,
     weekDays: undefined
-  }
+  },
+  loading: true,
+  resetAvailability: null
 };
 
 export default ConnectedAvailability;
