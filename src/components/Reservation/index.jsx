@@ -98,7 +98,6 @@ const Reservation = ({
   };
 
   const bookReservation = reservationIn => {
-    console.log("wtf");
     const reservationModel = {
       resourceName,
       start: reservationIn.start,
