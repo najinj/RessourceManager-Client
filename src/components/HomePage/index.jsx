@@ -133,7 +133,10 @@ const SideNav = () => {
           <Header style={{ background: "#fff", padding: 0 }} />
           <Content style={{ margin: "0 16px", minWidth: 660 }}>
             <Breadcrumbs style={{ margin: "16px 0" }} />
-            <div style={{ padding: 24 }} className="page-container">
+            <div
+              style={{ padding: 24, background: "#fff" }}
+              className="page-container"
+            >
               <Route exact path="/RessourceTypes" component={RessourceTypes} />
               <Route exact path="/Spaces" component={Spaces} />
               <Route exact path="/Assets" component={Assets} />
