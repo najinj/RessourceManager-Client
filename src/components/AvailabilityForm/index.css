@@ -1,3 +1,8 @@
 .time-select-field > div:first-child {
   margin-left: 8.33%;
 }
+.availability-form-container {
+  padding: 18px;
+  background: rgb(255, 255, 255);
+  border-radius: 5px;
+}
