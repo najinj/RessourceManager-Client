@@ -12,6 +12,7 @@ import {
 } from "./types";
 
 import AuthServices from "./service";
+import axiosInstance from "../../config";
 
 export function signIn(values) {
   return dispatch => {
@@ -23,6 +24,8 @@ export function signIn(values) {
       response => {
         localStorage.setItem("token", response.data.access_token);
         console.log("token ", localStorage.getItem("token"));
+        axiosInstance.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
+        axiosInstance.defaults.headers.Authorization = `Bearer ${response.data.access_token}`;
         dispatch({ type: SIGNIN_SUCCESS, payload: response.data });
       },
       err => {
