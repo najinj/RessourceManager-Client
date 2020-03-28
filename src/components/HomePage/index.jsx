@@ -13,16 +13,19 @@ import JwtDecoder, { ROLES_CLAIMS } from "../../Utils";
 
 import "./main.css";
 
-const isAdmin = JwtDecoder(localStorage.getItem("token"))[
-  ROLES_CLAIMS
-].includes("Admin");
-
-console.log("isAdmin", isAdmin);
-
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const SideNav = () => {
+  const isAdmin =
+    localStorage.getItem("token") == null
+      ? false
+      : JwtDecoder(localStorage.getItem("token"))[ROLES_CLAIMS].includes(
+          "Admin"
+        );
+
+  console.log("isAdmin", isAdmin);
+
   const [collapsed, SetCollapsed] = useState(false);
 
   const onCollapse = collapsedIn => {
@@ -130,7 +133,7 @@ const SideNav = () => {
           <Header style={{ background: "#fff", padding: 0 }} />
           <Content style={{ margin: "0 16px", minWidth: 660 }}>
             <Breadcrumbs style={{ margin: "16px 0" }} />
-            <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
+            <div style={{ padding: 24 }} className="page-container">
               <Route exact path="/RessourceTypes" component={RessourceTypes} />
               <Route exact path="/Spaces" component={Spaces} />
               <Route exact path="/Assets" component={Assets} />
