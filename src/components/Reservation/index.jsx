@@ -31,6 +31,7 @@ const Reservation = ({
   isAvailability,
   addReservation
 }) => {
+  console.log("isAvailability", isAvailability);
   const [showPeriodicReservation, SetPeriodicReservation] = useState(false);
 
   useEffect(() => {
@@ -97,7 +98,16 @@ const Reservation = ({
   };
 
   const bookReservation = reservationIn => {
-    addReservation(reservationIn);
+    console.log("wtf");
+    const reservationModel = {
+      resourceName,
+      start: reservationIn.start,
+      end: reservationIn.end,
+      title: reservationIn.title,
+      resourceType: reservationIn.resourceType,
+      resourceId: reservationIn.id
+    };
+    addReservation(reservationModel);
   };
   return (
     <div className="reservation-container">
