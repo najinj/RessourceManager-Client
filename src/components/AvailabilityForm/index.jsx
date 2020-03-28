@@ -117,153 +117,166 @@ const AvailabilitySearch = ({
     });
   };
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Item
-        style={{ margin: 0, padding: 10 }}
-        label="Recource Type"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 14 }}
-      >
-        {form.getFieldDecorator("resourceType", {
-          rules: [
-            { required: true, message: "Please input a  Resource Type!" }
-          ],
-          initialValue: null
-        })(
-          <Select initialValue="" onChange={val => filterResourceSubTypes(val)}>
-            <Option value="">&nbsp;</Option>
-            {resourceTypes.map(option => (
-              <Option value={option.value} key={option.value}>
-                {option.text}
-              </Option>
-            ))}
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item
-        style={{ margin: 0, padding: 10 }}
-        label="Recource SubType"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 14 }}
-      >
-        {form.getFieldDecorator("resourceSubTypes", {
-          initialValue: undefined
-        })(
-          <Select initialValue="" mode="multiple">
-            <Option value="">&nbsp;</Option>
-            {resourceTypeValue === ""
-              ? null
-              : resourceSubTypes.map(option => (
-                  <Option value={option.id} key={option.id}>
-                    {option.name}
-                  </Option>
-                ))}
-          </Select>
-        )}
-      </Form.Item>
-
-      <Row gutter={8} style={{ margin: 0, padding: 10 }}>
+    <div className="availability-form-container">
+      <Form onSubmit={handleSubmit}>
         <Form.Item
-          label="Start Date"
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 12 }}
-          className="ant-col-16"
-        >
-          <Col span={24}>
-            {form.getFieldDecorator("start", {
-              rules: [
-                { required: true, message: "Please input a  start Date!" }
-              ],
-              initialValue: null
-            })(<DatePicker style={{ width: "100%" }} />)}
-          </Col>
-        </Form.Item>
-        <Form.Item
-          className="ant-col-8 time-select-field"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-        >
-          <Col span={24}>
-            {form.getFieldDecorator("startTime", {
-              rules: [{ required: true, message: "Please input a start time!" }]
-            })(<TimePicker style={{ width: "100%" }} />)}
-          </Col>
-        </Form.Item>
-      </Row>
-
-      <Row gutter={8} style={{ margin: 0, padding: 10 }}>
-        <Form.Item
-          label="End Date"
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 12 }}
-          className="ant-col-16"
-        >
-          <Col span={24}>
-            {form.getFieldDecorator("end", {
-              rules: [{ required: true, message: "Please input a  end Date!" }],
-              initialValue: null
-            })(<DatePicker style={{ width: "100%" }} />)}
-          </Col>
-        </Form.Item>
-        <Form.Item
-          className="ant-col-8 time-select-field"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-        >
-          <Col span={24}>
-            {form.getFieldDecorator("endTime", {
-              rules: [{ required: true, message: "Please input a end time!" }]
-            })(<TimePicker style={{ width: "100%" }} />)}
-          </Col>
-        </Form.Item>
-      </Row>
-      <Row gutter={8}>
-        <Form.Item
-          label="Periodic?"
-          labelCol={{ span: 12 }}
-          wrapperCol={{ span: 12 }}
-          className="ant-col-8"
           style={{ margin: 0, padding: 10 }}
+          label="Recource Type"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 14 }}
         >
-          <Col span={24}>
-            <Switch onChange={switchToPeriodic} />
-          </Col>
+          {form.getFieldDecorator("resourceType", {
+            rules: [
+              { required: true, message: "Please input a  Resource Type!" }
+            ],
+            initialValue: null
+          })(
+            <Select
+              initialValue=""
+              onChange={val => filterResourceSubTypes(val)}
+            >
+              <Option value="">&nbsp;</Option>
+              {resourceTypes.map(option => (
+                <Option value={option.value} key={option.value}>
+                  {option.text}
+                </Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
         <Form.Item
-          style={{ margin: 0, padding: 10, display: periodic ? "" : "none" }}
-          label="Each"
+          style={{ margin: 0, padding: 10 }}
+          label="Recource SubType"
           labelCol={{ span: 8 }}
-          wrapperCol={{ span: 13 }}
-          className="ant-col-16"
+          wrapperCol={{ span: 14 }}
         >
-          <Col span={24}>
-            {form.getFieldDecorator("weekDays", {
-              rules: [
-                {
-                  required: false,
-                  message: `Please Input Week days!`
-                }
-              ],
-              initialValue: undefined
-            })(
-              <Select mode="multiple" style={{ width: "100%" }}>
-                {moment.weekdays().map((option, index) => (
-                  <Option value={index} key={option}>
-                    {option}
-                  </Option>
-                ))}
-              </Select>
-            )}
-          </Col>
+          {form.getFieldDecorator("resourceSubTypes", {
+            initialValue: undefined
+          })(
+            <Select initialValue="" mode="multiple">
+              <Option value="">&nbsp;</Option>
+              {resourceTypeValue === ""
+                ? null
+                : resourceSubTypes.map(option => (
+                    <Option value={option.id} key={option.id}>
+                      {option.name}
+                    </Option>
+                  ))}
+            </Select>
+          )}
         </Form.Item>
-      </Row>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
-          Search
-        </Button>
-      </Form.Item>
-    </Form>
+        <Row gutter={8} style={{ margin: 0, padding: 10 }}>
+          <Form.Item
+            label="Start Date"
+            labelCol={{ span: 12 }}
+            wrapperCol={{ span: 12 }}
+            className="ant-col-16"
+          >
+            <Col span={24}>
+              {form.getFieldDecorator("start", {
+                rules: [
+                  { required: true, message: "Please input a  start Date!" }
+                ],
+                initialValue: null
+              })(<DatePicker style={{ width: "100%" }} />)}
+            </Col>
+          </Form.Item>
+          <Form.Item
+            className="ant-col-8 time-select-field"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+          >
+            <Col span={24}>
+              {form.getFieldDecorator("startTime", {
+                rules: [
+                  { required: true, message: "Please input a start time!" }
+                ]
+              })(<TimePicker style={{ width: "100%" }} />)}
+            </Col>
+          </Form.Item>
+        </Row>
+
+        <Row gutter={8} style={{ margin: 0, padding: 10 }}>
+          <Form.Item
+            label="End Date"
+            labelCol={{ span: 12 }}
+            wrapperCol={{ span: 12 }}
+            className="ant-col-16"
+          >
+            <Col span={24}>
+              {form.getFieldDecorator("end", {
+                rules: [
+                  { required: true, message: "Please input a  end Date!" }
+                ],
+                initialValue: null
+              })(<DatePicker style={{ width: "100%" }} />)}
+            </Col>
+          </Form.Item>
+          <Form.Item
+            className="ant-col-8 time-select-field"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+          >
+            <Col span={24}>
+              {form.getFieldDecorator("endTime", {
+                rules: [{ required: true, message: "Please input a end time!" }]
+              })(<TimePicker style={{ width: "100%" }} />)}
+            </Col>
+          </Form.Item>
+        </Row>
+        <Row gutter={8}>
+          <Form.Item
+            label="Periodic?"
+            labelCol={{ span: 12 }}
+            wrapperCol={{ span: 12 }}
+            className="ant-col-8"
+            style={{ margin: 0, padding: 10 }}
+          >
+            <Col span={24}>
+              <Switch onChange={switchToPeriodic} />
+            </Col>
+          </Form.Item>
+          <Form.Item
+            style={{ margin: 0, padding: 10, display: periodic ? "" : "none" }}
+            label="Each"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 13 }}
+            className="ant-col-16"
+          >
+            <Col span={24}>
+              {form.getFieldDecorator("weekDays", {
+                rules: [
+                  {
+                    required: false,
+                    message: `Please Input Week days!`
+                  }
+                ],
+                initialValue: undefined
+              })(
+                <Select mode="multiple" style={{ width: "100%" }}>
+                  {moment.weekdays().map((option, index) => (
+                    <Option value={index} key={option}>
+                      {option}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            </Col>
+          </Form.Item>
+        </Row>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
+            Search
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
