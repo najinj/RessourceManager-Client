@@ -30,7 +30,8 @@ import {
   FILL_RESERVATION_FORM,
   EMPTY_RESERVATION_FORM,
   FILL_AVAILABILITY_FORM,
-  EMPTY_AVAILABILITY_FORM
+  EMPTY_AVAILABILITY_FORM,
+  EMPTY_AVAILABILITY_RESOUCRES
 } from "../actions/reservation-action/types";
 
 const intialState = {
@@ -57,7 +58,8 @@ const intialState = {
       weekDays: undefined
     },
     resourceType: null,
-    resources: []
+    resources: [],
+    loading: false
   },
   errors: null
 };
@@ -65,18 +67,31 @@ const intialState = {
 const reservationReducer = (state = intialState, action) => {
   switch (action.type) {
     case CHECK_AVAILABILITY_REQUEST:
-      return state;
+      return {
+        ...state,
+        availability: {
+          ...state.availability,
+          loading: true
+        }
+      };
     case CHECK_AVAILABILITY_SUCCESS:
       return {
         ...state,
         availability: {
           ...state.availability,
           resources: action.payload,
-          resourceType: action.payload.resourceType
+          resourceType: action.payload.resourceType,
+          loading: false
         }
       };
     case CHECK_AVAILABILITY_FAILURE:
-      return state;
+      return {
+        ...state,
+        availability: {
+          ...state.availability,
+          loading: false
+        }
+      };
 
     case GET_USER_RESERVATIONS_REQUEST:
       return state;
@@ -118,6 +133,18 @@ const reservationReducer = (state = intialState, action) => {
                 ? [...state.calendarState.reservations, ...action.payload]
                 : [...state.calendarState.reservations, action.payload]
               : state.calendarState.reservations
+        },
+        availability: {
+          ...state.availability,
+          resources:
+            // eslint-disable-next-line no-nested-ternary
+            !Array.isArray(action.payload)
+              ? state.availability.resources.filter(
+                  resource => resource.id !== action.payload.resourceId
+                )
+              : state.availability.resources.filter(
+                  resource => resource.id !== action.payload[0].resourceId
+                )
         }
       };
     case ADD_RESERVATION_FAILURE:
@@ -237,7 +264,14 @@ const reservationReducer = (state = intialState, action) => {
           availabilityForm: intialState.availability.availabilityForm
         }
       };
-
+    case EMPTY_AVAILABILITY_RESOUCRES:
+      return {
+        ...state,
+        availability: {
+          ...state.availability,
+          resources: []
+        }
+      };
     default:
       return state;
   }
