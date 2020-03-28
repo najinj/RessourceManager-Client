@@ -29,9 +29,17 @@ import {
   FILL_RESERVATION_FORM,
   EMPTY_RESERVATION_FORM,
   EMPTY_AVAILABILITY_FORM,
-  FILL_AVAILABILITY_FORM
+  FILL_AVAILABILITY_FORM,
+  EMPTY_AVAILABILITY_RESOUCRES
 } from "./types";
 import ReservationsServices from "./service";
+
+export function emptyAvailabilityResouces() {
+  return {
+    type: EMPTY_AVAILABILITY_RESOUCRES,
+    payload: []
+  };
+}
 
 export function emptyAvailabilityForm() {
   return {
