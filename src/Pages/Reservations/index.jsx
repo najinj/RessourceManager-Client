@@ -135,6 +135,32 @@ const Reservations = ({
     });
   };
 
+  const renderReservations = reservations => {
+    console.log("reservations", reservations, reservations.length);
+    return reservations.length > 0 ? (
+      <List
+        itemLayout="vertical"
+        size="sm"
+        pagination={{
+          onChange: page => {
+            console.log(page);
+          },
+          pageSize: 3
+        }}
+        dataSource={reservations}
+        renderItem={reservation => (
+          <List.Item key={reservation.id} noBorder>
+            <Reservation
+              reservation={reservation}
+              spaces={spaces}
+              isAvailability={false}
+            />
+          </List.Item>
+        )}
+      />
+    ) : null;
+  };
+
   return (
     <div className="reservation-root-container">
       <div className="reservation-filters">
@@ -145,48 +171,9 @@ const Reservations = ({
         />
       </div>
       <div className="reservations-list">
-        {isAdmin ? (
-          <List
-            itemLayout="vertical"
-            size="sm"
-            pagination={{
-              onChange: page => {
-                console.log(page);
-              },
-              pageSize: 3
-            }}
-            dataSource={filteredAllReservations}
-            renderItem={reservation => (
-              <List.Item key={reservation.id} noBorder>
-                <Reservation reservation={reservation} spaces={spaces} />
-              </List.Item>
-            )}
-          />
-        ) : (
-          <List
-            itemLayout="vertical"
-            size="sm"
-            pagination={{
-              onChange: page => {
-                console.log(page);
-              },
-              pageSize: 3
-            }}
-            dataSource={filteredUserReservations}
-            renderItem={reservation => (
-              <List.Item
-                key={reservation.id}
-                style={{
-                  borderWidth: 0,
-                  borderColor: "transparent",
-                  padding: 0
-                }}
-              >
-                <Reservation reservation={reservation} spaces={spaces} />
-              </List.Item>
-            )}
-          />
-        )}
+        {isAdmin
+          ? renderReservations(filteredAllReservations)
+          : renderReservations(filteredUserReservations)}
       </div>
     </div>
   );
