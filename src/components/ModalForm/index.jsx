@@ -22,15 +22,17 @@ const getParameterCaseInsensitive = (object, key) => {
   ];
 };
 
-const ModalForm = ({
+const PopUpForm = ({
   fields,
   action,
   onCancel,
   visible,
   errors,
-  validateFields,
-  loading
+  loading,
+  title,
+  form
 }) => {
+  console.log("HELOOOO");
   const [tags, SetTags] = useState(null);
   const [inputVisible, SetInputVisible] = useState(false);
   const [inputValue, SetInputValue] = useState("");
@@ -91,7 +93,7 @@ const ModalForm = ({
   };
 
   const saveOrUpdate = () => {
-    validateFields((error, row) => {
+    form.validateFields((error, row) => {
       if (error) {
         console.log(error);
         return;
@@ -129,7 +131,7 @@ const ModalForm = ({
               validateStatus: "error"
             })}
         >
-          {field.getFieldDecorator(field.dataIndex, {
+          {form.getFieldDecorator(field.dataIndex, {
             rules: [
               {
                 required: field.required,
@@ -236,7 +238,7 @@ const ModalForm = ({
               validateStatus: "error"
             })}
         >
-          {field.getFieldDecorator(field.dataIndex, {
+          {form.getFieldDecorator(field.dataIndex, {
             rules: [
               {
                 required: field.required,
@@ -284,7 +286,7 @@ const ModalForm = ({
               validateStatus: "error"
             })}
         >
-          {field.getFieldDecorator(field.dataIndex, {
+          {form.getFieldDecorator(field.dataIndex, {
             rules: [
               {
                 required: field.required,
@@ -310,7 +312,7 @@ const ModalForm = ({
               validateStatus: "error"
             })}
         >
-          {field.getFieldDecorator(field.dataIndex, {
+          {form.getFieldDecorator(field.dataIndex, {
             rules: [
               {
                 required: field.required,
@@ -335,7 +337,7 @@ const ModalForm = ({
             validateStatus: "error"
           })}
       >
-        {field.getFieldDecorator(field.dataIndex, {
+        {form.getFieldDecorator(field.dataIndex, {
           rules: [
             {
               required: field.required,
@@ -348,6 +350,7 @@ const ModalForm = ({
             <Input.TextArea
               autosize={{ minRows: 4, maxRows: 8 }}
               {...itemLayout}
+              onChange={e => console.log(e.target.value)}
             />
           ) : (
             <Input disabled={field.editable} />
@@ -358,17 +361,18 @@ const ModalForm = ({
   };
   return (
     <Modal
-      title="Title"
+      title={title}
       visible={visible}
       onOk={saveOrUpdate}
       confirmLoading={loading}
       onCancel={onCancel}
     >
+      {console.log("HELOOOOs")}
       <Form>{fields !== null ? fields.map(field => getInput(field)) : ""}</Form>
     </Modal>
   );
 };
-ModalForm.propTypes = {
+PopUpForm.propTypes = {
   fields: arrayOf(
     shape({
       dataIndex: string,
@@ -382,7 +386,6 @@ ModalForm.propTypes = {
         })
       ),
       required: bool,
-      validateFields: func,
       record: shape({
         key: string,
         name: string
@@ -395,17 +398,19 @@ ModalForm.propTypes = {
   onCancel: func,
   visible: bool,
   errors: arrayOf(shape()),
-  validateFields: func,
-  loading: bool
+  loading: bool,
+  title: string,
+  form: shape()
 };
-ModalForm.defaultProps = {
+PopUpForm.defaultProps = {
   fields: null,
   action: {},
   onCancel: func,
   visible: false,
   errors: null,
-  validateFields: func,
-  loading: bool
+  loading: bool,
+  title: null,
+  form: {}
 };
-
+const ModalForm = Form.create()(PopUpForm);
 export default ModalForm;
