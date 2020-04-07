@@ -30,9 +30,17 @@ import {
   EMPTY_RESERVATION_FORM,
   EMPTY_AVAILABILITY_FORM,
   FILL_AVAILABILITY_FORM,
-  EMPTY_AVAILABILITY_RESOUCRES
+  EMPTY_AVAILABILITY_RESOUCRES,
+  SET_USER_ACTION
 } from "./types";
 import ReservationsServices from "./service";
+
+export function setUserAction(action) {
+  return {
+    type: SET_USER_ACTION,
+    payload: action
+  };
+}
 
 export function emptyAvailabilityResouces() {
   return {
