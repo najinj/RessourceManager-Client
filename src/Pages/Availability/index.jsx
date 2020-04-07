@@ -1,10 +1,16 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { List } from "antd";
 import { shape, arrayOf, string, number, bool, func } from "prop-types";
 import AvailabilityForm from "../../components/AvailabilityForm";
 import Reservation from "../../components/Reservation";
-import { emptyAvailabilityResouces } from "../../actions/reservation-action/action";
+import ModalForm from "../../components/ModalForm";
+
+import {
+  emptyAvailabilityResouces,
+  emptyReservationForm
+} from "../../actions/reservation-action/action";
 
 const resourceTypes = [
   {
@@ -21,11 +27,18 @@ const Availability = ({
   resources,
   availabilityForm,
   loading,
-  resetAvailability
+  resetAvailability,
+  formVisible,
+  formLoading,
+  formErrors,
+  formFields,
+  userAction,
+  closeForm
 }) => {
   useEffect(() => {
     resetAvailability();
   }, []);
+
   const mappedReservations = resources.map(resource => {
     return {
       ...resource,
@@ -34,23 +47,33 @@ const Availability = ({
       resourceType: availabilityForm.resourceType
     };
   });
+  const handleCancel = () => {
+    closeForm();
+  };
 
   return (
     <div className="availability-container">
+      <ModalForm
+        title="Availability"
+        action={userAction}
+        onCancel={handleCancel}
+        visible={formVisible}
+        fields={formFields}
+        loading={formLoading}
+        errors={formErrors}
+      />
       <AvailabilityForm resourceTypes={resourceTypes} />
       <List
         itemLayout="vertical"
         size="sm"
         pagination={{
-          onChange: page => {
-            console.log(page);
-          },
           pageSize: 3
         }}
         dataSource={mappedReservations}
         renderItem={reservation => (
           <List.Item key={reservation.id} noBorder>
             <Reservation
+              key={reservation.id}
               reservation={reservation}
               isAvailability
               loading={loading}
@@ -66,13 +89,20 @@ const mapStateToProps = state => {
   return {
     resources: state.reservationReducer.availability.resources,
     loading: state.reservationReducer.availability.loading,
-    availabilityForm: state.reservationReducer.availability.availabilityForm
+    availabilityForm: state.reservationReducer.availability.availabilityForm,
+    userAction:
+      state.reservationReducer.calendarState.reservationForm.userAction,
+    formVisible: state.reservationReducer.calendarState.reservationForm.visible,
+    formFields: state.reservationReducer.calendarState.reservationForm.fields,
+    formErrors: state.reservationReducer.calendarState.reservationForm.errors,
+    formLoading: state.reservationReducer.calendarState.reservationForm.loading
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    resetAvailability: () => dispatch(emptyAvailabilityResouces())
+    resetAvailability: () => dispatch(emptyAvailabilityResouces()),
+    closeForm: () => dispatch(emptyReservationForm())
   };
 };
 
