@@ -31,7 +31,8 @@ import {
   EMPTY_RESERVATION_FORM,
   FILL_AVAILABILITY_FORM,
   EMPTY_AVAILABILITY_FORM,
-  EMPTY_AVAILABILITY_RESOUCRES
+  EMPTY_AVAILABILITY_RESOUCRES,
+  SET_USER_ACTION
 } from "../actions/reservation-action/types";
 
 const intialState = {
@@ -41,7 +42,8 @@ const intialState = {
       visible: false,
       loading: false,
       errors: null,
-      fields: []
+      fields: [],
+      userAction: null
     },
     resourceId: null
   },
@@ -165,6 +167,7 @@ const reservationReducer = (state = intialState, action) => {
         calendarState: {
           ...state.calendarState,
           reservationForm: {
+            ...state.calendarState.reservationForm,
             fields: action.payload,
             loading: false,
             visible: true,
@@ -180,8 +183,9 @@ const reservationReducer = (state = intialState, action) => {
           reservationForm: {
             loading: false,
             visible: false,
-            fields: action.payload,
-            errors: null
+            fields: [],
+            errors: null,
+            userAction: null
           }
         }
       };
@@ -270,6 +274,17 @@ const reservationReducer = (state = intialState, action) => {
         availability: {
           ...state.availability,
           resources: []
+        }
+      };
+    case SET_USER_ACTION:
+      return {
+        ...state,
+        calendarState: {
+          ...state.calendarState,
+          reservationForm: {
+            ...state.calendarState.reservationForm,
+            userAction: action.payload
+          }
         }
       };
     default:
