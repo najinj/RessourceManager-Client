@@ -97,7 +97,6 @@ const columns = [
 ];
 
 const CalendarView = ({
-  form,
   reservations,
   resourceId,
   spaces,
@@ -147,9 +146,7 @@ const CalendarView = ({
             required: col.required,
             inputType: col.inputType,
             dataIndex: col.dataIndex,
-            title: col.title,
-            getFieldDecorator: form.getFieldDecorator,
-            validateFields: form.validateFields
+            title: col.title
           })
         };
       });
@@ -226,10 +223,9 @@ const CalendarView = ({
         </div>
       </div>
       <ModalForm
-        title="Title"
+        title="Calendar"
         action={userAction}
         onCancel={handleCancel}
-        validateFields={form.validateFields}
         visible={formVisible}
         fields={formFields}
         loading={formLoading}
@@ -277,10 +273,6 @@ const CalendarView = ({
 const CalendarViewForm = Form.create()(CalendarView);
 
 CalendarView.propTypes = {
-  form: shape({
-    getFieldDecorator: func,
-    validateFields: func
-  }),
   reservations: arrayOf(shape()),
   resourceId: string,
   spaces: arrayOf(
@@ -305,7 +297,6 @@ CalendarView.propTypes = {
   addEntitie: func
 };
 CalendarView.defaultProps = {
-  form: {},
   reservations: [],
   resourceId: null,
   loadReservations: func,
