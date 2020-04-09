@@ -25,44 +25,59 @@ const columns = [
     dataIndex: "resourceName",
     required: true,
     editable: false,
-    inputType: "readOnly"
+    inputType: ["label"]
   },
   {
     title: "From",
     dataIndex: "start",
     editable: false,
     required: true,
-    inputType: "readOnly"
+    inputType: ["label"]
   },
   {
     title: "To",
     dataIndex: "end",
     editable: false,
     required: true,
-    inputType: "readOnly"
+    inputType: ["label"]
   },
   {
     title: "Description",
     dataIndex: "title",
     editable: true,
     required: false,
-    inputType: "text"
+    inputType: ["text"]
   },
   {
     title: "Resource Type",
     dataIndex: "resourceType",
     editable: false,
     hidden: true,
-    inputType: "hidden"
+    inputType: ["hidden", "text"]
   },
   {
     title: "Resource",
     dataIndex: "resourceId",
     editable: false,
     hidden: true,
-    inputType: "hidden"
+    inputType: ["hidden", "text"]
+  },
+  {
+    title: "CronosExpression",
+    dataIndex: "cronoExpression",
+    editable: false,
+    hidden: true,
+    inputType: ["hidden", "text"]
+  },
+  {
+    title: "DaysOfWeek",
+    dataIndex: "weekDays",
+    editable: false,
+    hidden: true,
+    inputType: ["hidden", "text"]
   }
 ];
+
 const mapDispatchToProps = dispatch => {
   return {
     removeReservation: id => dispatch(deleteReservation(id)),
@@ -72,6 +87,18 @@ const mapDispatchToProps = dispatch => {
     closeForm: () => dispatch(emptyReservationForm()),
     setUserAction: action => dispatch(setUserAction(action))
   };
+};
+
+const mapStateToProps = state => {
+  return {
+    weekDays: state.reservationReducer.availability.availabilityForm.weekDays
+  };
+};
+
+const getCronosExpression = (date, days) => {
+  return `${date.format("mm")} ${date.format("HH")} * * ${
+    days.length === 7 ? "*" : days.toString()
+  }`;
 };
 
 const Reservation = ({
@@ -84,7 +111,8 @@ const Reservation = ({
   addEntitie,
   openForm,
   // eslint-disable-next-line no-shadow
-  setUserAction
+  setUserAction,
+  weekDays
 }) => {
   const [showPeriodicReservation, SetPeriodicReservation] = useState(false);
 
@@ -183,8 +211,14 @@ const Reservation = ({
       },
       title: "",
       resourceType: reservation.resourceType,
-      resourceId: reservation.id
+      resourceId: reservation.id,
+      cronoExpression:
+        Array.isArray(weekDays) && weekDays.length
+          ? getCronosExpression(reservation.start, weekDays)
+          : null,
+      weekDays
     };
+
     const fields = formColumns.map(col => col.onCell(record));
     openForm(fields);
     setUserAction({ execute: addEntitie });
@@ -365,7 +399,7 @@ Reservation.defaultProps = {
 };
 
 const ConnectedTeservation = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Reservation);
 export default ConnectedTeservation;
