@@ -145,10 +145,9 @@ const Reservation = ({
     SetPeriodicReservation(!showPeriodicReservation);
   };
 
-  const getWeekDaysNames = indexes => {
+  const getWeekDaysNames = days => {
     const defaultWeekdays = moment.weekdays();
-    console.log(defaultWeekdays);
-    return indexes.map(i => defaultWeekdays[i]);
+    return days.map(i => defaultWeekdays[i]);
   };
   const cancelReservation = reserv => {
     confirm({
@@ -252,11 +251,13 @@ const Reservation = ({
           ) : null}
         </div>
         <div className="reservation-info ant-col-19">
-          <div className="reservation-header">
-            <span>Resource Title</span>
+          {!isAvailability ? (
+            <div className="reservation-header">
+              <span>Reservation Title</span>
+              <h4>{reservation.title}</h4>
+            </div>
+          ) : null}
 
-            <h4>{reservation.title}</h4>
-          </div>
           <div className="reservation-body">
             <div className="resourceName ant-col-5">
               <span>Resource Name</span>
@@ -296,64 +297,62 @@ const Reservation = ({
         </div>
       </Card>
 
-      {showPeriodicReservation
-        ? [
-            <Card
-              bordered
-              style={{ borderLeft: "1px solid #1890ff" }}
-              size="small"
-            >
-              <div className="icons-container">
-                <Popover content="Parent reservation" trigger="hover">
-                  <Icon type="calendar" style={{ fontSize: "20px" }} />
-                  <Icon type="sync" style={{ fontSize: "14px" }} rotate={60} />
-                </Popover>
-                <div style={{ width: 32 }} />
+      {showPeriodicReservation ? (
+        <QueueAnim delay={500} className="queue-simple">
+          <Card
+            bordered
+            style={{ borderLeft: "1px solid #1890ff" }}
+            size="small"
+          >
+            <div className="icons-container">
+              <Popover content="Parent reservation" trigger="hover">
+                <Icon type="calendar" style={{ fontSize: "20px" }} />
+                <Icon type="sync" style={{ fontSize: "14px" }} rotate={60} />
+              </Popover>
+              <div style={{ width: 32 }} />
+            </div>
+            <div className="reservation-info ant-col-19">
+              <div className="reservation-header">
+                <span>Recurrency</span>
+                <h4>
+                  {getWeekDaysNames(reservation.weekDays).map(day => {
+                    console.log(day);
+                    return <Tag key={day}>{day}</Tag>;
+                  })}
+                </h4>
               </div>
-              <div className="reservation-info ant-col-19">
-                <div className="reservation-header">
-                  <span>Recurrency</span>
-                  <h4>
-                    {getWeekDaysNames([1, 2, 3, 4, 5, 6, 0]).map(day => {
-                      console.log(day);
-                      return <Tag key={day}>{day}</Tag>;
-                    })}
-                  </h4>
+              <div className="reservation-body">
+                <div className="resourceType ant-col-5">
+                  <span>Start Date</span>
+                  <h4>{moment(reservation.startRecur).format("DD/MM/YYYY")}</h4>
                 </div>
-                <div className="reservation-body">
-                  <div className="resourceType ant-col-5">
-                    <span>Start Date</span>
-                    <h4>
-                      {moment(reservation.startRecur).format("DD/MM/YYYY")}
-                    </h4>
-                  </div>
-                  <div className="resource-date ant-col-4">
-                    <span>End Date</span>
-                    <h4>{moment(reservation.endRecur).format("DD/MM/YYYY")}</h4>
-                  </div>
-                  <div className="resource-time ant-col-4">
-                    <span>From</span>
-                    <h4>{moment(reservation.start).format("HH:mm")}</h4>
-                  </div>
-                  <div className="resource-time ant-col-6">
-                    <span>To</span>
-                    <h4>{moment(reservation.end).format("HH:mm")}</h4>
-                  </div>
+                <div className="resource-date ant-col-4">
+                  <span>End Date</span>
+                  <h4>{moment(reservation.endRecur).format("DD/MM/YYYY")}</h4>
+                </div>
+                <div className="resource-time ant-col-4">
+                  <span>From</span>
+                  <h4>{moment(reservation.start).format("HH:mm")}</h4>
+                </div>
+                <div className="resource-time ant-col-6">
+                  <span>To</span>
+                  <h4>{moment(reservation.end).format("HH:mm")}</h4>
                 </div>
               </div>
-              <div className="reservation-actions ant-col-4">
-                <Popover content="Cancel Perdoidic Reservation" trigger="hover">
-                  <Button
-                    type="danger"
-                    onClick={() => cancelPeriodicReservation(reservation)}
-                  >
-                    Cancel
-                  </Button>
-                </Popover>
-              </div>
-            </Card>
-          ]
-        : null}
+            </div>
+            <div className="reservation-actions ant-col-4">
+              <Popover content="Cancel Perdoidic Reservation" trigger="hover">
+                <Button
+                  type="danger"
+                  onClick={() => cancelPeriodicReservation(reservation)}
+                >
+                  Cancel
+                </Button>
+              </Popover>
+            </div>
+          </Card>
+        </QueueAnim>
+      ) : null}
     </div>
   );
 };
