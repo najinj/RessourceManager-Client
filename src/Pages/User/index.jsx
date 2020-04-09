@@ -97,7 +97,7 @@ const EditableTable = ({
       onCell: record => ({
         record,
         required: col.required,
-        inputType: "text",
+        inputType: ["text"],
         dataIndex: col.dataIndex,
         title: col.title,
         editing: false,

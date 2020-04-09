@@ -211,7 +211,8 @@ const EditableTable = ({
           key: `_${col.dataIndex}`,
           record,
           required: col.required,
-          inputType: col.dataIndex === "spaceTypeId" ? "select" : "multiSelect",
+          inputType:
+            col.dataIndex === "spaceTypeId" ? ["select"] : ["multiSelect"],
           dataIndex: col.dataIndex,
           title: col.title,
           options: col.dataIndex === "spaceTypeId" ? spaceFilter : assetFilter,
@@ -227,7 +228,7 @@ const EditableTable = ({
         key: `_${col.dataIndex}`,
         record,
         required: col.required,
-        inputType: col.dataIndex === "tags" ? "tags" : "text",
+        inputType: col.dataIndex === "tags" ? ["tags"] : ["text"],
         dataIndex: col.dataIndex,
         title: col.title,
         getFieldDecorator: form.getFieldDecorator,

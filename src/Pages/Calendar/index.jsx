@@ -50,49 +50,49 @@ const columns = [
     dataIndex: "resourceName",
     required: true,
     editable: false,
-    inputType: "readOnly"
+    inputType: ["label"]
   },
   {
     title: "From",
     dataIndex: "start",
     editable: false,
     required: true,
-    inputType: "readOnly"
+    inputType: ["label"]
   },
   {
     title: "To",
     dataIndex: "end",
     editable: false,
     required: true,
-    inputType: "readOnly"
+    inputType: ["label"]
   },
   {
     title: "Description",
     dataIndex: "title",
     editable: true,
     required: false,
-    inputType: "text"
+    inputType: ["text"]
   },
   {
     title: "Resource Type",
     dataIndex: "resourceType",
     editable: false,
     hidden: true,
-    inputType: "hidden"
+    inputType: ["hidden"]
   },
   {
     title: "Resource",
     dataIndex: "resourceId",
     editable: false,
     hidden: true,
-    inputType: "hidden"
+    inputType: ["hidden"]
   },
   {
     title: "Resource Type Name",
     dataIndex: "resourceTypeName",
     editable: false,
     hidden: true,
-    inputType: "hidden"
+    inputType: ["hidden"]
   }
 ];
 

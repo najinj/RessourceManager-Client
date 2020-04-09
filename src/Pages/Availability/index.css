@@ -1,0 +1,19 @@
+.page-container {
+  padding: 38px !important;
+  min-height: 360px;
+  background: linear-gradient(
+    to bottom,
+    #339dff 0%,
+    #339dff 40%,
+    #000000 40%,
+    #f0f2f5 40%,
+    #f0f2f5 100%
+  );
+  border-radius: 5px;
+}
+
+.ant-list {
+  background: white;
+  margin-top: 5%;
+  padding: 20px;
+}
