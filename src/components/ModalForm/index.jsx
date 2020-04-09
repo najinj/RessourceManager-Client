@@ -43,7 +43,7 @@ const PopUpForm = ({
       if (fields[0].record.tags !== undefined) {
         const tagsArray = fields
           .reduce((acc, curr) => {
-            if (curr.inputType === "tags") {
+            if (curr.inputType.includes("tags")) {
               acc.push(curr.record.tags);
             }
             return acc;
@@ -117,10 +117,13 @@ const PopUpForm = ({
             wrapperCol: { span: 14 }
           };
 
-    if (field.inputType === "select") {
+    if (field.inputType.includes("select")) {
       return (
         <Form.Item
-          style={{ margin: 0 }}
+          style={{
+            margin: 0,
+            display: field.inputType.includes("hidden") ? "none" : "block"
+          }}
           key={field.key}
           label={field.title}
           {...itemLayout}
@@ -141,6 +144,7 @@ const PopUpForm = ({
             initialValue: field.record[field.dataIndex]
           })(
             <Select
+              disabled={field.editable}
               initialValue=""
               style={{ width: 120 }}
               onChange={value => hadnleSelectChange(value, field.dataIndex)}
@@ -158,9 +162,16 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.inputType === "tags") {
+    if (field.inputType.includes("tags")) {
       return (
-        <Form.Item label={field.title} {...itemLayout}>
+        <Form.Item
+          style={{
+            margin: 0,
+            display: field.inputType.includes("hidden") ? "none" : "block"
+          }}
+          label={field.title}
+          {...itemLayout}
+        >
           {tags !== null
             ? tags.map((tag, index) => {
                 const isLongTag = tag.length > 20;
@@ -206,10 +217,13 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.dataIndex === "status") {
+    if (field.dataIndex.includes("status")) {
       return (
         <Form.Item
-          style={{ margin: 0 }}
+          style={{
+            margin: 0,
+            display: field.inputType.includes("hidden") ? "none" : "block"
+          }}
           key={field.key}
           label={field.title}
           {...itemLayout}
@@ -224,10 +238,13 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.inputType === "multiSelect") {
+    if (field.inputType.includes("multiSelect")) {
       return (
         <Form.Item
-          style={{ margin: 0 }}
+          style={{
+            margin: 0,
+            display: field.inputType.includes("hidden") ? "none" : "block"
+          }}
           key={field.key}
           label={field.title}
           {...itemLayout}
@@ -250,7 +267,11 @@ const PopUpForm = ({
                 ? field.record[field.dataIndex].map(asset => asset.id)
                 : undefined
           })(
-            <Select mode="multiple" style={{ width: "100%" }}>
+            <Select
+              mode="multiple"
+              style={{ width: "100%" }}
+              disabled={field.editable}
+            >
               {field.options.map(option => (
                 <Option
                   value={option.value}
@@ -264,7 +285,7 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.inputType === "readOnly") {
+    if (field.inputType.includes("label")) {
       const fieldValue =
         field.record[field.dataIndex].value === undefined
           ? field.record[field.dataIndex]
@@ -275,7 +296,10 @@ const PopUpForm = ({
           : field.record[field.dataIndex].text;
       return (
         <Form.Item
-          style={{ margin: 0 }}
+          style={{
+            margin: 0,
+            display: field.inputType.includes("hidden") ? "none" : "block"
+          }}
           key={field.key}
           label={field.title}
           {...itemLayout}
@@ -298,35 +322,12 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.inputType === "hidden") {
-      return (
-        <Form.Item
-          style={{ margin: 0, display: "none" }}
-          key={field.key}
-          label={field.title}
-          {...itemLayout}
-          {...(errors !== null &&
-            errors !== undefined &&
-            getParameterCaseInsensitive(errors, field.dataIndex) && {
-              help: getParameterCaseInsensitive(errors, field.dataIndex),
-              validateStatus: "error"
-            })}
-        >
-          {form.getFieldDecorator(field.dataIndex, {
-            rules: [
-              {
-                required: field.required,
-                message: `Please Input ${field.title}!`
-              }
-            ],
-            initialValue: field.record[field.dataIndex]
-          })(<span>{field.record[field.dataIndex].toString()}</span>)}
-        </Form.Item>
-      );
-    }
     return (
       <Form.Item
-        style={{ margin: 0 }}
+        style={{
+          margin: 0,
+          display: field.inputType.includes("hidden") ? "none" : "block"
+        }}
         key={field.key}
         label={field.title}
         {...itemLayout}
@@ -377,7 +378,7 @@ PopUpForm.propTypes = {
     shape({
       dataIndex: string,
       getFieldDecorator: func,
-      inputType: string,
+      inputType: arrayOf(string),
       key: string,
       options: arrayOf(
         shape({
