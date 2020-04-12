@@ -103,7 +103,6 @@ const getCronosExpression = (date, days) => {
 
 const Reservation = ({
   reservation,
-  spaces,
   removeReservation,
   removePeriodicReservation,
   isAvailability,
@@ -123,10 +122,8 @@ const Reservation = ({
   const resourceName =
     reservation.name !== undefined
       ? reservation.name
-      : spaces.reduce(
-          (acc, curr) => (curr.id === reservation.resourceId ? curr.name : acc),
-          ""
-        );
+      : reservation.resourceName;
+
   const getResourceType = () => {
     let resourceType = "";
     if (!isAvailability && reservation.resourceType === 1) {
@@ -368,17 +365,6 @@ Reservation.propTypes = {
     start: shape(),
     end: shape()
   }),
-  spaces: arrayOf(
-    shape({
-      id: string,
-      name: string,
-      capacity: number,
-      spaceTypeId: string,
-      count: number,
-      tags: arrayOf(string),
-      assets: arrayOf(string)
-    })
-  ),
   removeReservation: func,
   removePeriodicReservation: func,
   isAvailability: bool,
@@ -388,7 +374,6 @@ Reservation.propTypes = {
 };
 Reservation.defaultProps = {
   reservation: null,
-  spaces: [],
   removeReservation: func,
   removePeriodicReservation: func,
   isAvailability: bool,
