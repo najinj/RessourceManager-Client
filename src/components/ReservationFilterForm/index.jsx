@@ -1,17 +1,63 @@
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Select, DatePicker, TimePicker, Row, Col } from "antd";
-import { shape, func, arrayOf, number, string } from "prop-types";
+import { shape, func, arrayOf, string } from "prop-types";
 
 const { Option } = Select;
 
-const Filter = ({ form, spaces, filterReservations, resourceTypes }) => {
+const Filter = ({ form, spaceNames, filterReservations, resourceTypes }) => {
+  const [resourceIds, SetResourceIds] = useState([]);
+
+  useEffect(() => {
+    SetResourceIds(spaceNames);
+  }, [spaceNames]);
+
   const hadnleSelectChange = (fieldId, val) => {
     filterReservations(fieldId, val);
+  };
+
+  const handleResourceTypeChange = (fieldId, val) => {
+    if (val === "") {
+      form.setFieldsValue({
+        resourceId: ""
+      });
+    }
+    filterReservations(fieldId, val);
+  };
+
+  const renderResourceIds = () => {
+    const resourceOptions = resourceIds.map(option => (
+      <Option value={option.id} key={option.id}>
+        {option.name}
+      </Option>
+    ));
+    return resourceOptions;
   };
   const handleSubmit = () => {};
   return (
     <Form onSubmit={handleSubmit}>
+      <Form.Item
+        style={{ margin: 0, padding: 10 }}
+        label="Recource Type"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 14 }}
+      >
+        {form.getFieldDecorator("resourceType", {
+          initialValue: null
+        })(
+          <Select
+            initialValue=""
+            onChange={val => handleResourceTypeChange("resourceType", val)}
+          >
+            <Option value="">&nbsp;</Option>
+            {resourceTypes.map(option => (
+              <Option value={option.value} key={option.value}>
+                {option.text}
+              </Option>
+            ))}
+          </Select>
+        )}
+      </Form.Item>
       <Form.Item
         style={{ margin: 0, padding: 10 }}
         label="Recource"
@@ -26,33 +72,7 @@ const Filter = ({ form, spaces, filterReservations, resourceTypes }) => {
             onChange={val => hadnleSelectChange("resourceId", val)}
           >
             <Option value="">&nbsp;</Option>
-            {spaces.map(option => (
-              <Option value={option.id} key={option.id}>
-                {option.name}
-              </Option>
-            ))}
-          </Select>
-        )}
-      </Form.Item>
-      <Form.Item
-        style={{ margin: 0, padding: 10 }}
-        label="Recource Type"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 14 }}
-      >
-        {form.getFieldDecorator("resourceType", {
-          initialValue: null
-        })(
-          <Select
-            initialValue=""
-            onChange={val => hadnleSelectChange("resourceType", val)}
-          >
-            <Option value="">&nbsp;</Option>
-            {resourceTypes.map(option => (
-              <Option value={option.value} key={option.value}>
-                {option.text}
-              </Option>
-            ))}
+            {renderResourceIds()}
           </Select>
         )}
       </Form.Item>
@@ -110,15 +130,10 @@ const FilterForm = Form.create()(Filter);
 
 Filter.propTypes = {
   form: shape(),
-  spaces: arrayOf(
+  spaceNames: arrayOf(
     shape({
-      id: string,
       name: string,
-      capacity: number,
-      spaceTypeId: string,
-      count: number,
-      tags: arrayOf(string),
-      assets: arrayOf(string)
+      id: string
     })
   ),
   filterReservations: func,
@@ -131,7 +146,7 @@ Filter.propTypes = {
 };
 Filter.defaultProps = {
   form: {},
-  spaces: [],
+  spaceNames: [],
   filterReservations: func,
   resourceTypes: []
 };
