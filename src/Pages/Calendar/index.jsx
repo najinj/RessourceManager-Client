@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
 import { Calendar, Select, Form, Modal } from "antd";
@@ -14,6 +14,7 @@ import {
   fillReservationForm,
   emptyReservationForm
 } from "../../actions/reservation-action/action";
+import { fetchAssets } from "../../actions/asset-actions/actions";
 import { fetchSpaces } from "../../actions/space-actions/actions";
 import ModalForm from "../../components/ModalForm";
 
@@ -27,7 +28,8 @@ const mapStateToProps = state => {
     formFields: state.reservationReducer.calendarState.reservationForm.fields,
     formErrors: state.reservationReducer.calendarState.reservationForm.errors,
     formLoading: state.reservationReducer.calendarState.reservationForm.loading,
-    spaces: state.spaceReducer.spaces
+    spaces: state.spaceReducer.spaces,
+    assets: state.assetReducer.assets
   };
 };
 
@@ -38,7 +40,8 @@ const mapDispatchToProps = dispatch => {
     loadSpaces: () => dispatch(fetchSpaces()),
     openForm: form => dispatch(fillReservationForm(form)),
     closeForm: () => dispatch(emptyReservationForm()),
-    addEntitie: reservation => dispatch(addReservations(reservation))
+    addEntitie: reservation => dispatch(addReservations(reservation)),
+    loadAssets: () => dispatch(fetchAssets())
   };
 };
 const { Option } = Select;
@@ -96,12 +99,25 @@ const columns = [
   }
 ];
 
+const resourceTypes = [
+  {
+    text: "Space",
+    value: 1
+  },
+  {
+    text: "Asset",
+    value: 2
+  }
+];
+
 const CalendarView = ({
   reservations,
   resourceId,
   spaces,
+  assets,
   loadReservations,
   loadSpaces,
+  loadAssets,
   openForm,
   closeForm,
   addEntitie,
@@ -111,17 +127,20 @@ const CalendarView = ({
   formFields
 }) => {
   const [userAction, SetUserAction] = useState("");
-
+  const [resourceTypeSelectValue, SetResourceTypeSelectValue] = useState("");
   const calendarComponentRef = React.createRef();
-
-  useEffect(() => {
-    loadSpaces();
-  }, []);
 
   const spaceOptions = spaces.map(space => {
     return {
       text: space.name,
       value: space.id
+    };
+  });
+
+  const assetOptions = assets.map(asset => {
+    return {
+      text: asset.name,
+      value: asset.id
     };
   });
 
@@ -201,22 +220,68 @@ const CalendarView = ({
     loadReservations(value);
   };
 
+  const hadnleResourceTypeChange = value => {
+    if (value === 1) loadSpaces();
+    if (value === 2) loadAssets();
+    SetResourceTypeSelectValue(value);
+  };
+
+  const renderOptions = () => {
+    if (resourceTypeSelectValue === "") return null;
+    return resourceTypeSelectValue === 1
+      ? spaceOptions.map(option => (
+          <Option value={option.value} key={option.value}>
+            {option.text}
+          </Option>
+        ))
+      : assetOptions.map(option => (
+          <Option value={option.value} key={option.value}>
+            {option.text}
+          </Option>
+        ));
+  };
+
   return (
     <div className="calendar-container">
       <div className="select-container">
         <div className="space-select-container">
-          <Select
-            initialValue=""
-            style={{ width: 120 }}
-            onChange={hadnleSpaceChange}
-            placeholder="Select a space"
+          <Form.Item
+            style={{ margin: 0 }}
+            label="Recource Type"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 14 }}
           >
-            {spaceOptions.map(option => (
-              <Option value={option.value} key={option.value}>
-                {option.text}
-              </Option>
-            ))}
-          </Select>
+            <Select
+              initialValue=""
+              style={{ width: 120 }}
+              onChange={hadnleResourceTypeChange}
+              placeholder="Select a Resource Type"
+            >
+              <Option value="">&nbsp;</Option>
+              {resourceTypes.map(option => (
+                <Option value={option.value} key={option.value}>
+                  {option.text}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </div>
+        <div className="space-select-container">
+          <Form.Item
+            style={{ margin: 0 }}
+            label="Recource"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 14 }}
+          >
+            <Select
+              initialValue=""
+              style={{ width: 120 }}
+              onChange={hadnleSpaceChange}
+              placeholder="Select a space"
+            >
+              {renderOptions()}
+            </Select>
+          </Form.Item>
         </div>
         <div className="monthly-sideview-calendar">
           <Calendar fullscreen={false} onChange={onPanelChange} />
@@ -231,7 +296,7 @@ const CalendarView = ({
         loading={formLoading}
         errors={formErrors}
       />
-      <div className="demo-app-calendar">
+      <div className="fullCalendar-container">
         <FullCalendar
           defaultView="timeGridWeek"
           header={{
@@ -286,6 +351,14 @@ CalendarView.propTypes = {
       assets: arrayOf(string)
     })
   ),
+  assets: arrayOf(
+    shape({
+      name: string,
+      SpaceId: string,
+      assetTypeId: string,
+      status: number
+    })
+  ),
   loadReservations: func,
   loadSpaces: func,
   openForm: func,
@@ -294,7 +367,8 @@ CalendarView.propTypes = {
   formFields: arrayOf(shape()),
   formLoading: bool,
   formErrors: arrayOf(shape()),
-  addEntitie: func
+  addEntitie: func,
+  loadAssets: func
 };
 CalendarView.defaultProps = {
   reservations: [],
@@ -302,13 +376,15 @@ CalendarView.defaultProps = {
   loadReservations: func,
   loadSpaces: func,
   spaces: [],
+  assets: [],
   openForm: func,
   closeForm: func,
   formVisible: false,
   formFields: null,
   formLoading: false,
   formErrors: null,
-  addEntitie: null
+  addEntitie: null,
+  loadAssets: func
 };
 
 const ConnectedCalendar = connect(
