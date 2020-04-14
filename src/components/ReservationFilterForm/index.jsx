@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Select, DatePicker, TimePicker, Row, Col } from "antd";
 import { shape, func, arrayOf, string } from "prop-types";
 
+import "./index.css";
+
 const { Option } = Select;
 
 const Filter = ({ form, spaceNames, filterReservations, resourceTypes }) => {
