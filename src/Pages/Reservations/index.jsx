@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { shape, func, arrayOf, bool, number, string } from "prop-types";
+import { func, bool, arrayOf, shape } from "prop-types";
 import { List } from "antd";
 import moment from "moment";
 import Reservation from "../../components/Reservation";
@@ -38,7 +38,8 @@ const mapStateToProps = state => {
   return {
     userReservations: state.reservationReducer.userReservations,
     allReservations: state.reservationReducer.allReservations,
-    spaces: state.spaceReducer.spaces
+    spaces: state.spaceReducer.spaces,
+    assets: state.assetReducer.assets
   };
 };
 
@@ -66,7 +67,6 @@ const Reservations = ({
   getEntitiesByDate,
   getUserEntities,
   loadSpaces,
-  spaces,
   isAdmin
 }) => {
   const [filteredUserReservations, SetFilteredUserReservations] = useState([]);
@@ -79,6 +79,8 @@ const Reservations = ({
     endDate: "",
     endTime: ""
   });
+  const [userSpaceNames, SetUserSpaceNames] = useState([]);
+  const [allUsersSpaceNames, SetAllUsersSpaceNames] = useState([]);
   useEffect(() => {
     loadSpaces();
     if (!isAdmin) {
@@ -88,8 +90,40 @@ const Reservations = ({
     }
   }, []);
 
+  const getResourceNames = (reservations, resourceTypeId) => {
+    const resourceNames = reservations.reduce((accu, curr) => {
+      const resourceName =
+        curr.name !== undefined ? curr.name : curr.resourceName;
+      if (
+        curr.resourceType === resourceTypeId &&
+        filtredBy.resourceType === resourceTypeId
+      )
+        accu.push({ name: resourceName, id: curr.resourceId });
+      return accu;
+    }, []);
+    const filtredNames = Array.from(
+      new Set(resourceNames.map(item => item.id))
+    ).map(id => {
+      return {
+        id,
+        name: resourceNames.find(el => el.id === id).name
+      };
+    });
+    return filtredNames;
+  };
+
   const filterReservations = () => {
     if (!isAdmin) {
+      if (userReservations.length) {
+        if (filtredBy.resourceType === "") SetUserSpaceNames([]);
+        else {
+          const resourceNames = getResourceNames(
+            userReservations,
+            filtredBy.resourceType
+          );
+          SetUserSpaceNames(resourceNames);
+        }
+      }
       SetFilteredUserReservations([
         ...userReservations.filter(reservation => {
           return Object.keys(filtredBy).every(key => {
@@ -105,6 +139,16 @@ const Reservations = ({
         })
       ]);
     } else {
+      if (allReservations.length) {
+        if (filtredBy.resourceType === "") SetAllUsersSpaceNames([]);
+        else {
+          const resourceNames = getResourceNames(
+            allReservations,
+            filtredBy.resourceType
+          );
+          SetAllUsersSpaceNames(resourceNames);
+        }
+      }
       SetFilteredAllReservations([
         ...allReservations.filter(reservation => {
           return Object.keys(filtredBy).every(key => {
@@ -123,16 +167,20 @@ const Reservations = ({
   };
   useEffect(() => {
     filterReservations();
-  }, [userReservations, allReservations]);
-  useEffect(() => {
-    filterReservations();
-  }, [filtredBy]);
+  }, [userReservations, allReservations, filtredBy]);
 
   const setFilters = (fieldId, val) => {
-    SetFiltredBy({
-      ...filtredBy,
-      [fieldId]: val == null ? "" : val
-    });
+    if (fieldId === "resourceType") {
+      SetFiltredBy({
+        ...filtredBy,
+        resourceType: val,
+        resourceId: ""
+      });
+    } else
+      SetFiltredBy({
+        ...filtredBy,
+        [fieldId]: val == null ? "" : val
+      });
   };
 
   const renderReservations = reservations => {
@@ -150,11 +198,7 @@ const Reservations = ({
         dataSource={reservations}
         renderItem={reservation => (
           <List.Item key={reservation.id} noBorder>
-            <Reservation
-              reservation={reservation}
-              spaces={spaces}
-              isAvailability={false}
-            />
+            <Reservation reservation={reservation} isAvailability={false} />
           </List.Item>
         )}
       />
@@ -165,7 +209,7 @@ const Reservations = ({
     <div className="reservation-root-container">
       <div className="reservation-filters">
         <FilterForm
-          spaces={spaces}
+          spaceNames={isAdmin ? allUsersSpaceNames : userSpaceNames}
           filterReservations={setFilters}
           resourceTypes={resourceTypes}
         />
@@ -179,31 +223,19 @@ const Reservations = ({
   );
 };
 Reservations.propTypes = {
-  userReservations: func,
-  allReservations: func,
+  userReservations: arrayOf(shape()),
+  allReservations: arrayOf(shape()),
   getEntitiesByDate: func,
   getUserEntities: func,
   loadSpaces: func,
-  spaces: arrayOf(
-    shape({
-      id: string,
-      name: string,
-      capacity: number,
-      spaceTypeId: string,
-      count: number,
-      tags: arrayOf(string),
-      assets: arrayOf(string)
-    })
-  ),
   isAdmin: bool
 };
 Reservations.defaultProps = {
-  userReservations: func,
-  allReservations: func,
+  userReservations: [],
+  allReservations: [],
   getEntitiesByDate: func,
   getUserEntities: func,
   loadSpaces: func,
-  spaces: [],
   isAdmin: false
 };
 const ConnectedReservations = connect(
