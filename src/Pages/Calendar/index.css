@@ -1,18 +1,47 @@
 .calendar-container {
   display: flex;
-  flex-wrap: wrap;
-}
-
-.space-select-container {
-  padding-bottom: 5%;
-  padding-top: 5%;
 }
 
 .space-select-container .ant-select {
   width: 100% !important;
 }
 .monthly-sideview-calendar {
-  width: 300px;
   border: 1px solid rgb(217, 217, 217);
   border-radius: 4px;
+}
+.select-container {
+  margin: 0 15px;
+  min-width: 300px;
+}
+.fullCalendar-container {
+  width: 80%;
+}
+.space-select-container .ant-col.ant-form-item-control-wrapper {
+  width: 100%;
+}
+.monthly-sideview-calendar {
+  margin-top: 10px;
+}
+@media only screen and (max-width: 950px) {
+  .space-select-container .ant-row.ant-form-item {
+    margin: 0px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .calendar-container {
+    flex-wrap: wrap;
+  }
+  .select-container {
+    margin: auto;
+    width: 90%;
+  }
+  .fullCalendar-container {
+    margin: auto;
+    margin-top: 2%;
+    width: 100%;
+  }
+  .monthly-sideview-calendar {
+    margin: 10px;
+  }
 }
