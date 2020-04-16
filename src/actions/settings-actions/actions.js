@@ -11,7 +11,7 @@ import SettingsServices from "./service";
 export function getBackOfficeSettings() {
   return dispatch => {
     dispatch({ type: GET_BACK_OFFICE_SETTINGS_REQUEST });
-    SettingsServices.getSettings.then(
+    SettingsServices.getSettings().then(
       response => {
         dispatch({
           type: GET_BACK_OFFICE_SETTINGS_SUCCESS,
