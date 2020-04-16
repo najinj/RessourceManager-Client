@@ -5,6 +5,7 @@ import spaceReducer from "./spaceReducer";
 import assetReducer from "./assetReducer";
 import userReducer from "./userReducer";
 import reservationReducer from "./reservationReducer";
+import settingsReducer from "./settingsReducer";
 
 const rootReducer = combineReducers({
   authReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   ressourceTypeReducer,
   spaceReducer,
   assetReducer,
-  reservationReducer
+  reservationReducer,
+  settingsReducer
 });
 
 export default rootReducer;
