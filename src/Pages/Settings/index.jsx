@@ -16,63 +16,69 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    settings: state.settingsReducer
+    settingsViewModel: state.settingsReducer.settingsViewModel,
+    settingsModel: state.settingsReducer.settingsModel
   };
 };
 
 const getColumns = settings => {
   if (settings == null) return [];
-  return Object.keys(settings).map(key => {
+  return settings.map(setting => {
     return {
-      title: key,
-      dataIndex: key,
-      width: `${(1 / (Object.keys(settings).length + 1)) * 100}%`,
+      title: setting.label,
+      dataIndex: setting.name,
+      inputType: setting.type,
+      value: setting.value,
+      selectOptions: setting.type === "Select" ? setting.options : null,
+      width: `${(1 / (settings.length + 1)) * 100}%`,
       editable: true
     };
   });
 };
 
-const Settings = ({ settings = {}, getSettings, updateSettings }) => {
+const Settings = ({
+  settingsViewModel = {},
+  getSettings,
+  updateSettings,
+  settingsModel = {}
+}) => {
   useEffect(() => {
     getSettings();
   }, []);
   const editSettings = (settingsIn, key) => {
     const newSettings = {
-      ...settings,
+      ...settingsModel,
       [key]: settingsIn
     };
     updateSettings(newSettings);
   };
+  const getSettingsForProps = settingsIn => {
+    if (settingsIn == null) return [];
+    const mySettings = [...settingsIn];
+    mySettings.push({
+      value: settingsViewModel.id,
+      name: "key"
+    });
+    return mySettings;
+  };
   return (
     <div>
       <EditableTable
-        settings={
-          settings.emailSettings == null
-            ? []
-            : [{ ...settings.emailSettings, key: settings.id }]
-        }
+        settings={getSettingsForProps(settingsViewModel.emailSettings)}
         updateSettings={editSettings}
-        columns={getColumns(settings.emailSettings)}
+        columns={getColumns(settingsViewModel.emailSettings)}
         settingsKey="emailSettings"
       />
       <EditableTable
-        settings={
-          settings.reservationSettings == null
-            ? []
-            : [{ ...settings.reservationSettings, key: settings.id }]
-        }
+        settings={getSettingsForProps(settingsViewModel.reservationSettings)}
         updateSettings={editSettings}
-        columns={getColumns(settings.reservationSettings)}
+        columns={getColumns(settingsViewModel.reservationSettings)}
         settingsKey="reservationSettings"
       />
       <EditableTable
-        settings={
-          settings.calendarSettings == null
-            ? []
-            : [{ ...settings.calendarSettings, key: settings.id }]
-        }
+        settings={getSettingsForProps(settingsViewModel.calendarSettings)}
         updateSettings={editSettings}
-        columns={getColumns(settings.calendarSettings)}
+        columns={getColumns(settingsViewModel.calendarSettings)}
         settingsKey="calendarSettings"
       />
     </div>
