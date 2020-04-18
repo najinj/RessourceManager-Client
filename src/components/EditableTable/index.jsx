@@ -1,7 +1,18 @@
+/* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { Table, Input, Popconfirm, Form, Button } from "antd";
+import {
+  Table,
+  Input,
+  Popconfirm,
+  Form,
+  Button,
+  Select,
+  InputNumber
+} from "antd";
+
+const { Option } = Select;
 
 const EditableCell = ({
   editing,
@@ -13,32 +24,123 @@ const EditableCell = ({
   children,
   editable,
   getFieldDecorator,
+  selectOptions,
+  value,
+  setFields,
   ...restProps
 }) => {
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0
-          }}
-        >
-          {getFieldDecorator(dataIndex, {
-            rules: [
-              {
-                required: true,
-                message: `Please Input ${title}!`
-              }
-            ],
-            initialValue: record[dataIndex]
-          })(<Input />)}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
+  const getInput = () => {
+    switch (inputType) {
+      case "Boolean":
+        return (
+          <td {...restProps}>
+            {editing ? (
+              <Form.Item style={{ margin: 0 }}>
+                {getFieldDecorator(dataIndex, {
+                  rules: [
+                    {
+                      required: true,
+                      message: `Please Input ${title}!`
+                    }
+                  ],
+                  initialValue: value
+                })(
+                  <Select initialValue="" style={{ width: 120 }}>
+                    <Option value>true</Option>
+                    <Option value={false}>False</Option>
+                  </Select>
+                )}
+              </Form.Item>
+            ) : (
+              <span>{value.toString()}</span>
+            )}
+          </td>
+        );
+      case "Select":
+        return (
+          <td {...restProps}>
+            {editing ? (
+              <Form.Item style={{ margin: 0 }}>
+                {getFieldDecorator(dataIndex, {
+                  rules: [
+                    {
+                      required: true,
+                      message: `Please Input ${title}!`
+                    }
+                  ],
+                  initialValue: value
+                })(
+                  <Select initialValue="" style={{ width: 120 }}>
+                    {selectOptions.map(option => (
+                      <Option value={option.value}>{option.name}</Option>
+                    ))}
+                  </Select>
+                )}
+              </Form.Item>
+            ) : (
+              children
+            )}
+          </td>
+        );
+      case "Integer":
+        return (
+          <td {...restProps}>
+            {editing ? (
+              <Form.Item
+                name={dataIndex}
+                style={{
+                  margin: 0
+                }}
+              >
+                {getFieldDecorator(dataIndex, {
+                  rules: [
+                    {
+                      required: true,
+                      message: `Please Input ${title}!`
+                    },
+                    {
+                      validator: async (_, val) => {
+                        if (val < 0) throw new Error("Value Must be Positive");
+                      },
+                      message: "Value must be greater than 0 !"
+                    }
+                  ],
+                  initialValue: value
+                })(<InputNumber />)}
+              </Form.Item>
+            ) : (
+              children
+            )}
+          </td>
+        );
+      default:
+        return (
+          <td {...restProps}>
+            {editing ? (
+              <Form.Item
+                name={dataIndex}
+                style={{
+                  margin: 0
+                }}
+              >
+                {getFieldDecorator(dataIndex, {
+                  rules: [
+                    {
+                      required: true,
+                      message: `Please Input ${title}!`
+                    }
+                  ],
+                  initialValue: value
+                })(<Input />)}
+              </Form.Item>
+            ) : (
+              children
+            )}
+          </td>
+        );
+    }
+  };
+  return getInput();
 };
 
 const EditableTable = ({
@@ -61,22 +163,11 @@ const EditableTable = ({
     setEditingKey("");
   };
 
-  const save = async key => {
+  const save = async () => {
     try {
       const row = await form.validateFields();
-      const newData = [...settings];
-      const index = newData.findIndex(item => key === item.key);
-
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        updateSettings(newData[0], settingsKey);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        updateSettings(newData[0], settingsKey);
-        setEditingKey("");
-      }
+      updateSettings(row, settingsKey);
+      setEditingKey("");
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);
     }
@@ -113,14 +204,21 @@ const EditableTable = ({
       ...col,
       onCell: record => ({
         record,
-        inputType: col.dataIndex === "age" ? "number" : "text",
+        inputType: col.inputType,
         dataIndex: col.dataIndex,
+        value: col.value,
+        setFields: form.setFields,
         getFieldDecorator: form.getFieldDecorator,
         title: col.title,
+        selectOptions: col.selectOptions,
         editing: isEditing(record)
       })
     };
   });
+  const mappedSettings = settings.reduce(
+    (acc, cur) => ({ ...acc, [cur.name]: cur.value }),
+    {}
+  );
 
   return (
     <Form form={form} component={false}>
@@ -136,7 +234,7 @@ const EditableTable = ({
           }}
           bordered
           pagination={{ position: ["none", "none"] }}
-          dataSource={settings}
+          dataSource={[mappedSettings]}
           columns={mergedColumns}
           rowClassName="editable-row"
         />
