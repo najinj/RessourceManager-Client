@@ -1,11 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { Typography } from "antd";
 import EditableTable from "../../components/EditableTable";
 import {
   getBackOfficeSettings,
   updateBackOfficeSettings
 } from "../../actions/settings-actions/actions";
+
+const { Title } = Typography;
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -63,24 +66,34 @@ const Settings = ({
   };
   return (
     <div>
-      <EditableTable
-        settings={getSettingsForProps(settingsViewModel.emailSettings)}
-        updateSettings={editSettings}
-        columns={getColumns(settingsViewModel.emailSettings)}
-        settingsKey="emailSettings"
-      />
-      <EditableTable
-        settings={getSettingsForProps(settingsViewModel.reservationSettings)}
-        updateSettings={editSettings}
-        columns={getColumns(settingsViewModel.reservationSettings)}
-        settingsKey="reservationSettings"
-      />
-      <EditableTable
-        settings={getSettingsForProps(settingsViewModel.calendarSettings)}
-        updateSettings={editSettings}
-        columns={getColumns(settingsViewModel.calendarSettings)}
-        settingsKey="calendarSettings"
-      />
+      <div>
+        <Title level={4}>Email Settings</Title>
+        <EditableTable
+          settings={getSettingsForProps(settingsViewModel.emailSettings)}
+          updateSettings={editSettings}
+          columns={getColumns(settingsViewModel.emailSettings)}
+          settingsKey="emailSettings"
+        />
+      </div>
+      <div>
+        <Title level={4}>Reservation Settings</Title>
+        <EditableTable
+          settings={getSettingsForProps(settingsViewModel.reservationSettings)}
+          updateSettings={editSettings}
+          columns={getColumns(settingsViewModel.reservationSettings)}
+          settingsKey="reservationSettings"
+        />
+      </div>
+
+      <div>
+        <Title level={4}>Calendar Settings</Title>
+        <EditableTable
+          settings={getSettingsForProps(settingsViewModel.calendarSettings)}
+          updateSettings={editSettings}
+          columns={getColumns(settingsViewModel.calendarSettings)}
+          settingsKey="calendarSettings"
+        />
+      </div>
     </div>
   );
 };
