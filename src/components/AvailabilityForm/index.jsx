@@ -38,7 +38,8 @@ const AvailabilitySearch = ({
   resourceTypes,
   resourceSubTypes,
   getSubResourceTypes,
-  checkAvailability
+  checkAvailability,
+  reservationSettings
 }) => {
   const [resourceTypeValue, SetResourceTypeValue] = useState("");
   const [periodic, SetPeriodic] = useState(false);
@@ -106,6 +107,24 @@ const AvailabilitySearch = ({
               value: values.weekDays,
               errors: [
                 new Error("Please select week days for this reservation")
+              ]
+            }
+          });
+        } else if (
+          values.start.isAfter(
+            moment().add(
+              reservationSettings.IntervalAllowedForReservations,
+              "days"
+            )
+          )
+        ) {
+          form.setFields({
+            start: {
+              value: values.start,
+              errors: [
+                new Error(
+                  `Can't Add a reservation starting ${reservationSettings.IntervalAllowedForReservations} days from today`
+                )
               ]
             }
           });
@@ -301,7 +320,8 @@ const AvailabilitySearch = ({
 
 const mapStateToProps = state => {
   return {
-    resourceSubTypes: state.ressourceTypeReducer.filters
+    resourceSubTypes: state.ressourceTypeReducer.filters,
+    reservationSettings: state.settingsReducer.settingsModel.reservationSettings
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -334,7 +354,8 @@ AvailabilitySearch.propTypes = {
     })
   ),
   getSubResourceTypes: func,
-  checkAvailability: func
+  checkAvailability: func,
+  reservationSettings: shape()
 };
 AvailabilitySearch.defaultProps = {
   form: null,
@@ -342,7 +363,8 @@ AvailabilitySearch.defaultProps = {
   resourceTypes: [],
   resourceSubTypes: [],
   getSubResourceTypes: func,
-  checkAvailability: func
+  checkAvailability: func,
+  reservationSettings: {}
 };
 
 const ConnectedAvailabilitySearchForm = connect(
