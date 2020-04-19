@@ -163,6 +163,11 @@ const CalendarView = ({
         title: `Can't Add a reservation`,
         content: `No resource has been selected , please select a resource before adding a reservation`
       });
+    } else if (moment().diff(moment(arg.start)) > 0) {
+      error({
+        title: `Can't Add a reservation`,
+        content: `Can't add a reservation in the past`
+      });
     } else if (
       moment(arg.start)
         .hours(0)
