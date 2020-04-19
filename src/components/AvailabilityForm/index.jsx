@@ -290,7 +290,14 @@ const AvailabilitySearch = ({
             <Col span={24}>
               {form.getFieldDecorator("end", {
                 rules: [
-                  { required: true, message: "Please input a  end Date!" }
+                  { required: true, message: "Please input a  end Date!" },
+                  {
+                    validator: async (_, val) => {
+                      if (val && val.diff(moment(), "days") < 0)
+                        throw new Error("Can't book in the past");
+                    },
+                    message: "start date must be greater than today's date"
+                  }
                 ],
                 initialValue: null
               })(<DatePicker style={{ width: "100%" }} />)}
