@@ -181,6 +181,19 @@ const CalendarView = ({
         title: `Can't Add a reservation`,
         content: `Can't Add a reservation starting ${reservationSettings.IntervalAllowedForReservations} days from today`
       });
+    } else if (
+      moment(arg.end).isAfter(
+        moment().add(
+          reservationSettings.IntervalAllowedForReservations,
+          "days"
+        ),
+        "day"
+      )
+    ) {
+      error({
+        title: `Can't Add a reservation`,
+        content: `Can't Add a reservation ending ${reservationSettings.IntervalAllowedForReservations} days from today`
+      });
     } else {
       const formColumns = columns.map(col => {
         return {
