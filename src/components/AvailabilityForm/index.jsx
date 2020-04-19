@@ -204,6 +204,22 @@ const AvailabilitySearch = ({
               )
             }
           });
+        }
+        if (
+          periodic &&
+          moment.duration(values.endTime.diff(values.startTime)).asMinutes() /
+            60 >
+            reservationSettings.MaxDurationPerReservation
+        ) {
+          form.setFields({
+            endTime: {
+              value: values.endTime,
+              errors: getFieldErrors(
+                "endTime",
+                `Can't Book a resource for more than ${reservationSettings.MaxDurationPerReservation} hours`
+              )
+            }
+          });
         } else {
           fillForm(values);
           search(values);
