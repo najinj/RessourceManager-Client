@@ -115,7 +115,8 @@ const AvailabilitySearch = ({
             moment().add(
               reservationSettings.IntervalAllowedForReservations,
               "days"
-            )
+            ),
+            "day"
           )
         ) {
           form.setFields({
