@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
@@ -30,7 +31,8 @@ const mapStateToProps = state => {
     formLoading: state.reservationReducer.calendarState.reservationForm.loading,
     spaces: state.spaceReducer.spaces,
     assets: state.assetReducer.assets,
-    calendarSettings: state.settingsReducer.settingsModel.calendarSettings
+    calendarSettings: state.settingsReducer.settingsModel.calendarSettings,
+    reservationSettings: state.settingsReducer.settingsModel.reservationSettings
   };
 };
 
@@ -126,7 +128,8 @@ const CalendarView = ({
   formLoading,
   formErrors,
   formFields,
-  calendarSettings
+  calendarSettings,
+  reservationSettings
 }) => {
   const [userAction, SetUserAction] = useState("");
   const [resourceTypeSelectValue, SetResourceTypeSelectValue] = useState("");
@@ -152,10 +155,24 @@ const CalendarView = ({
   };
 
   const handleAdd = arg => {
+    const today = moment()
+      .hours(0)
+      .minutes(0);
     if (resourceId == null) {
       error({
         title: `Can't Add a reservation`,
         content: `No resource has been selected , please select a resource before adding a reservation`
+      });
+    } else if (
+      moment(arg.start)
+        .hours(0)
+        .minutes(0)
+        .diff(today, "days") >=
+      reservationSettings.IntervalAllowedForReservations
+    ) {
+      error({
+        title: `Can't Add a reservation`,
+        content: `Can't Add a reservation starting ${reservationSettings.IntervalAllowedForReservations} days from today`
       });
     } else {
       const formColumns = columns.map(col => {
@@ -371,7 +388,8 @@ CalendarView.propTypes = {
   formErrors: arrayOf(shape()),
   addEntitie: func,
   loadAssets: func,
-  calendarSettings: arrayOf(shape())
+  calendarSettings: arrayOf(shape()),
+  reservationSettings: arrayOf(shape())
 };
 CalendarView.defaultProps = {
   reservations: [],
@@ -388,7 +406,8 @@ CalendarView.defaultProps = {
   formErrors: null,
   addEntitie: null,
   loadAssets: func,
-  calendarSettings: {}
+  calendarSettings: {},
+  reservationSettings: {}
 };
 
 const ConnectedCalendar = connect(
