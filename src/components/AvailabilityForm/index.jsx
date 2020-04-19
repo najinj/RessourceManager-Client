@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import {
@@ -32,6 +33,12 @@ const getCronosExpression = (date, days) => {
   }`;
 };
 
+const getParameterCaseInsensitive = (object, key) => {
+  return object[
+    Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())
+  ];
+};
+
 const AvailabilitySearch = ({
   form,
   fillForm,
@@ -39,7 +46,8 @@ const AvailabilitySearch = ({
   resourceSubTypes,
   getSubResourceTypes,
   checkAvailability,
-  reservationSettings
+  reservationSettings,
+  errors
 }) => {
   const [resourceTypeValue, SetResourceTypeValue] = useState("");
   const [periodic, SetPeriodic] = useState(false);
@@ -211,6 +219,12 @@ const AvailabilitySearch = ({
             labelCol={{ span: 12 }}
             wrapperCol={{ span: 12 }}
             className="ant-col-16"
+            {...(errors !== null &&
+              errors !== undefined &&
+              getParameterCaseInsensitive(errors, "Start") && {
+                help: getParameterCaseInsensitive(errors, "Start"),
+                validateStatus: "error"
+              })}
           >
             <Col span={24}>
               {form.getFieldDecorator("start", {
@@ -262,6 +276,12 @@ const AvailabilitySearch = ({
             labelCol={{ span: 12 }}
             wrapperCol={{ span: 12 }}
             className="ant-col-16"
+            {...(errors !== null &&
+              errors !== undefined &&
+              getParameterCaseInsensitive(errors, "End") && {
+                help: getParameterCaseInsensitive(errors, "End"),
+                validateStatus: "error"
+              })}
           >
             <Col span={24}>
               {form.getFieldDecorator("end", {
@@ -342,7 +362,9 @@ const AvailabilitySearch = ({
 const mapStateToProps = state => {
   return {
     resourceSubTypes: state.ressourceTypeReducer.filters,
-    reservationSettings: state.settingsReducer.settingsModel.reservationSettings
+    reservationSettings:
+      state.settingsReducer.settingsModel.reservationSettings,
+    errors: state.reservationReducer.availability.availabilityForm.errors
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -376,7 +398,8 @@ AvailabilitySearch.propTypes = {
   ),
   getSubResourceTypes: func,
   checkAvailability: func,
-  reservationSettings: shape()
+  reservationSettings: shape(),
+  errors: arrayOf(shape())
 };
 AvailabilitySearch.defaultProps = {
   form: null,
@@ -385,7 +408,8 @@ AvailabilitySearch.defaultProps = {
   resourceSubTypes: [],
   getSubResourceTypes: func,
   checkAvailability: func,
-  reservationSettings: {}
+  reservationSettings: {},
+  errors: []
 };
 
 const ConnectedAvailabilitySearchForm = connect(
