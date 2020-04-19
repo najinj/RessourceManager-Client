@@ -96,7 +96,8 @@ const AvailabilitySearch = ({
               errors: [new Error("End Date cannot be before start date")]
             }
           });
-        } else if (
+        }
+        if (
           values.start.isSame(values.end, "day") &&
           minutesOfDay(values.startTime) >= minutesOfDay(values.endTime)
         ) {
@@ -106,7 +107,8 @@ const AvailabilitySearch = ({
               errors: [new Error("End time cannot be before start time")]
             }
           });
-        } else if (
+        }
+        if (
           periodic &&
           !(Array.isArray(values.weekDays) && values.weekDays.length)
         ) {
@@ -118,7 +120,8 @@ const AvailabilitySearch = ({
               ]
             }
           });
-        } else if (
+        }
+        if (
           values.start.isAfter(
             moment().add(
               reservationSettings.IntervalAllowedForReservations,
@@ -137,7 +140,8 @@ const AvailabilitySearch = ({
               ]
             }
           });
-        } else if (
+        }
+        if (
           values.end.isAfter(
             moment().add(
               reservationSettings.IntervalAllowedForReservations,
