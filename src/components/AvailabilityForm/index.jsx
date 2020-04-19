@@ -85,15 +85,44 @@ const AvailabilitySearch = ({
     checkAvailability(reservation);
   };
 
+  const getFieldErrors = (fieldName, errorMessage) => {
+    if (form.getFieldError(fieldName) === undefined)
+      return [new Error(errorMessage)];
+    return [
+      ...form.getFieldError(fieldName).map(error => new Error(error)),
+      new Error(errorMessage)
+    ];
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFields((err, values) => {
+      let startDateWithTime = { ...values.start };
+      startDateWithTime = moment(startDateWithTime).set({
+        hour: values.startTime.hours(),
+        minute: values.startTime.minutes(),
+        second: 0,
+        millisecond: 0
+      });
+      let endDateWithTime = { ...values.end };
+      endDateWithTime = moment(endDateWithTime).set({
+        hour: values.endTime.hours(),
+        minute: values.endTime.minutes(),
+        second: 0,
+        millisecond: 0
+      });
+
+      const diff = endDateWithTime.diff(startDateWithTime, "minute");
+
       if (!err) {
         if (values.start.isAfter(values.end)) {
           form.setFields({
             end: {
               value: values.end,
-              errors: [new Error("End Date cannot be before start date")]
+              errors: getFieldErrors(
+                "end",
+                "End Date cannot be before start date"
+              )
             }
           });
         }
@@ -104,7 +133,10 @@ const AvailabilitySearch = ({
           form.setFields({
             endTime: {
               value: values.endTime,
-              errors: [new Error("End time cannot be before start time")]
+              errors: getFieldErrors(
+                "endTime",
+                "End time cannot be before start time"
+              )
             }
           });
         }
@@ -133,11 +165,10 @@ const AvailabilitySearch = ({
           form.setFields({
             start: {
               value: values.start,
-              errors: [
-                new Error(
-                  `Can't Add a reservation starting ${reservationSettings.IntervalAllowedForReservations} days from today`
-                )
-              ]
+              errors: getFieldErrors(
+                "start",
+                `Can't Add a reservation starting ${reservationSettings.IntervalAllowedForReservations} days from today`
+              )
             }
           });
         }
@@ -153,11 +184,24 @@ const AvailabilitySearch = ({
           form.setFields({
             end: {
               value: values.end,
-              errors: [
-                new Error(
-                  `Can't Add a reservation ending ${reservationSettings.IntervalAllowedForReservations} days from today`
-                )
-              ]
+              errors: getFieldErrors(
+                "end",
+                `Can't Add a reservation ending ${reservationSettings.IntervalAllowedForReservations} days from today`
+              )
+            }
+          });
+        }
+        if (
+          !periodic &&
+          diff / 60 > reservationSettings.MaxDurationPerReservation
+        ) {
+          form.setFields({
+            end: {
+              value: values.end,
+              errors: getFieldErrors(
+                "end",
+                `Can't Book a resource for more than ${reservationSettings.MaxDurationPerReservation} hours`
+              )
             }
           });
         } else {
