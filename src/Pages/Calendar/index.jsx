@@ -169,11 +169,13 @@ const CalendarView = ({
         content: `Can't add a reservation in the past`
       });
     } else if (
-      moment(arg.start)
-        .hours(0)
-        .minutes(0)
-        .diff(today, "days") >=
-      reservationSettings.IntervalAllowedForReservations
+      moment(arg.start).isAfter(
+        moment().add(
+          reservationSettings.IntervalAllowedForReservations,
+          "days"
+        ),
+        "day"
+      )
     ) {
       error({
         title: `Can't Add a reservation`,
