@@ -57,7 +57,8 @@ const intialState = {
       startTime: null,
       end: null,
       endTime: null,
-      weekDays: undefined
+      weekDays: undefined,
+      errors: []
     },
     resourceType: null,
     resources: [],
@@ -83,7 +84,11 @@ const reservationReducer = (state = intialState, action) => {
           ...state.availability,
           resources: action.payload,
           resourceType: action.payload.resourceType,
-          loading: false
+          loading: false,
+          availabilityForm: {
+            ...state.availability.availabilityForm,
+            errors: []
+          }
         }
       };
     case CHECK_AVAILABILITY_FAILURE:
@@ -91,6 +96,10 @@ const reservationReducer = (state = intialState, action) => {
         ...state,
         availability: {
           ...state.availability,
+          availabilityForm: {
+            ...state.availability.availabilityForm,
+            errors: action.error
+          },
           loading: false
         }
       };
