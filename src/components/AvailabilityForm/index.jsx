@@ -199,7 +199,7 @@ const AvailabilitySearch = ({
                   { required: true, message: "Please input a  start Date!" },
                   {
                     validator: async (_, val) => {
-                      if (val.diff(moment(), "days") < 0)
+                      if (val && val.diff(moment(), "days") < 0)
                         throw new Error("Can't book in the past");
                     },
                     message: "start date must be greater than today's date"
@@ -221,6 +221,7 @@ const AvailabilitySearch = ({
                   {
                     validator: async (_, val) => {
                       if (
+                        val &&
                         form.getFieldValue("start").isSame(moment(), "day") &&
                         val.isBefore(moment(), "minute")
                       )
