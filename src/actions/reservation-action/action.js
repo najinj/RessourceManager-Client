@@ -254,7 +254,7 @@ export function getAvailability(reservationModel) {
         console.log(CHECK_AVAILABILITY_FAILURE, err);
         dispatch({
           type: CHECK_AVAILABILITY_FAILURE,
-          error: err.response.data
+          error: err.response.data.errors
         });
       }
     );
