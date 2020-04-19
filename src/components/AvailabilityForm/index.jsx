@@ -197,7 +197,19 @@ const AvailabilitySearch = ({
             <Col span={24}>
               {form.getFieldDecorator("startTime", {
                 rules: [
-                  { required: true, message: "Please input a start time!" }
+                  { required: true, message: "Please input a start time!" },
+                  {
+                    validator: async (_, val) => {
+                      if (
+                        form.getFieldValue("start").isSame(moment(), "day") &&
+                        val.isBefore(moment(), "minute")
+                      )
+                        throw new Error("Can't book in the past");
+                    },
+                    message: `start Time must be greater than ${moment().format(
+                      "HH:mm"
+                    )}`
+                  }
                 ]
               })(<TimePicker style={{ width: "100%" }} />)}
             </Col>
