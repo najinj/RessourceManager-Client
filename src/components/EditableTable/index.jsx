@@ -78,7 +78,13 @@ const EditableCell = ({
                 )}
               </Form.Item>
             ) : (
-              children
+              <span>
+                {selectOptions.filter(el => el.value === String(value)).length >
+                0
+                  ? selectOptions.filter(el => el.value === String(value))[0]
+                      .name
+                  : children}
+              </span>
             )}
           </td>
         );
