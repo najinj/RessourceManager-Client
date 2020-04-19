@@ -29,7 +29,8 @@ const mapStateToProps = state => {
     formErrors: state.reservationReducer.calendarState.reservationForm.errors,
     formLoading: state.reservationReducer.calendarState.reservationForm.loading,
     spaces: state.spaceReducer.spaces,
-    assets: state.assetReducer.assets
+    assets: state.assetReducer.assets,
+    settings: state.settingsReducer.settingsModel.calendarSettings
   };
 };
 
@@ -124,7 +125,8 @@ const CalendarView = ({
   formVisible,
   formLoading,
   formErrors,
-  formFields
+  formFields,
+  settings
 }) => {
   const [userAction, SetUserAction] = useState("");
   const [resourceTypeSelectValue, SetResourceTypeSelectValue] = useState("");
@@ -311,15 +313,15 @@ const CalendarView = ({
           selectable
           select={handleAdd}
           allDaySlot={false}
-          minTime="08:00:00"
-          maxTime="18:00:00"
+          minTime={settings.minTime}
+          maxTime={settings.maxTime}
           height="auto"
-          firstDay={1}
+          firstDay={settings.firstDay}
           eventClick={eventClick}
           slotLabelFormat={{
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
+            hour: settings.HourSlotLabelFormat,
+            minute: settings.MinuteSlotLabelFormat,
+            hour12: settings.Hour12SlotLabelFormat
           }}
         >
           <div className="fc-right">
@@ -368,7 +370,8 @@ CalendarView.propTypes = {
   formLoading: bool,
   formErrors: arrayOf(shape()),
   addEntitie: func,
-  loadAssets: func
+  loadAssets: func,
+  settings: arrayOf(shape())
 };
 CalendarView.defaultProps = {
   reservations: [],
@@ -384,7 +387,8 @@ CalendarView.defaultProps = {
   formLoading: false,
   formErrors: null,
   addEntitie: null,
-  loadAssets: func
+  loadAssets: func,
+  settings: {}
 };
 
 const ConnectedCalendar = connect(
