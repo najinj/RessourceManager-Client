@@ -129,6 +129,25 @@ const AvailabilitySearch = ({
               ]
             }
           });
+        } else if (
+          values.end.isAfter(
+            moment().add(
+              reservationSettings.IntervalAllowedForReservations,
+              "days"
+            ),
+            "day"
+          )
+        ) {
+          form.setFields({
+            end: {
+              value: values.end,
+              errors: [
+                new Error(
+                  `Can't Add a reservation ending ${reservationSettings.IntervalAllowedForReservations} days from today`
+                )
+              ]
+            }
+          });
         } else {
           fillForm(values);
           search(values);
