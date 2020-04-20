@@ -94,6 +94,14 @@ const AvailabilitySearch = ({
     ];
   };
 
+  const hasErrors = errorsObject => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const key of Object.keys(errorsObject)) {
+      if (errorsObject[key] !== undefined) return true;
+    }
+    return false;
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFields((err, values) => {
@@ -220,7 +228,8 @@ const AvailabilitySearch = ({
               )
             }
           });
-        } else {
+        }
+        if (!hasErrors(form.getFieldsError())) {
           fillForm(values);
           search(values);
         }
