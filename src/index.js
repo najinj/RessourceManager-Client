@@ -8,6 +8,7 @@ import App from "./components/App";
 import store from "./store";
 import { connectTheUser } from "./actions/auth-actions/actions";
 import axiosInstance, { history } from "./config";
+import { getBackOfficeSettings } from "./actions/settings-actions/actions";
 
 const token = localStorage.getItem("token");
 
@@ -27,6 +28,7 @@ store.subscribe(() => {
 const WrappedApp = props => {
   useEffect(() => {
     if (token) {
+      if (props.settingsModel.id == null) props.getSettings();
       // We need to check if the token are valid or not by getting the auth user
       //   props.store.dispatch(getAuthUser());
     }
@@ -45,11 +47,20 @@ const WrappedApp = props => {
 
 const mapStateToProps = reduxStore => {
   return {
-    isLoadingUser: reduxStore.authReducer.isLoadingUser
+    isLoadingUser: reduxStore.authReducer.isLoadingUser,
+    settingsModel: reduxStore.settingsReducer.settingsModel
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getSettings: () => dispatch(getBackOfficeSettings())
   };
 };
 
-const ConnectedWrappedApp = connect(mapStateToProps)(WrappedApp);
+const ConnectedWrappedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WrappedApp);
 
 const Reload = () => {
   // eslint-disable-next-line react/jsx-filename-extension
