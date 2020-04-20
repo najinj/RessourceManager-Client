@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Layout, Menu, Icon } from "antd";
+import { connect } from "react-redux";
+import { Layout, Menu, Icon, Dropdown } from "antd";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { func } from "prop-types";
 import RessourceTypes from "../../Pages/RessourceTypes";
 import Spaces from "../../Pages/Space";
 import Assets from "../../Pages/Asset";
@@ -11,13 +13,20 @@ import Reservations from "../../Pages/Reservations";
 import Availability from "../../Pages/Availability";
 import Settings from "../../Pages/Settings";
 import JwtDecoder, { ROLES_CLAIMS } from "../../Utils";
+import { logout } from "../../actions/auth-actions/actions";
 
 import "./main.css";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-const SideNav = () => {
+const mapDispatchToProps = dispatch => {
+  return {
+    logoutUser: () => dispatch(logout())
+  };
+};
+
+const SideNav = ({ logoutUser }) => {
   const isAdmin =
     localStorage.getItem("token") == null
       ? false
@@ -32,6 +41,16 @@ const SideNav = () => {
   const onCollapse = collapsedIn => {
     SetCollapsed(collapsedIn);
   };
+
+  const logoutDropDown = (
+    <Menu>
+      <Menu.Item onClick={() => logoutUser()}>
+        <a target="_self" rel="noopener noreferrer" href="/" type="submit">
+          Logout
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <Router>
       <Layout style={{ minHeight: "100vh" }}>
@@ -82,7 +101,7 @@ const SideNav = () => {
               key="sub2"
               title={
                 <span>
-                  <Icon type="form" />
+                  <Icon type="book" />
                   <span>Reservations</span>
                 </span>
               }
@@ -125,7 +144,7 @@ const SideNav = () => {
             ) : null}
             {isAdmin ? (
               <Menu.Item key="11">
-                <Icon type="file" />
+                <Icon type="setting" />
                 <span>Settings</span>
                 <Link to="/Settings" />
               </Menu.Item>
@@ -133,7 +152,11 @@ const SideNav = () => {
           </Menu>
         </Sider>
         <Layout>
-          <Header style={{ background: "#fff", padding: 0 }} />
+          <Header style={{ background: "#fff", padding: 0 }}>
+            <Dropdown overlay={logoutDropDown} placement="bottomRight">
+              <Icon type="user" className="header-icon" />
+            </Dropdown>
+          </Header>
           <Content style={{ margin: "0 16px", minWidth: 660 }}>
             <Breadcrumbs style={{ margin: "16px 0" }} />
             <div
@@ -167,4 +190,18 @@ const SideNav = () => {
     </Router>
   );
 };
-export default SideNav;
+
+SideNav.propTypes = {
+  logoutUser: func
+};
+
+SideNav.defaultProps = {
+  logoutUser: func
+};
+
+const ConnectedSideNav = connect(
+  null,
+  mapDispatchToProps
+)(SideNav);
+
+export default ConnectedSideNav;
