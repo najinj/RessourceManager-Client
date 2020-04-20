@@ -9,7 +9,9 @@ const breadcrumbNameMap = {
   "/Reservations": "All Reservations",
   "/MyReservations": "My Reservations",
   "/Calendar": "Calendar View",
-  "/Availability": "Availability"
+  "/Availability": "Availability",
+  "/Users": "User Managment",
+  "/Settings": "Settings"
 };
 const Breadcrumbs = withRouter(props => {
   const { location, style } = props;
