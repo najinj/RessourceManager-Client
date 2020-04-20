@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
 import { Calendar, Select, Form, Modal } from "antd";
@@ -135,6 +135,10 @@ const CalendarView = ({
   const [resourceTypeSelectValue, SetResourceTypeSelectValue] = useState("");
   const calendarComponentRef = React.createRef();
 
+  useEffect(() => {
+    loadReservations(null);
+  }, []);
+
   const spaceOptions = spaces.map(space => {
     return {
       text: space.name,
@@ -253,15 +257,18 @@ const CalendarView = ({
       SetUserAction({ execute: addEntitie });
     }
   };
-  const mappedReservations = reservations.map(reservation => {
-    return {
-      ...reservation,
-      startRecur: null,
-      endRecur: null,
-      daysOfWeek: null
-    };
-  });
-
+  const mappedReservations =
+    reservations.length > 0
+      ? reservations.map(reservation => {
+          return {
+            ...reservation,
+            startRecur: null,
+            endRecur: null,
+            daysOfWeek: null
+          };
+        })
+      : [];
+  console.log("reservations", mappedReservations);
   const eventClick = info => {
     console.log(info.event);
   };
@@ -351,40 +358,42 @@ const CalendarView = ({
         errors={formErrors}
       />
       <div className="fullCalendar-container">
-        <FullCalendar
-          defaultView="timeGridWeek"
-          header={{
-            left: "prev,next today",
-            center: "title",
-            right: null
-          }}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          ref={calendarComponentRef}
-          weekends
-          events={mappedReservations}
-          selectable
-          select={handleAdd}
-          allDaySlot={false}
-          minTime={calendarSettings.minTime}
-          maxTime={calendarSettings.maxTime}
-          height="auto"
-          firstDay={calendarSettings.firstDay}
-          eventClick={eventClick}
-          slotLabelFormat={{
-            hour: calendarSettings.HourSlotLabelFormat,
-            minute: calendarSettings.MinuteSlotLabelFormat,
-            hour12: calendarSettings.Hour12SlotLabelFormat
-          }}
-        >
-          <div className="fc-right">
-            <button
-              type="button"
-              className="fc-timeGridWeek-button fc-button fc-button-primary fc-button-active"
-            >
-              week
-            </button>
-          </div>
-        </FullCalendar>
+        {calendarSettings !== null ? (
+          <FullCalendar
+            defaultView="timeGridWeek"
+            header={{
+              left: "prev,next today",
+              center: "title",
+              right: null
+            }}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            ref={calendarComponentRef}
+            weekends
+            events={mappedReservations}
+            selectable
+            select={handleAdd}
+            allDaySlot={false}
+            minTime={calendarSettings.minTime}
+            maxTime={calendarSettings.maxTime}
+            height="auto"
+            firstDay={calendarSettings.firstDay}
+            eventClick={eventClick}
+            slotLabelFormat={{
+              hour: calendarSettings.HourSlotLabelFormat,
+              minute: calendarSettings.MinuteSlotLabelFormat,
+              hour12: calendarSettings.Hour12SlotLabelFormat
+            }}
+          >
+            <div className="fc-right">
+              <button
+                type="button"
+                className="fc-timeGridWeek-button fc-button fc-button-primary fc-button-active"
+              >
+                week
+              </button>
+            </div>
+          </FullCalendar>
+        ) : null}
       </div>
     </div>
   );
