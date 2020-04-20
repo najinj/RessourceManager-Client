@@ -154,21 +154,13 @@ const CalendarView = ({
     SetUserAction("");
   };
 
-  const handleAdd = arg => {
-    const today = moment()
-      .hours(0)
-      .minutes(0);
-    if (resourceId == null) {
-      error({
-        title: `Can't Add a reservation`,
-        content: `No resource has been selected , please select a resource before adding a reservation`
-      });
-    }
+  const validateArguments = arg => {
+    const errors = [];
+    const startDateWithTime = moment(arg.start);
+    const endDateWithTime = moment(arg.end);
+    const diff = endDateWithTime.diff(startDateWithTime, "minute");
     if (moment().diff(moment(arg.start)) > 0) {
-      error({
-        title: `Can't Add a reservation`,
-        content: `Can't add a reservation in the past`
-      });
+      errors.push(`Can't add a reservation in the past`);
     }
     if (
       moment(arg.start).isAfter(
@@ -179,10 +171,9 @@ const CalendarView = ({
         "day"
       )
     ) {
-      error({
-        title: `Can't Add a reservation`,
-        content: `Can't Add a reservation starting ${reservationSettings.IntervalAllowedForReservations} days from today`
-      });
+      errors.push(
+        `Can't Add a reservation starting ${reservationSettings.IntervalAllowedForReservations} days from today`
+      );
     }
     if (
       moment(arg.end).isAfter(
@@ -193,9 +184,30 @@ const CalendarView = ({
         "day"
       )
     ) {
+      errors.push(
+        `Can't Add a reservation ending ${reservationSettings.IntervalAllowedForReservations} days from today`
+      );
+    }
+    if (diff / 60 > reservationSettings.MaxDurationPerReservation) {
+      errors.push(
+        `Can't Book a resource for more than ${reservationSettings.MaxDurationPerReservation} hours`
+      );
+    }
+    return errors;
+  };
+
+  const handleAdd = arg => {
+    const errors = validateArguments(arg);
+
+    if (resourceId == null) {
       error({
         title: `Can't Add a reservation`,
-        content: `Can't Add a reservation ending ${reservationSettings.IntervalAllowedForReservations} days from today`
+        content: `No resource has been selected , please select a resource before adding a reservation`
+      });
+    } else if (errors.length > 0) {
+      error({
+        title: `Can't Add a reservation`,
+        content: errors.join("\n")
       });
     } else {
       const formColumns = columns.map(col => {
