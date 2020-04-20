@@ -129,7 +129,8 @@ const CalendarView = ({
   formErrors,
   formFields,
   calendarSettings,
-  reservationSettings
+  reservationSettings,
+  form
 }) => {
   const [userAction, SetUserAction] = useState("");
   const [resourceTypeSelectValue, SetResourceTypeSelectValue] = useState("");
@@ -282,6 +283,9 @@ const CalendarView = ({
   };
 
   const hadnleResourceTypeChange = value => {
+    form.setFieldsValue({
+      resourceId: ""
+    });
     if (value === 1) loadSpaces();
     if (value === 2) loadAssets();
     SetResourceTypeSelectValue(value);
@@ -334,14 +338,18 @@ const CalendarView = ({
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 14 }}
           >
-            <Select
-              initialValue=""
-              style={{ width: 120 }}
-              onChange={hadnleSpaceChange}
-              placeholder="Select a space"
-            >
-              {renderOptions()}
-            </Select>
+            {form.getFieldDecorator("resourceId", {
+              initialValue: null
+            })(
+              <Select
+                initialValue=""
+                style={{ width: 120 }}
+                onChange={hadnleSpaceChange}
+                placeholder="Select a space"
+              >
+                {renderOptions()}
+              </Select>
+            )}
           </Form.Item>
         </div>
         <div className="monthly-sideview-calendar">
@@ -433,7 +441,8 @@ CalendarView.propTypes = {
   addEntitie: func,
   loadAssets: func,
   calendarSettings: arrayOf(shape()),
-  reservationSettings: arrayOf(shape())
+  reservationSettings: arrayOf(shape()),
+  form: shape()
 };
 CalendarView.defaultProps = {
   reservations: [],
@@ -451,7 +460,8 @@ CalendarView.defaultProps = {
   addEntitie: null,
   loadAssets: func,
   calendarSettings: {},
-  reservationSettings: {}
+  reservationSettings: {},
+  form: {}
 };
 
 const ConnectedCalendar = connect(
