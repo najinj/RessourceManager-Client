@@ -175,7 +175,15 @@ export function getReservationsByDate(dateTime) {
 
 export function getReservationsByResource(resourceId) {
   return dispatch => {
-    dispatch({ type: GET_RESERVATIONS_BY_RESOURCE_REQUEST });
+    if (resourceId == null)
+      dispatch({
+        type: GET_RESERVATIONS_BY_RESOURCE_SUCCESS,
+        payload: {
+          reservations: [],
+          resourceId: null
+        }
+      });
+    else dispatch({ type: GET_RESERVATIONS_BY_RESOURCE_REQUEST });
     ReservationsServices.getReservationsByResource(resourceId).then(
       response => {
         const payload = response.data;
