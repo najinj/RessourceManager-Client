@@ -10,6 +10,7 @@ import {
   LOGOUT_FAILURE,
   CONNECT_THE_USER
 } from "./types";
+import { getBackOfficeSettings } from "../settings-actions/actions";
 
 import AuthServices from "./service";
 import axiosInstance from "../../config";
@@ -27,6 +28,7 @@ export function signIn(values) {
         axiosInstance.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
         axiosInstance.defaults.headers.Authorization = `Bearer ${response.data.access_token}`;
         dispatch({ type: SIGNIN_SUCCESS, payload: response.data });
+        dispatch(getBackOfficeSettings());
       },
       err => {
         console.log(err.response.data);
