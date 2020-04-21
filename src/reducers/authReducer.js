@@ -6,7 +6,8 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_ERROR,
   DISCONNECT_THE_USER,
-  CONNECT_THE_USER
+  CONNECT_THE_USER,
+  RESET_FORM_ERRORS
 } from "../actions/auth-actions/types";
 
 const intialState = {
@@ -80,6 +81,12 @@ const authReducer = (state = intialState, action) => {
         isLoadingUser: false,
         token: action.payload.token // getting token from local storage
       };
+    case RESET_FORM_ERRORS: {
+      return {
+        ...state,
+        errors: null
+      };
+    }
     default:
       return state;
   }
