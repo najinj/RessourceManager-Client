@@ -12,10 +12,10 @@ import {
   DISCONNECT_THE_USER,
   RESET_PASSWORD_REQUEST_REQUEST,
   RESET_PASSWORD_REQUEST_SUCCESS,
-  RESRT_PASSWORD_REQUEST_FAILURE,
+  RESET_PASSWORD_REQUEST_FAILURE,
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
-  RESRT_PASSWORD_FAILURE
+  RESET_PASSWORD_FAILURE
 } from "./types";
 import { getBackOfficeSettings } from "../settings-actions/actions";
 
@@ -38,8 +38,8 @@ export function signIn(values) {
         dispatch(getBackOfficeSettings());
       },
       err => {
-        console.log(err.response.data);
-        dispatch({ type: SIGNIN_ERROR, errors: err.response.data });
+        console.log(err.response);
+        dispatch({ type: SIGNIN_ERROR, errors: err.response.status });
       }
     );
   };
@@ -104,8 +104,8 @@ export function resetPasswordRequest(email) {
         });
       },
       err => {
-        console.log(RESRT_PASSWORD_REQUEST_FAILURE, err);
-        dispatch({ type: RESRT_PASSWORD_REQUEST_FAILURE });
+        console.log(RESET_PASSWORD_REQUEST_FAILURE, err);
+        dispatch({ type: RESET_PASSWORD_REQUEST_FAILURE });
       }
     );
   };
@@ -119,8 +119,8 @@ export function resetPassword(body) {
         dispatch({ type: RESET_PASSWORD_SUCCESS, payload: response.data });
       },
       err => {
-        console.log(RESRT_PASSWORD_FAILURE, err);
-        dispatch({ type: RESRT_PASSWORD_FAILURE });
+        console.log(RESET_PASSWORD_FAILURE, err);
+        dispatch({ type: RESET_PASSWORD_FAILURE });
       }
     );
   };
