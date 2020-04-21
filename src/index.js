@@ -4,8 +4,9 @@
 import { render } from "react-dom";
 import React, { useEffect } from "react";
 import { Provider, connect } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import App from "./components/App";
-import store from "./store";
+import { store, persistor } from "./store";
 import { connectTheUser } from "./actions/auth-actions/actions";
 import axiosInstance, { history } from "./config";
 import { getBackOfficeSettings } from "./actions/settings-actions/actions";
@@ -66,9 +67,11 @@ const Reload = () => {
   // eslint-disable-next-line react/jsx-filename-extension
   render(
     <Provider store={store}>
-      <ConnectedWrappedApp store={store}>
-        <App history={history} />
-      </ConnectedWrappedApp>
+      <PersistGate loading={null} persistor={persistor}>
+        <ConnectedWrappedApp store={store}>
+          <App history={history} />
+        </ConnectedWrappedApp>
+      </PersistGate>
     </Provider>,
     document.getElementById("root")
   );
