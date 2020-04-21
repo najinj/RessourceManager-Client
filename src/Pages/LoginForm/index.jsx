@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Form, Icon, Input, Button, Checkbox, notification } from "antd";
+import { Form, Icon, Input, Button, notification } from "antd";
 import { shape, func, number } from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -79,10 +79,6 @@ const NormalLoginForm = ({ form, logIn, errors, resetErrors }) => {
         )}
       </Form.Item>
       <Form.Item>
-        {getFieldDecorator("remember", {
-          valuePropName: "checked",
-          initialValue: true
-        })(<Checkbox>Remember me</Checkbox>)}
         <a className="login-form-forgot" href="/ResetPassword">
           Forgot password
         </a>
