@@ -51,7 +51,7 @@ const NormalLoginForm = ({ form, logIn }) => {
           valuePropName: "checked",
           initialValue: true
         })(<Checkbox>Remember me</Checkbox>)}
-        <a className="login-form-forgot" href="##">
+        <a className="login-form-forgot" href="/ResetPassword">
           Forgot password
         </a>
         <Button type="primary" htmlType="submit" className="login-form-button">
