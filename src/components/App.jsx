@@ -7,8 +7,9 @@ import { connect } from "react-redux";
 import WrappedSignInForm from "../Pages/SignInForm";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
-import LoginForm from "./LoginForm";
+import LoginForm from "../Pages/LoginForm";
 import SideNav from "./HomePage";
+import ResetPasswordPage from "../Pages/ResetPassword";
 
 const mapStateToProps = reduxStore => {
   return {
@@ -21,6 +22,13 @@ const mapStateToProps = reduxStore => {
 const App = props => (
   <Router history={props.history}>
     <Switch>
+      <PublicRoute
+        exact
+        path="/ResetPassword"
+        component={ResetPasswordPage}
+        email={props.email}
+        authenticated={props.isLoggedIn}
+      />
       <PublicRoute
         exact
         path="/Signup"
