@@ -1,17 +1,38 @@
-import React from "react";
-import { Form, Icon, Input, Button, Checkbox } from "antd";
-import { shape, func } from "prop-types";
+import React, { useEffect } from "react";
+import { Form, Icon, Input, Button, Checkbox, notification } from "antd";
+import { shape, func, number } from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { signIn } from "../../actions/auth-actions/actions";
+import { signIn, resetLoginErrors } from "../../actions/auth-actions/actions";
 
 const mapDispatchToProps = dispatch => {
   return {
-    logIn: user => dispatch(signIn(user))
+    logIn: user => dispatch(signIn(user)),
+    resetErrors: () => dispatch(resetLoginErrors())
+  };
+};
+const mapStateToProps = state => {
+  return {
+    errors: state.authReducer.errors
   };
 };
 
-const NormalLoginForm = ({ form, logIn }) => {
+const openNotification = () => {
+  notification.info({
+    message: `Account Not yet Activated`,
+    description: "Once your account gets activated you will recieve an email",
+    placement: "topLeft"
+  });
+};
+
+const NormalLoginForm = ({ form, logIn, errors, resetErrors }) => {
+  useEffect(() => {
+    if (errors === 423) {
+      openNotification();
+      resetErrors();
+    }
+  }, [errors]);
+
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFields((err, values) => {
@@ -22,6 +43,9 @@ const NormalLoginForm = ({ form, logIn }) => {
     });
   };
 
+  const resetError = () => {
+    resetErrors();
+  };
   const { getFieldDecorator } = form;
   return (
     <Form onSubmit={handleSubmit} className="login-form">
@@ -35,14 +59,22 @@ const NormalLoginForm = ({ form, logIn }) => {
           />
         )}
       </Form.Item>
-      <Form.Item>
+      <Form.Item
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...(errors === 401 && {
+          help: "Bad Credentials",
+          validateStatus: "error"
+        })}
+      >
         {getFieldDecorator("password", {
           rules: [{ required: true, message: "Please input your Password!" }]
         })(
           <Input
+            onChange={resetError}
             prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
             type="password"
             placeholder="Password"
+            name="password"
           />
         )}
       </Form.Item>
@@ -68,15 +100,19 @@ const WrappedNormalLoginForm = Form.create({ name: "normal_login" })(
 );
 NormalLoginForm.propTypes = {
   form: shape(),
-  logIn: func
+  logIn: func,
+  errors: number,
+  resetErrors: func
 };
 NormalLoginForm.defaultProps = {
   form: {},
-  logIn: null
+  logIn: null,
+  errors: null,
+  resetErrors: func
 };
 
 const ConnectedWrappedNormalLoginForm = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(WrappedNormalLoginForm);
 
