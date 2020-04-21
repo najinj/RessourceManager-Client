@@ -13,7 +13,7 @@ import Reservations from "../../Pages/Reservations";
 import Availability from "../../Pages/Availability";
 import Settings from "../../Pages/Settings";
 import JwtDecoder, { ROLES_CLAIMS } from "../../Utils";
-import { logout } from "../../actions/auth-actions/actions";
+import { disconnectUser } from "../../actions/auth-actions/actions";
 
 import "./main.css";
 
@@ -22,7 +22,7 @@ const { SubMenu } = Menu;
 
 const mapDispatchToProps = dispatch => {
   return {
-    logoutUser: () => dispatch(logout())
+    logoutUser: () => dispatch(disconnectUser())
   };
 };
 
@@ -183,7 +183,7 @@ const SideNav = ({ logoutUser }) => {
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2018 Created by Ant UED
+            Resource Management App ©2020 Created by najinj
           </Footer>
         </Layout>
       </Layout>
