@@ -9,7 +9,13 @@ import {
   LOGOUT_SUCCESS,
   LOGOUT_FAILURE,
   CONNECT_THE_USER,
-  DISCONNECT_THE_USER
+  DISCONNECT_THE_USER,
+  RESET_PASSWORD_REQUEST_REQUEST,
+  RESET_PASSWORD_REQUEST_SUCCESS,
+  RESRT_PASSWORD_REQUEST_FAILURE,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
+  RESRT_PASSWORD_FAILURE
 } from "./types";
 import { getBackOfficeSettings } from "../settings-actions/actions";
 
@@ -84,5 +90,38 @@ export function disconnectUser() {
   localStorage.removeItem("token");
   return dispatch => {
     dispatch({ type: DISCONNECT_THE_USER });
+  };
+}
+
+export function resetPasswordRequest(email) {
+  return dispatch => {
+    dispatch({ type: RESET_PASSWORD_REQUEST_REQUEST });
+    AuthServices.resetPasswordRequest(email).then(
+      response => {
+        dispatch({
+          type: RESET_PASSWORD_REQUEST_SUCCESS,
+          payload: response.data
+        });
+      },
+      err => {
+        console.log(RESRT_PASSWORD_REQUEST_FAILURE, err);
+        dispatch({ type: RESRT_PASSWORD_REQUEST_FAILURE });
+      }
+    );
+  };
+}
+
+export function resetPassword(body) {
+  return dispatch => {
+    dispatch({ type: RESET_PASSWORD_REQUEST });
+    AuthServices.resetPassword(body).then(
+      response => {
+        dispatch({ type: RESET_PASSWORD_SUCCESS, payload: response.data });
+      },
+      err => {
+        console.log(RESRT_PASSWORD_FAILURE, err);
+        dispatch({ type: RESRT_PASSWORD_FAILURE });
+      }
+    );
   };
 }
