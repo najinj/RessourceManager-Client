@@ -15,7 +15,8 @@ import {
   RESET_PASSWORD_REQUEST_FAILURE,
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
-  RESET_PASSWORD_FAILURE
+  RESET_PASSWORD_FAILURE,
+  RESET_FORM_ERRORS
 } from "./types";
 import { getBackOfficeSettings } from "../settings-actions/actions";
 
@@ -123,5 +124,10 @@ export function resetPassword(body) {
         dispatch({ type: RESET_PASSWORD_FAILURE });
       }
     );
+  };
+}
+export function resetLoginErrors() {
+  return {
+    type: RESET_FORM_ERRORS
   };
 }
