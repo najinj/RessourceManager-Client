@@ -62,16 +62,10 @@ const SideNav = ({ logoutUser }) => {
           breakpoint="lg"
           collapsedWidth="80"
         >
-          <div className="logo" />
+          <div
+            className={`logo-${collapsed ? "collapsed" : "non-collapsed"}`}
+          />
           <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1">
-              <Icon type="pie-chart" />
-              <span>Option 1</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <Icon type="desktop" />
-              <span>Option 2</span>
-            </Menu.Item>
             {isAdmin ? (
               <SubMenu
                 key="sub1"
