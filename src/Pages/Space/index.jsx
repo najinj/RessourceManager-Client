@@ -242,7 +242,7 @@ const EditableTable = ({
   return (
     <>
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-        Add a row
+        Add a Space
       </Button>
       <ModalForm
         title="Title"

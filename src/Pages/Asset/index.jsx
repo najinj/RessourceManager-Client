@@ -241,7 +241,7 @@ const EditableTable = ({
   return (
     <>
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-        Add a row
+        Add an Asset
       </Button>
       <ModalForm
         title="Title"

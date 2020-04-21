@@ -200,7 +200,7 @@ const EditableTable = ({
   return (
     <>
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-        Add a row
+        Add a Resource type
       </Button>
       <ModalForm
         title="Title"
