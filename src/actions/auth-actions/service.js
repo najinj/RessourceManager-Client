@@ -26,10 +26,27 @@ const signupRequest = body => {
   });
 };
 
+const resetPasswordRequest = email => {
+  return axiosInstance({
+    method: "get",
+    url: `Account/ResetPassword/?email=${email}`
+  });
+};
+
+const resetPassword = body => {
+  return axiosInstance({
+    method: "post",
+    url: "Account/ResetPassword/",
+    data: body
+  });
+};
+
 const AuthServices = {
   signinRequest,
   signupRequest,
-  logoutRequest
+  logoutRequest,
+  resetPasswordRequest,
+  resetPassword
 };
 
 export default AuthServices;
