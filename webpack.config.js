@@ -34,6 +34,10 @@ module.exports = ({ mode } = { mode: "production" }) =>
           {
             test: /\.css$/,
             use: ["style-loader", "css-loader"]
+          },
+          {
+            test: /\.(png|svg|jpg|gif)$/,
+            use: ["file-loader"]
           }
         ]
       },
