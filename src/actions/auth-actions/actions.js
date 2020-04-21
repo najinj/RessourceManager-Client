@@ -8,7 +8,8 @@ import {
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
   LOGOUT_FAILURE,
-  CONNECT_THE_USER
+  CONNECT_THE_USER,
+  DISCONNECT_THE_USER
 } from "./types";
 import { getBackOfficeSettings } from "../settings-actions/actions";
 
@@ -76,5 +77,12 @@ export function logout() {
     } catch (e) {
       dispatch({ type: LOGOUT_FAILURE });
     }
+  };
+}
+
+export function disconnectUser() {
+  localStorage.removeItem("token");
+  return dispatch => {
+    dispatch({ type: DISCONNECT_THE_USER });
   };
 }
