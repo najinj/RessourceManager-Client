@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Icon, Input, Button } from "antd";
+import { Form, Icon, Input, Button, Result } from "antd";
 import { shape, func } from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -21,6 +21,7 @@ const ResetPasswordForm = ({
   requestPasswordRequest
 }) => {
   const [confirmDirty, setConfirmDirty] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const queryString = window.location.search;
 
@@ -40,7 +41,10 @@ const ResetPasswordForm = ({
             resetToken: resetToken.replace(/ /g, "+")
           };
           resetUserPassword(body);
-        } else requestPasswordRequest(values.Email);
+        } else {
+          requestPasswordRequest(values.Email);
+          setSubmitted(true);
+        }
         console.log("Received values of form: ", values);
       }
     });
@@ -119,12 +123,16 @@ const ResetPasswordForm = ({
           </Form.Item>
         </>
       ) : null}
+
       <Form.Item>
         <Button type="primary" htmlType="submit" className="login-form-button">
           Reset Password
         </Button>
         Or <Link to="/LogIn">Back To Login Page</Link>
       </Form.Item>
+      {submitted ? (
+        <Result subTitle="If this email correspond with one that we have in our database you will receive an email for reseting your password" />
+      ) : null}
     </Form>
   );
 };
