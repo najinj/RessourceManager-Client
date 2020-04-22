@@ -102,7 +102,7 @@ const SideNav = ({ logoutUser }) => {
             >
               <Menu.Item key="6">
                 <span>Availability</span>
-                <Link to="/Availability" />
+                <Link to="/" />
               </Menu.Item>
               <Menu.Item key="7">
                 <span>My Reservations</span>
@@ -154,7 +154,7 @@ const SideNav = ({ logoutUser }) => {
           <Content style={{ margin: "0 16px", minWidth: 660 }}>
             <Breadcrumbs style={{ margin: "16px 0" }} />
             <div
-              style={{ padding: 24, background: "#fff" }}
+              style={{ padding: 24, background: "#fff", height: "100%" }}
               className="page-container"
             >
               <Route exact path="/RessourceTypes" component={RessourceTypes} />
@@ -172,7 +172,7 @@ const SideNav = ({ logoutUser }) => {
                 path="/Reservations"
                 render={() => <Reservations isAdmin />}
               />
-              <Route exact path="/Availability" component={Availability} />
+              <Route exact path="/" component={Availability} />
               <Route exact path="/Settings" component={Settings} />
             </div>
           </Content>
