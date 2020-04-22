@@ -71,80 +71,83 @@ const SignInForm = ({ form, register }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="login-form">
-      <Form.Item>
-        <Col>
-          <Form.Item label="Name">
-            {getFieldDecorator("name", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your Name!"
-                }
-              ]
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-        <Col>
-          <Form.Item label="Last Name">
-            {getFieldDecorator("lastName", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your Last Name!"
-                }
-              ]
-            })(<Input />)}
-          </Form.Item>
-        </Col>
-      </Form.Item>
-      <Form.Item label="E-mail">
-        {getFieldDecorator("email", {
-          rules: [
-            {
-              type: "email",
-              message: "The input is not valid E-mail!"
-            },
-            {
-              required: true,
-              message: "Please input your E-mail!"
-            }
-          ]
-        })(<Input />)}
-      </Form.Item>
-      <Form.Item label="Password" hasFeedback>
-        {getFieldDecorator("password", {
-          rules: [
-            {
-              required: true,
-              message: "Please input your password!"
-            },
-            {
-              validator: validateToNextPassword
-            }
-          ]
-        })(<Input.Password />)}
-      </Form.Item>
-      <Form.Item label="Confirm Password" hasFeedback>
-        {getFieldDecorator("ConfirmPassword", {
-          rules: [
-            {
-              required: true,
-              message: "Please confirm your password!"
-            },
-            {
-              validator: compareToFirstPassword
-            }
-          ]
-        })(<Input.Password onBlur={handleConfirmBlur} />)}
-      </Form.Item>
+    <div className="form-container">
+      <div className="logo" />
+      <Form onSubmit={handleSubmit} className="singup-form">
+        <Form.Item>
+          <Col>
+            <Form.Item label="Name">
+              {getFieldDecorator("name", {
+                rules: [
+                  {
+                    required: true,
+                    message: "Please input your Name!"
+                  }
+                ]
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item label="Last Name">
+              {getFieldDecorator("lastName", {
+                rules: [
+                  {
+                    required: true,
+                    message: "Please input your Last Name!"
+                  }
+                ]
+              })(<Input />)}
+            </Form.Item>
+          </Col>
+        </Form.Item>
+        <Form.Item label="E-mail">
+          {getFieldDecorator("email", {
+            rules: [
+              {
+                type: "email",
+                message: "The input is not valid E-mail!"
+              },
+              {
+                required: true,
+                message: "Please input your E-mail!"
+              }
+            ]
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="Password" hasFeedback>
+          {getFieldDecorator("password", {
+            rules: [
+              {
+                required: true,
+                message: "Please input your password!"
+              },
+              {
+                validator: validateToNextPassword
+              }
+            ]
+          })(<Input.Password />)}
+        </Form.Item>
+        <Form.Item label="Confirm Password" hasFeedback>
+          {getFieldDecorator("ConfirmPassword", {
+            rules: [
+              {
+                required: true,
+                message: "Please confirm your password!"
+              },
+              {
+                validator: compareToFirstPassword
+              }
+            ]
+          })(<Input.Password onBlur={handleConfirmBlur} />)}
+        </Form.Item>
 
-      <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit">
-          Register
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit">
+            Register
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 const WrappedSignInForm = Form.create({ name: "register" })(SignInForm);
