@@ -1,14 +1,37 @@
 .login-form {
-  max-width: 300px;
-  position: absolute;
+  max-width: 400px;
+  /* position: absolute; */
   left: 0;
   right: 0;
-  top: 20%;
+  /* top: 20%; */
   margin: auto;
+  margin-top: 30%;
 }
 .login-form-forgot {
   float: right;
 }
 .login-form-button {
   width: 100%;
+}
+.form-container {
+  width: 460px;
+  height: 80%;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border-radius: 1%;
+}
+body {
+  background: #f0f2f5;
+}
+.logo {
+  background: url("../../../public/assets/LogoIcons/logo_transparent.png") 50%
+    50% no-repeat;
+  height: 200px;
+  margin: auto;
+  margin-top: 3%;
 }

@@ -18,7 +18,8 @@ const mapDispatchToProps = dispatch => {
 const ResetPasswordForm = ({
   form,
   resetUserPassword,
-  requestPasswordRequest
+  requestPasswordRequest,
+  history
 }) => {
   const [confirmDirty, setConfirmDirty] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -41,6 +42,7 @@ const ResetPasswordForm = ({
             resetToken: resetToken.replace(/ /g, "+")
           };
           resetUserPassword(body);
+          history.push("/");
         } else {
           requestPasswordRequest(values.Email);
           setSubmitted(true);
@@ -82,58 +84,65 @@ const ResetPasswordForm = ({
 
   const { getFieldDecorator } = form;
   return (
-    <Form onSubmit={handleSubmit} className="login-form">
-      <Form.Item>
-        {getFieldDecorator("Email", {
-          rules: [{ required: true, message: "Please input your Email!" }]
-        })(
-          <Input
-            prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-            placeholder="Email"
-          />
-        )}
-      </Form.Item>
-      {resetToken ? (
-        <>
-          <Form.Item label="Password" hasFeedback>
-            {getFieldDecorator("password", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please input your password!"
-                },
-                {
-                  validator: validateToNextPassword
-                }
-              ]
-            })(<Input.Password />)}
-          </Form.Item>
-          <Form.Item label="Confirm Password" hasFeedback>
-            {getFieldDecorator("ConfirmPassword", {
-              rules: [
-                {
-                  required: true,
-                  message: "Please confirm your password!"
-                },
-                {
-                  validator: compareToFirstPassword
-                }
-              ]
-            })(<Input.Password onBlur={handleConfirmBlur} />)}
-          </Form.Item>
-        </>
-      ) : null}
+    <div className="form-container">
+      <div className="logo" />
+      <Form onSubmit={handleSubmit} className="login-form">
+        <Form.Item>
+          {getFieldDecorator("Email", {
+            rules: [{ required: true, message: "Please input your Email!" }]
+          })(
+            <Input
+              prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+              placeholder="Email"
+            />
+          )}
+        </Form.Item>
+        {resetToken ? (
+          <>
+            <Form.Item label="Password" hasFeedback>
+              {getFieldDecorator("password", {
+                rules: [
+                  {
+                    required: true,
+                    message: "Please input your password!"
+                  },
+                  {
+                    validator: validateToNextPassword
+                  }
+                ]
+              })(<Input.Password />)}
+            </Form.Item>
+            <Form.Item label="Confirm Password" hasFeedback>
+              {getFieldDecorator("ConfirmPassword", {
+                rules: [
+                  {
+                    required: true,
+                    message: "Please confirm your password!"
+                  },
+                  {
+                    validator: compareToFirstPassword
+                  }
+                ]
+              })(<Input.Password onBlur={handleConfirmBlur} />)}
+            </Form.Item>
+          </>
+        ) : null}
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
-          Reset Password
-        </Button>
-        Or <Link to="/LogIn">Back To Login Page</Link>
-      </Form.Item>
-      {submitted ? (
-        <Result subTitle="If this email correspond with one that we have in our database you will receive an email for reseting your password" />
-      ) : null}
-    </Form>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+          >
+            Reset Password
+          </Button>
+          Or <Link to="/LogIn">Back To Login Page</Link>
+        </Form.Item>
+        {submitted ? (
+          <Result subTitle="If this email correspond with one that we have in our database you will receive an email for reseting your password" />
+        ) : null}
+      </Form>
+    </div>
   );
 };
 
@@ -143,12 +152,14 @@ const WrappedResetPasswordForm = Form.create({ name: "normal_login" })(
 ResetPasswordForm.propTypes = {
   form: shape(),
   resetUserPassword: func,
-  requestPasswordRequest: func
+  requestPasswordRequest: func,
+  history: shape()
 };
 ResetPasswordForm.defaultProps = {
   form: {},
   resetUserPassword: func,
-  requestPasswordRequest: func
+  requestPasswordRequest: func,
+  history: {}
 };
 
 const ConnectedWrappedResetPasswordForm = connect(
