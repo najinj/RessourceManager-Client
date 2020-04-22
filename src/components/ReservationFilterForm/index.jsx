@@ -1,11 +1,20 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
-import { Form, Select, DatePicker, TimePicker, Row, Col } from "antd";
+import {
+  Form,
+  Select,
+  DatePicker,
+  TimePicker,
+  Row,
+  Col,
+  Typography
+} from "antd";
 import { shape, func, arrayOf, string } from "prop-types";
 
 import "./index.css";
 
 const { Option } = Select;
+const { Title } = Typography;
 
 const Filter = ({ form, spaceNames, filterReservations, resourceTypes }) => {
   const [resourceIds, SetResourceIds] = useState([]);
@@ -38,6 +47,7 @@ const Filter = ({ form, spaceNames, filterReservations, resourceTypes }) => {
   const handleSubmit = () => {};
   return (
     <Form onSubmit={handleSubmit}>
+      <Title level={3}>Filter Reservations</Title>
       <Form.Item
         style={{ margin: 0, padding: 10 }}
         label="Recource Type"
