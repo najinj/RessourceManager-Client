@@ -15,7 +15,8 @@ const intialState = {
   isLoggedIn: false,
   isLoadingUser: false,
   token: null,
-  errors: null
+  errors: null,
+  status: null
 };
 
 const authReducer = (state = intialState, action) => {
@@ -33,7 +34,8 @@ const authReducer = (state = intialState, action) => {
         email: action.payload.email,
         isLoggedIn: true,
         isLoadingUser: false,
-        token: action.payload.token
+        token: action.payload.token,
+        status: SIGNIN_SUCCESS
       };
     case SIGNIN_ERROR:
       return {
@@ -41,7 +43,8 @@ const authReducer = (state = intialState, action) => {
         isLoggedIn: false,
         isLoadingUser: false,
         token: null,
-        errors: action.errors
+        errors: action.errors,
+        status: SIGNIN_ERROR
       };
 
     // Sign up
@@ -54,14 +57,16 @@ const authReducer = (state = intialState, action) => {
       return {
         ...state,
         email: action.payload.email,
-        isLoggedIn: true,
+        isLoggedIn: false,
         isLoadingUser: false,
-        token: action.payload.token
+        token: null,
+        status: SIGNUP_SUCCESS
       };
     case SIGNUP_ERROR:
       return {
         ...state,
-        isLoadingUser: false
+        isLoadingUser: false,
+        status: SIGNUP_ERROR
       };
 
     // Connect & disconnect user ( no interaction with the server )
@@ -71,7 +76,8 @@ const authReducer = (state = intialState, action) => {
         user: null,
         isLoggedIn: false,
         isLoadingUser: false,
-        token: null
+        token: null,
+        status: null
       };
 
     case CONNECT_THE_USER:
@@ -79,7 +85,8 @@ const authReducer = (state = intialState, action) => {
         ...state,
         isLoggedIn: true,
         isLoadingUser: false,
-        token: action.payload.token // getting token from local storage
+        token: action.payload.token, // getting token from local storage,
+        status: null
       };
     case RESET_FORM_ERRORS: {
       return {
