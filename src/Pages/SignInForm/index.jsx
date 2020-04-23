@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from "react";
-import { Form, Input, Button, Col } from "antd";
+import React, { useState, useEffect } from "react";
+import { Form, Input, Button, Col, notification } from "antd";
 import { connect } from "react-redux";
-import { shape, func } from "prop-types";
+import { shape, func, string } from "prop-types";
 import { signUp } from "../../actions/auth-actions/actions";
+import { SIGNUP_SUCCESS } from "../../actions/auth-actions/types";
 
 import "./SignInForm.css";
 
@@ -13,8 +14,27 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const SignInForm = ({ form, register }) => {
+const mapStateToProps = state => {
+  return {
+    status: state.authReducer.status
+  };
+};
+
+const openNotification = () => {
+  notification.info({
+    message: `Your account was created successfuly`,
+    description: "Once your account gets activated you will recieve an email",
+    placement: "topLeft"
+  });
+};
+
+const SignInForm = ({ form, register, status }) => {
   const [confirmDirty, setConfirmDirty] = useState(false);
+
+  useEffect(() => {
+    if (status === SIGNUP_SUCCESS) openNotification();
+  }, [status]);
+
   const handleSubmit = e => {
     e.preventDefault();
     form.validateFieldsAndScroll((err, user) => {
@@ -154,15 +174,17 @@ const WrappedSignInForm = Form.create({ name: "register" })(SignInForm);
 
 SignInForm.propTypes = {
   form: shape(),
-  register: func
+  register: func,
+  status: string
 };
 SignInForm.defaultProps = {
   form: {},
-  register: null
+  register: null,
+  status: null
 };
 
 const ConnectedForm = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(WrappedSignInForm);
 
