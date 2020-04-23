@@ -52,7 +52,6 @@ export function signUp(user) {
     AuthServices.signupRequest(user).then(
       response => {
         dispatch({ type: SIGNUP_SUCCESS, payload: response.data });
-        localStorage.setItem("token", response.data.token);
       },
       err => {
         console.log(SIGNUP_ERROR, err);
