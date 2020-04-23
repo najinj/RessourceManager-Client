@@ -63,7 +63,7 @@ const AvailabilitySearch = ({
   const search = values => {
     const reservation = { ...values };
     if (Array.isArray(values.weekDays) && values.weekDays.length) {
-      reservation.CronosExpression = getCronosExpression(
+      reservation.cronoExpression = getCronosExpression(
         values.startTime,
         values.weekDays
       );
