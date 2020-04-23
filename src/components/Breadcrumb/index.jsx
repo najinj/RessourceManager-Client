@@ -5,7 +5,7 @@ import { Breadcrumb } from "antd";
 const breadcrumbNameMap = {
   "/Assets": "Assets",
   "/Spaces": "Spaces",
-  "/RessourceTypes": "RessourceTypes",
+  "/ResourceTypes": "ResourceTypes",
   "/Reservations": "All Reservations",
   "/MyReservations": "My Reservations",
   "/Calendar": "Calendar View",

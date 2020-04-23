@@ -72,13 +72,13 @@ const SideNav = ({ logoutUser }) => {
                 title={
                   <span>
                     <Icon type="form" />
-                    <span>Ressource Managment</span>
+                    <span>Resource Managment</span>
                   </span>
                 }
               >
                 <Menu.Item key="3">
-                  <span>Ressource Types</span>
-                  <Link to="/RessourceTypes" />
+                  <span>Resource Types</span>
+                  <Link to="/ResourceTypes" />
                 </Menu.Item>
                 <Menu.Item key="4">
                   <span>Spaces</span>
@@ -157,7 +157,7 @@ const SideNav = ({ logoutUser }) => {
               style={{ padding: 24, background: "#fff", height: "100%" }}
               className="page-container"
             >
-              <Route exact path="/RessourceTypes" component={RessourceTypes} />
+              <Route exact path="/ResourceTypes" component={RessourceTypes} />
               <Route exact path="/Spaces" component={Spaces} />
               <Route exact path="/Assets" component={Assets} />
               <Route exact path="/Users" component={Users} />
