@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { List } from "antd";
+import { List, Typography } from "antd";
 import { shape, arrayOf, string, number, bool, func } from "prop-types";
 import AvailabilityForm from "../../components/AvailabilityForm";
 import Reservation from "../../components/Reservation";
@@ -11,6 +11,8 @@ import {
   emptyAvailabilityResouces,
   emptyReservationForm
 } from "../../actions/reservation-action/action";
+
+const { Title } = Typography;
 
 const resourceTypes = [
   {
@@ -53,6 +55,9 @@ const Availability = ({
 
   return (
     <div className="availability-container">
+      <Title level={3} style={{ textAlign: "center" }}>
+        Check Availability
+      </Title>
       <ModalForm
         title="Availability"
         action={userAction}
