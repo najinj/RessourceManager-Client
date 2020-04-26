@@ -117,7 +117,7 @@ const PopUpForm = ({
             wrapperCol: { span: 14 }
           };
 
-    if (field.inputType.includes("select")) {
+    if (field.inputType && field.inputType.includes("select")) {
       return (
         <Form.Item
           style={{
@@ -162,7 +162,7 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.inputType.includes("tags")) {
+    if (field.inputType && field.inputType.includes("tags")) {
       return (
         <Form.Item
           style={{
@@ -217,7 +217,7 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.dataIndex.includes("status")) {
+    if (field.inputType && field.dataIndex.includes("status")) {
       return (
         <Form.Item
           style={{
@@ -238,7 +238,7 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.inputType.includes("multiSelect")) {
+    if (field.inputType && field.inputType.includes("multiSelect")) {
       return (
         <Form.Item
           style={{
@@ -285,7 +285,7 @@ const PopUpForm = ({
         </Form.Item>
       );
     }
-    if (field.inputType.includes("label")) {
+    if (field.inputType && field.inputType.includes("label")) {
       const fieldValue =
         field.record[field.dataIndex].value === undefined
           ? field.record[field.dataIndex]
@@ -326,7 +326,10 @@ const PopUpForm = ({
       <Form.Item
         style={{
           margin: 0,
-          display: field.inputType.includes("hidden") ? "none" : "block"
+          display:
+            field.inputType && field.inputType.includes("hidden")
+              ? "none"
+              : "block"
         }}
         key={field.key}
         label={field.title}
@@ -345,7 +348,7 @@ const PopUpForm = ({
               message: `Please Input ${field.title}!`
             }
           ],
-          initialValue: field.record[field.dataIndex]
+          initialValue: field.record ? field.record[field.dataIndex] : ""
         })(
           field.dataIndex === "title" || field.dataIndex === "description" ? (
             <Input.TextArea
