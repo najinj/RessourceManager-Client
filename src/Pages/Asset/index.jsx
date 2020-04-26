@@ -182,6 +182,11 @@ const EditableTable = ({
     spaceId: asset.spaceId
   }));
   const columnsMaped = columns.map(col => {
+    let colDataIndex = null;
+    if (col.dataIndex === "spaceId") colDataIndex = ["select"];
+    else if (col.dataIndex === "status") colDataIndex = ["label"];
+    else colDataIndex = ["text"];
+
     if (col.dataIndex === "assetTypeId") {
       return {
         ...col,
@@ -204,14 +209,14 @@ const EditableTable = ({
       onCell: record => ({
         record,
         required: col.required,
-        inputType: col.dataIndex === "spaceId" ? ["select"] : ["text"],
+        inputType: colDataIndex,
         dataIndex: col.dataIndex,
         title: col.title,
         options: col.dataIndex === "spaceId" ? spaceFiler : null,
         getFieldDecorator: form.getFieldDecorator,
         tagsArray: record.tags,
         validateFields: form.validateFields,
-        editable: !col.editable
+        editable: col.dataIndex === "status" ? false : !col.editable
       })
     };
   });
@@ -231,9 +236,7 @@ const EditableTable = ({
   const edit = editableRecord => {
     const asset = { ...editableRecord };
 
-    const fields = columnsMaped
-      .slice(0, 4)
-      .map(col => (col.editable ? col.onCell(asset) : col));
+    const fields = columnsMaped.slice(0, 4).map(col => col.onCell(asset));
     console.log(fields);
     openForm(fields);
     SetUserAction({ execute: updateEntitie });
