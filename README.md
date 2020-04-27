@@ -58,29 +58,26 @@ An admin has access to three main application settings
 ### Login Page
 ![image](https://user-images.githubusercontent.com/29644684/80315360-90376a00-87e6-11ea-812c-c658dcc6c64e.png)
 ### Landing Page / Availability Page
-![image](https://user-images.githubusercontent.com/29644684/80316487-be6c7800-87ed-11ea-86b1-cfca5cd0d812.png)
+![Availability](https://user-images.githubusercontent.com/29644684/80323163-39975380-8819-11ea-992f-454633a6de79.gif)
 ### Resource Management 
 #### Resource Types
-![image](https://user-images.githubusercontent.com/29644684/80315403-eefce380-87e6-11ea-993c-76de46c74379.png)
 
-![image](https://user-images.githubusercontent.com/29644684/80315442-15228380-87e7-11ea-806a-b675582b0a65.png)
+![ResourceType](https://user-images.githubusercontent.com/29644684/80322074-01404700-8812-11ea-8514-751c8b4fc96d.gif)
 
 #### Spaces 
-![image](https://user-images.githubusercontent.com/29644684/80316520-e2c85480-87ed-11ea-9326-db2623628152.png)
-![image](https://user-images.githubusercontent.com/29644684/80316561-14412000-87ee-11ea-9041-f7e47011f28b.png)
+
+![space](https://user-images.githubusercontent.com/29644684/80322853-2f745580-8817-11ea-90e8-b79efdcbb96c.gif)
 
 #### Assets 
-![image](https://user-images.githubusercontent.com/29644684/80316608-42266480-87ee-11ea-912b-507ad078002f.png)
-![image](https://user-images.githubusercontent.com/29644684/80317153-9121c900-87f1-11ea-97d1-33df0d7cd0cf.png)
+![Asset](https://user-images.githubusercontent.com/29644684/80322819-0653c500-8817-11ea-9c85-39fe2eb2f035.gif)
 
 ### Reservations 
 #### My Reservations 
-![image](https://user-images.githubusercontent.com/29644684/80317180-c1696780-87f1-11ea-9776-feaa3beb84f2.png)
-![image](https://user-images.githubusercontent.com/29644684/80317210-ecec5200-87f1-11ea-81b7-81d64475eb07.png)
+![Reservations](https://user-images.githubusercontent.com/29644684/80323310-29cc3f00-881a-11ea-9b83-90cbfdb25697.gif)
+
 
 #### Calendar View
-![image](https://user-images.githubusercontent.com/29644684/80317224-02fa1280-87f2-11ea-95cc-432e1f863172.png)
-![image](https://user-images.githubusercontent.com/29644684/80317249-2c1aa300-87f2-11ea-94bd-961b7f04ae60.png)
+
 ![calendar](https://user-images.githubusercontent.com/29644684/80317418-37ba9980-87f3-11ea-9ebc-ade741b1882e.gif)
 
 ### User Managment
