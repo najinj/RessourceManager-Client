@@ -88,27 +88,30 @@ An admin has access to three main application settings
 ![image](https://user-images.githubusercontent.com/29644684/80317507-bca5b300-87f3-11ea-8e7f-4c70e123360a.png)
 
 ## Installation
+1. Setup the back-end for the app you can find it [here](https://github.com/najinj/RessourceManager-Server)
 
-1. Clone the repo 
-```
- $ git clone https://github.com/najinj/RessourceManager-Client.git
-```
-2. install dependencies
-  ```
- $ yarn install 
-```
-Or
-```
- $ npm install
-```
-3. execute command to run the application
-```
- $ npm run dev-server
-```
-Or 
-```
- $ yarn dev-server
-```
+2. Clone the repo 
+     ```
+      $ git clone https://github.com/najinj/RessourceManager-Client.git
+     ```
+     
+3. install dependencies
+     ```
+      $ yarn install 
+     ```
+     Or
+     ```
+      $ npm install
+     ```
+     
+4. execute command to run the application
+     ```
+      $ npm run dev-server
+     ```
+     Or 
+     ```
+      $ yarn dev-server
+     ```
 ## License
 
 MIT © [najinj](https://github.com/najinj)
