@@ -67,6 +67,29 @@ const intialState = {
   errors: null
 };
 
+const addReservationsForCalendarState = (state, payload) => {
+  const {
+    calendarState: { resourceId, reservations }
+  } = state;
+  if (!Array.isArray(payload) && payload.resourceId === resourceId) {
+    if (Array.isArray(payload) && payload[0].resourceId === resourceId) {
+      return [...reservations, ...payload];
+    }
+    return [...reservations, payload];
+  }
+  return reservations;
+};
+
+const filterResourcesForAvailability = (state, payload) => {
+  const {
+    availability: { resources }
+  } = state;
+  if (!Array.isArray(payload)) {
+    return resources.filter(resource => resource.id !== payload.resourceId);
+  }
+  return resources.filter(resource => resource.id !== payload[0].resourceId);
+};
+
 const reservationReducer = (state = intialState, action) => {
   switch (action.type) {
     case CHECK_AVAILABILITY_REQUEST:
@@ -135,27 +158,11 @@ const reservationReducer = (state = intialState, action) => {
         ...state,
         calendarState: {
           ...state.calendarState,
-          reservations:
-            // eslint-disable-next-line no-nested-ternary
-            !Array.isArray(action.payload) &&
-            action.payload.resourceId === state.calendarState.resourceId
-              ? Array.isArray(action.payload) &&
-                action.payload[0].resourceId === state.calendarState.resourceId
-                ? [...state.calendarState.reservations, ...action.payload]
-                : [...state.calendarState.reservations, action.payload]
-              : state.calendarState.reservations
+          reservations: addReservationsForCalendarState(state, action.payload)
         },
         availability: {
           ...state.availability,
-          resources:
-            // eslint-disable-next-line no-nested-ternary
-            !Array.isArray(action.payload)
-              ? state.availability.resources.filter(
-                  resource => resource.id !== action.payload.resourceId
-                )
-              : state.availability.resources.filter(
-                  resource => resource.id !== action.payload[0].resourceId
-                )
+          resources: filterResourcesForAvailability(state, action.payload)
         }
       };
     case ADD_RESERVATION_FAILURE:
